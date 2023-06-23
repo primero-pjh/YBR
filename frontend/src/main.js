@@ -8,7 +8,16 @@ import messages from './i18n';
 import { Quasar } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/dist/quasar.css'
-
+import axios from 'axios';
+// import { Service } from 'axios-middleware';
+axios.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  config.headers["Authorization"] = $c.getCookie("APP_ACC_TKN");
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
 const i18n = createI18n({
     locale: 'ko',
     fallbackLocale: 'en',
@@ -37,11 +46,16 @@ const $c = {
         form[k] = error[k];
       }
     }
-  }
+  },
+  getCookie: function (name) {
+    let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return value? value[2] : null;
+  },
 }
 app.config.globalProperties.$store = store;
 app.config.globalProperties.$c = $c;
 app.config.globalProperties.$config = config;
+app.config.globalProperties.$axios = axios;
 console.error(`ybr version: ${config.version}`);
 
 app.use(Quasar);

@@ -1,11 +1,18 @@
 <template>
-    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-        <van-image src="/images/doge_v3.png" />
-        <p style="text-align: center;">권한이 없거나</p>
-        <p style="text-align: center;">잘못된 URL 입니다.</p>
-        <van-button type="primary" @click="clickHome" style="width: 100%;">
-            홈으로 이동
-        </van-button>
+    <div class="center">
+        <q-card style="width:300px;">
+            <q-card-section>
+                <div class="q-pa-md">
+                    <q-img src="/images/doge_v3.png" />
+                    <q-separator class="q-my-md" />
+                    <p class="text-center text-bold text-h6">권한이 없거나</p>
+                    <p class="text-center text-bold text-h6">잘못된 URL 입니다.</p>
+                    <q-btn color="primary" @click="$router.back()" style="width: 100%;">
+                        뒤로 돌아가기
+                    </q-btn>
+                </div>
+            </q-card-section>
+        </q-card>
     </div>
 </template>
 
@@ -17,9 +24,6 @@ export default {
         }
     },
     methods: {
-        clickHome: function() {
-            this.$router.push('/calendar');
-        },
     },
     mounted: function() {
     }

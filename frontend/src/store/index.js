@@ -4,7 +4,7 @@ import { createStore } from "vuex";
 const store = createStore({
     state : {
         socket: null,
-        token: null,
+        APP_ACC_TKN: null,
         host: process.env.VUE_APP_HOST,
         width: window.screen.width,
         height: window.screen.height,
@@ -64,8 +64,8 @@ const store = createStore({
         setSocket(state, socket) {
             state.socket = socket;
         },
-        setToken(state, token) {
-            state.token = token;
+        setToken(state, APP_ACC_TKN) {
+            state.APP_ACC_TKN = APP_ACC_TKN;
         },
         /* user function */
         setUser(state, user) {

@@ -15,8 +15,8 @@ const appRoot = require('app-root-path');
 const chalk = require("chalk");
 // let knex = require(`${appRoot.path}/db`);
 let db = require(`${appRoot.path}/mysql2`);
+let redis = require(`${appRoot.path}/redis`);
 let CRT_ERROR_CODE = require(`${appRoot.path}/error_code`);
-
 /**
  * Get port from environment and store in Express.
  */

@@ -4,6 +4,7 @@ let path = appRoot.path;
 const router = express.Router();
 const crypto = require('crypto');
 const cfg = require(`${path}/config`);
+const redis = require(`${path}/redis`);
 const jwt = require('jsonwebtoken');
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
@@ -20,7 +21,7 @@ router.post('/api/user/login', async function(req, res, next) {
     let userId = req.body.params.userId;
     let password = req.body.params.password;
     let rememberMe = req.body.params.rememberMe;
-    
+
     let error = new Object();
     if(!userId) { error["userId"] = "필수입력 항목입니다!"; }
     if(!password) { error["password"] = "필수입력 항목입니다!"; }
@@ -58,39 +59,44 @@ router.post('/api/user/login', async function(req, res, next) {
     }
 
     /* get couple info */
-    // let couple = null;
-    // if(user.spousePhoneNumber) {
-    //     couple = await knex.table('appUsers as u')
-    //     .select('u.userId', 'u.UID', 'u.spousePhoneNumber', 'u.phoneNumber', 'u.image', 
-    //         'u.userName', 'u.coupleInfoId', 'ci.backgroundImage')
-    //     .join('coupleInfos as ci', 'u.coupleInfoId', '=', 'ci.coupleInfoId')
-    //     .where('u.phoneNumber', user.spousePhoneNumber).first();
-    // }
+    let couple = null;
+    if(user.spousePhoneNumber) {
+        let [rows, fields] = await db.query(`
+            select u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, 
+                    u.coupleInfoId,
+                    ci.backgroundImage
+            from appUsers as u 
+            join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
+            where u.phoneNumber=?`, 
+            [user.spousePhoneNumber]);
+        couple = rows[0];
+    }
     
     // /* set cookie */
     let APP_ACC_TKN = null; // access_token
     let APP_REF_TKN = null; // refresh_token
-    rememberMe = 1;
-    if(rememberMe == 1) {
-        APP_ACC_TKN = jwt.sign({ 
-            userId: userId,
-            UID: user.UID
-        }, 
-        cfg.jwtKey, 
-        {
-            expiresIn: "1 hours",
-        });
-        res.cookie('APP_ACC_TKN', APP_ACC_TKN);
+    /* 
+        자동로그인 여부와 관계 없이 access token(1시간)을 발급 후 cookie에 저장한다.
+    */
+    APP_ACC_TKN = jwt.sign({ 
+        userId: userId,
+        UID: user.UID
+    }, cfg.jwtKey, {
+        expiresIn: "1 hours",
+    });
+    res.cookie('APP_ACC_TKN', APP_ACC_TKN);
 
+    /* 
+        자동로그인이 되어 있다면 refresh token(30일)을 발급 후 redis에 저장한다.
+    */
+    if(rememberMe == 1) {
         APP_REF_TKN = jwt.sign({ 
             userId: userId,
             UID: user.UID
-        }, 
-        cfg.jwtKey, 
-        {
-            expiresIn: "14 days",
+        }, cfg.jwtKey, {
+            expiresIn: "30 days",
         });
-        res.cookie('APP_REF_TKN', APP_REF_TKN);
+        await redis.set(user.UID, APP_REF_TKN);
     }
 
     // /* couple socketId */
@@ -103,9 +109,10 @@ router.post('/api/user/login', async function(req, res, next) {
 
     return res.json({
         success: 1,
+        user,
+        couple,
         token: {
-            APP_ACC_TKN,
-            APP_REF_TKN
+            APP_ACC_TKN
         },
         // user,
         // couple,

@@ -1,7 +1,7 @@
 <template>
     <div id="loginVue" class="center">
-        <div class="text-h4">YBR</div>
-        <div style="width: 580px;" class="shadow-2 q-pa-md">
+        <div class="text-h4 text-center">YBR</div>
+        <div style="width: 580px;" class="shadow-2 q-pa-md q-mt-md">
             <div style="padding: 55px 69px;">
                 <div>
                     <q-input outlined dense label="아이디" v-model="appUser.userId"
@@ -11,8 +11,11 @@
 
                     <q-toggle label="자동 로그인" v-model="appUser.rememberMe" />
 
-                    <q-btn class="q-mt-md" label="로그인" color="primary" 
-                        style="width: 100%;" size="lg" @click="onLogin" :loading="isLoading" :disable="isLoading" />
+                    <q-btn class="q-mt-md" style="width: 100%;" label="로그인" color="primary" 
+                        size="lg" @click="onLogin" 
+                        :loading="isLoading" :disable="isLoading" />
+                    <q-img src="/images/kakao_login_medium_wide.png" 
+                        class="q-mt-md" style="height: 51px; cursor: pointer;" />
                     <div style="display: flex; justify-content: space-between; height: 20px;" class="q-mt-md">
                         <div>
                             <p style="cursor: pointer;">회원가입</p>
@@ -30,7 +33,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { io } from "socket.io-client";
 
 export default {
@@ -56,7 +58,7 @@ export default {
         onLogin() {
             let vm = this;
             vm.isLoading = !vm.isLoading;
-            axios.post(`/api/user/login`, {
+            vm.$axios.post(`/api/user/login`, {
                 params: {
                     userId: vm.appUser.userId,
                     password: vm.appUser.password,
@@ -65,8 +67,23 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {  
-                    vm.$router.push("/home");
                     console.log("data:", data);
+                    /*
+                        login logic flow
+                        1. 커플인 경우
+                            -> store에 값들을 저장 후 home 화면으로 이동
+                        2. 커플이 아닌 경우
+                            -> user의 값만 store에 저장 후 waiting 화면으로 이동
+                    */
+                    if(data.couple) {
+                        vm.$store.commit("setToken", data.token.APP_ACC_TKN);
+                        vm.$store.commit("setUser", data.user);
+                        vm.$store.commit("setCouple", data.couple);
+                        console.log(vm.$store.state);
+                        vm.$router.push("/home");
+                        return;
+                    }
+                    vm.$router.push("/waiting");
                 } else {
                     vm.$c.setError(vm.formError, data.error);
                 }
