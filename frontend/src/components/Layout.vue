@@ -1,25 +1,39 @@
 <template>
     <div id="layoutVue" style="width: 100%; display: flex; justify-content: center;">
-        <div style="width: 1300px;"> 
+        <div style="width: 100%;">
             <slot name="header">
-                <div style="height: 72px; display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;" @click="$router.push('/home')">YBR</p>
-                    </div>
-                    <div>
-                        <template v-for="row,idx in item_list" :key="idx">
-                            <q-btn :label="row.label" class="fkR ft24" flat @click="location_href(row)" />
-                        </template>
-                    </div>
-                    <div>
-                        <q-btn icon="settings" flat />
+                <div style="width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #eaeaea;">
+                    <div style="width: 1300px; height: 72px; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;" @click="$router.push('/home')">YBR</p>
+                        </div>
+                        <div>
+                            <q-tabs v-model="tab" class="text-black">
+                                <template v-for="row,idx in item_list" :key="idx">
+                                    <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                        <template v-slot:default>
+                                            <p class="q-ma-none ft20">{{ row.label }}</p>
+                                        </template>
+                                    </q-tab>
+                                </template>
+                            </q-tabs>
+                        </div>
+                        <div>
+                            <q-btn icon="settings" flat />
+                        </div>
                     </div>
                 </div>
             </slot>
-            <slot name="body"></slot>
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <div style="width: 1300px; min-height: 800px;">
+                    <slot name="body">
+    
+                    </slot>
+                </div>
+            </div>
             <slot name="footer">
-                <div style="height: 58px;">
-                    <p class="fkR" style="font-size: 20px;">@primero-pjh. All right reserved.</p>
+                <div style="height: 58px; border-top: 1px solid #eaeaea;" class="q-pa-md">
+                    <p class="fkR" style="font-size: 16px; color: grey;">@primero-pjh. All right reserved.</p>
                 </div>
             </slot>
         </div>
@@ -32,6 +46,7 @@ export default {
     data() {
         return {
             height: 0,
+            tab: 'home',
             isShow: true,
             unShowPage: {
                 login: true,

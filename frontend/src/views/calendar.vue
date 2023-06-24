@@ -1,12 +1,17 @@
 <template>
     <div id="homeVue" style="height: 100%;">
         <div>
-            <p class="fkR">캘린더</p>
+            <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
         </div>
     </div>
 </template>
 
 <script>
+
+import Calendar from 'tui-calendar';
+import 'tui-calendar/dist/tui-calendar.css';
+import 'tui-date-picker/dist/tui-date-picker.css';
+import 'tui-time-picker/dist/tui-time-picker.css';
 
 export default {
     name: 'homeVue',
@@ -22,6 +27,47 @@ export default {
     },
     mounted: function() {
         let vm = this;
+        const calendar = new Calendar('#calendar', {
+            defaultView: 'month',
+            useCreationPopup: false,
+            useDetailPopup: true,
+            usageStatistics: false,
+        });
+        
+        calendar.createSchedules([
+            {
+                id: '1',
+                calendarId: 'Major Lecture',
+                title: '소프트웨어 개론 레포트 제출',
+                category: 'time', // 'task'로 지정합니다
+                dueDateClass: '',
+                start: '2023-06-20T10:30:00',
+                end: '2023-06-20T11:30:00',
+            },
+            {
+                id: '2',
+                calendarId: 'General Lecture',
+                title: '건강과 영양',
+                category: 'time',
+                dueDateClass: '',
+                start: '2023-06-20T14:30:00',
+                end: '2023-06-21T16:30:00',
+                isReadOnly: true // schedule is read-only
+            },
+        ]);
+
+        calendar.on('beforeCreateSchedule', scheduleData => {
+            console.log("scheduleData", scheduleData);
+            const schedule = {
+                calendarId: 'Major Lecture',
+                id: String(Math.random() * 100000000000000000),
+                title: scheduleData.title,
+                isAllDay: scheduleData.isAllDay,
+                start: scheduleData.start,
+                end: scheduleData.end,
+                category: scheduleData.isAllDay ? 'allday' : 'time'
+            };
+        });
     },
 }
 </script>
