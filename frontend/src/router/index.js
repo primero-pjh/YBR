@@ -1,12 +1,20 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import homeVue from "../views/home.vue";
 import loginVue from "../views/login.vue";
+import chatVue from "../views/chat.vue";
+import calendarVue from "../views/calendar.vue";
+import communityVue from "../views/community.vue";
+import profileVue from "../views/profile.vue";
 import errorVue from "../views/error.vue";
 
 const routes = [
     { path: "/", name: "home", component: homeVue, label: "홈화면", },
     { path: "/home", name: "home", component: homeVue, label: "홈화면", },
     { path: "/login", name: "login", component: loginVue, label: "로그인", },
+    { path: "/chat", name: "chat", component: chatVue, label: "채팅", },
+    { path: "/calendar", name: "calendar", component: calendarVue, label: "캘린더", },
+    { path: "/community", name: "community", component: communityVue, label: "커뮤니티", },
+    { path: "/profile", name: "profile", component: profileVue, label: "커뮤니티", },
     { path: "/error", name: "error", component: errorVue, label: "404", },
 
     { path: "/:pathMatch(.*)*", redirect: "/error" },

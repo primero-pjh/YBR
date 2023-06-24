@@ -39,6 +39,7 @@
 .ft12 {font-size: 12px;}
 .ft14 {font-size: 14px;}
 .ft20 {font-size: 20px;}
+.ft24 {font-size: 24px;}
 
 .ft-xs {font-size: 12px;}
 .ft-sm {font-size: 16px;}
@@ -85,4 +86,20 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+@font-face {
+  font-family: "KakaoBold";
+  src: url("/public/fonts/kakao_fonts/KakaoBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "KakaoRegular";
+  src: url("/public/fonts/kakao_fonts/KakaoRegular.ttf") format("truetype");
+}
+
+.fkB {
+  font-family: KakaoBold;
+}
+.fkR {
+  font-family: KakaoRegular;
 }

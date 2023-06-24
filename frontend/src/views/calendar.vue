@@ -1,7 +1,7 @@
 <template>
     <div id="homeVue" style="height: 100%;">
         <div>
-            <p class="fkR">안녕</p>
+            <p class="fkR">캘린더</p>
         </div>
     </div>
 </template>

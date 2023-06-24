@@ -1,5 +1,5 @@
 <template>
-    <div class="center">
+    <div style="width: 100%; display: flex; justify-content: center;">
         <q-card style="width:300px;">
             <q-card-section>
                 <div class="q-pa-md">

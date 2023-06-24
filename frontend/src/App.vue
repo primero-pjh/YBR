@@ -1,28 +1,35 @@
 <template>
     <div id="app">
-        <router-view></router-view>
+        <layout>
+            <template v-slot:body>
+                <router-view></router-view>
+            </template>
+        </layout>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'App',
-        computed: {
-            width() {
-                return this.$store.state.width;
-            },
-            height() {
-                return this.$store.state.height;
-            },
+import layout from "@/components/layout.vue";
+
+export default {
+    name: 'App',
+    computed: {
+        width() {
+            return this.$store.state.width;
         },
-        components: {
+        height() {
+            return this.$store.state.height;
         },
-        data() {
-            return {
-            }
-        },
-        mounted: function() {
-            let vm = this;
+    },
+    components: {
+        layout,
+    },
+    data() {
+        return {
         }
+    },
+    mounted: function() {
+        let vm = this;
     }
+}
 </script>

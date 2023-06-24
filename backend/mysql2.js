@@ -5,7 +5,7 @@ console.log("mysql2");
 let db = null;
 const loading = async () => {
     db = await mysql.createPool({
-        host: 'pritras.vps.phps.kr',
+        host: cfg.host,
         user : cfg.user,
         password : cfg.password,
         database : cfg.database,
