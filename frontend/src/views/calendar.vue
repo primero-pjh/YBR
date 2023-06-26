@@ -3,6 +3,8 @@
         <div>
             <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
         </div>
+
+        <dialog_scheduled ref="dialog_scheduled" />
     </div>
 </template>
 
@@ -12,10 +14,12 @@ import Calendar from 'tui-calendar';
 import 'tui-calendar/dist/tui-calendar.css';
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
+import dialog_scheduled from '@/components/dialog_scheduled.vue';
 
 export default {
     name: 'homeVue',
     components: {
+        dialog_scheduled,
     },
     data() {
         return {
@@ -56,17 +60,17 @@ export default {
             },
         ]);
 
+        /* scheduled를 생성하기 전 */
         calendar.on('beforeCreateSchedule', scheduleData => {
-            console.log("scheduleData", scheduleData);
-            const schedule = {
-                calendarId: 'Major Lecture',
-                id: String(Math.random() * 100000000000000000),
-                title: scheduleData.title,
-                isAllDay: scheduleData.isAllDay,
-                start: scheduleData.start,
-                end: scheduleData.end,
-                category: scheduleData.isAllDay ? 'allday' : 'time'
-            };
+            vm.$refs.dialog_scheduled.open('add', scheduleData, (schedule) => {
+                console.log("schedule:", schedule);
+                // schedule["calendarId"] = "123",
+                // schedule["id"] = '3';
+                // schedule["title"] = "123123123";
+                schedule["category"] = "time";
+                calendar.createSchedules([schedule]);
+            });
+            
         });
     },
 }

@@ -32,12 +32,22 @@ const $c = {
     month = month > 10 ? month : `0${month}`;
     let day = date.getDate();
     day = day > 10 ? day : `0${day}`;
+
+    let hours = date.getHours();
+    hours = hours > 10 ? hours : `0${hours}`;
+    let min = date.getMinutes();
+    min = min > 10 ? min : `0${min}`;
+    let sec = date.getSeconds();
+    sec = sec > 10 ? sec : `0${sec}`;
+
     if(type == 'date') {
       return `${date.getFullYear()}-${month}-${day}`; 
     } else if (type == 'date_ko') {
       return `${date.getFullYear()}년 ${month}월 ${day}일`; 
     } else if (type == 'date_2') {
       return `${month}.${day}`; 
+    } else {
+      return `${date.getFullYear()}-${month}-${day} ${hours}:${min}:${sec}`; 
     }
   },
   setError(form, error) {
