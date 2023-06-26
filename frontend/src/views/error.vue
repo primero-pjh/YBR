@@ -3,7 +3,7 @@
         <q-card style="width:300px;">
             <q-card-section>
                 <div class="q-pa-md">
-                    <q-img src="/images/doge_v3.png" />
+                    <q-img :src="$store.state.host + '/images/doge_v3.png'" />
                     <q-separator class="q-my-md" />
                     <p class="text-center text-bold text-h6">권한이 없거나</p>
                     <p class="text-center text-bold text-h6">잘못된 URL 입니다.</p>
