@@ -29,16 +29,16 @@ const $c = {
   formatDate: function(date, type) {
     date = new Date(date);
     let month = date.getMonth() + 1;
-    month = month > 10 ? month : `0${month}`;
+    month = month >= 10 ? month : `0${month}`;
     let day = date.getDate();
-    day = day > 10 ? day : `0${day}`;
+    day = day >= 10 ? day : `0${day}`;
 
     let hours = date.getHours();
-    hours = hours > 10 ? hours : `0${hours}`;
+    hours = hours >= 10 ? hours : `0${hours}`;
     let min = date.getMinutes();
-    min = min > 10 ? min : `0${min}`;
+    min = min >= 10 ? min : `0${min}`;
     let sec = date.getSeconds();
-    sec = sec > 10 ? sec : `0${sec}`;
+    sec = sec >= 10 ? sec : `0${sec}`;
 
     if(type == 'date') {
       return `${date.getFullYear()}-${month}-${day}`; 
