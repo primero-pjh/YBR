@@ -6,6 +6,7 @@ import calendarVue from "../views/calendar.vue";
 import communityVue from "../views/community.vue";
 import profileVue from "../views/profile.vue";
 import errorVue from "../views/error.vue";
+import store from "../store";
 
 const routes = [
     { path: "/", name: "home", component: homeVue, label: "홈화면", },
@@ -25,8 +26,18 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from) => {
-    console.error(`from: ${from.fullPath}, to: ${to.fullPath}`);
+router.beforeEach((to, from, next) => {
+    // console.error(`from: ${from.fullPath}, to: ${to.fullPath}`);
+    // console.log(store.state.UID);
+    if(!store.state.UID) {
+        if(to.path != '/login') {
+            window.location.href = "/#/login";
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
 });
 
 export default router;

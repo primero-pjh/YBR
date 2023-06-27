@@ -7,16 +7,16 @@
             <q-separator />
             <q-card-section class="row items-center no-wrap">
                 <div style="width: 100%;">
-                    <q-input label="제목 *" style="width: 100%;" />
-                    <q-input label="장소" />
-                    <q-input label="시작시각" v-model="schedule.start" />
-                    <q-input label="종료시각" v-model="schedule.end" />
+                    <q-input label="제목 *" v-model="schedule.title" label-color="red" @keyup.enter="onSave" />
+                    <q-input label="장소" v-model="schedule.place" @keyup.enter="onSave" />
+                    <q-input label="시작시각" v-model="schedule.start" @keyup.enter="onSave" />
+                    <q-input label="종료시각" v-model="schedule.end" @keyup.enter="onSave" />
                 </div>
             </q-card-section>
             <q-separator />
             <q-card-actions align="right">
                 <q-btn outline label="닫기" v-close-popup />
-                <q-btn outline color="positive" label="저장" @click="save_schedule" />
+                <q-btn outline color="positive" label="저장" @click="onSave" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -34,6 +34,7 @@ export default {
 
             schedule: {
                 id: 0,
+                place: '',
                 calendarId: '',
                 title: '',
                 isAllDay: '',
@@ -47,6 +48,8 @@ export default {
     methods: {
         setSchedule(schedule) {
             let vm = this;
+            vm.schedule.title = "";
+            vm.schedule.place = "";
             vm.schedule.start = vm.$c.formatDate(schedule.start._date);
             vm.schedule.end = vm.$c.formatDate(schedule.end._date);
         },
@@ -59,7 +62,7 @@ export default {
             vm.isOpen = true;
         },
 
-        save_schedule() {
+        onSave() {
             let vm = this;
             vm.callback(vm.schedule);
             vm.isOpen = false;

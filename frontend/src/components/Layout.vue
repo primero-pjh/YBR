@@ -1,7 +1,7 @@
 <template>
     <div id="layoutVue" style="width: 100%; display: flex; justify-content: center;">
         <div style="width: 100%;">
-            <slot name="header">
+            <slot name="header" v-if="$router.currentRoute.value.path != '/login'">
                 <div style="width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #eaeaea;">
                     <div style="width: 1300px; height: 72px; display: flex; align-items: center; justify-content: space-between;">
                         <div>
@@ -19,7 +19,23 @@
                             </q-tabs>
                         </div>
                         <div>
-                            <q-btn icon="settings" flat />
+                            <q-chip>
+                                <q-avatar>
+                                    <img :src="$store.state.host + $store.state.user.image">
+                                </q-avatar>
+                                <p class="q-ma-none fkR ft20">{{ $store.state.user.userName }}</p>
+                                <q-menu>
+                                    <q-list style="min-width: 100px">
+                                        <q-item clickable v-close-popup>
+                                            <q-item-section class="fkR">계정 관리</q-item-section>
+                                        </q-item>
+                                        <q-separator />
+                                        <q-item clickable @click="onLogout">
+                                            <q-item-section class="fkR">로그아웃</q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-menu>
+                            </q-chip>
                         </div>
                     </div>
                 </div>
@@ -71,20 +87,13 @@ export default {
         },
     },
     methods: {
+        onLogout() {
+            let vm = this;
+            console.log("logout");
+        },
         location_href(row) {
             let vm = this;
             vm.$router.push(row.url);
-        },
-        onChange: function(idx) {
-            let vm = this;
-            let item = vm.item_list[idx];
-            vm.$router.push(item.url);
-        },
-        onClickLeft: function() {
-            let vm = this;
-            let back_route = vm.$router.options.history.state.back;
-            if(back_route == '/login') { return; }
-            vm.$router.back();
         },
     },
     mounted: function() {

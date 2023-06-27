@@ -30,6 +30,9 @@ export default {
     },
     mounted: function() {
         let vm = this;
+        if(!vm.$store.state.UID) {
+            vm.$router.push("/login");
+        }
     }
 }
 </script>

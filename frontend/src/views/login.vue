@@ -79,7 +79,7 @@ export default {
                         vm.$store.commit("setToken", data.token.APP_ACC_TKN);
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setCouple", data.couple);
-                        console.log(vm.$store.state);
+                        vm.$store.commit("setUserUID", data.user.UID);
                         vm.$router.push("/home");
                         return;
                     }

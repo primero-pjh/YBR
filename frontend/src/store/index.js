@@ -8,6 +8,7 @@ const store = createStore({
         host: process.env.VUE_APP_HOST,
         width: window.screen.width,
         height: window.screen.height,
+        UID: null,
 
         user: {
             coupleInfoId: 0,
@@ -61,6 +62,9 @@ const store = createStore({
         getUser(state) { return state.user; },
     },
     mutations: {
+        setUserUID(state, UID) {
+            state.UID = UID;
+        },
         setSocket(state, socket) {
             state.socket = socket;
         },

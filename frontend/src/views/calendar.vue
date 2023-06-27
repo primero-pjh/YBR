@@ -3,7 +3,6 @@
         <div>
             <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
         </div>
-
         <dialog_scheduled ref="dialog_scheduled" />
     </div>
 </template>
