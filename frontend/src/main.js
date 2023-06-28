@@ -5,7 +5,7 @@ import store from "./store";
 import config from "../package.json";
 import { createI18n } from 'vue-i18n';
 import messages from './i18n';
-import { Quasar } from 'quasar'
+import { Quasar, Loading } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/dist/quasar.css'
 import axios from 'axios';
@@ -16,6 +16,20 @@ axios.interceptors.request.use(function (config) {
   return config;
 }, function (error) {
   // Do something with request error
+  return Promise.reject(error);
+});
+axios.interceptors.response.use((res) => {
+  let data = res.data;
+  console.log("data:", data);
+  if(data.success == 0 && Object.prototype.hasOwnProperty.call(data, "isLogged")) {
+    window.location.href = '/#/error';
+    alert(data.message);
+    // return res;
+  } else {
+    console.log("!!?");
+    return res;
+  }
+}, function (error) {
   return Promise.reject(error);
 });
 const i18n = createI18n({
@@ -68,7 +82,14 @@ app.config.globalProperties.$config = config;
 app.config.globalProperties.$axios = axios;
 console.error(`ybr version: ${config.version}`);
 
-app.use(Quasar);
+app.use(Quasar, {
+  plugins: {
+    Loading
+  },
+  config: {
+    loading: { /* look at QuasarConfOptions from the API card */ }
+  }
+});
 app.use(router);
 app.use(store);
 app.use(i18n);

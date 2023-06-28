@@ -107,16 +107,21 @@ router.post('/api/user/login', async function(req, res, next) {
     //     }
     // }
 
+    // return res.json({
+    //     success: 1,
+    //     user,
+    //     couple,
+    //     token: {
+    //         APP_ACC_TKN
+    //     },
+    //     // user,
+    //     // couple,
+    //     // coupleSocketId,
+    // });
     return res.json({
-        success: 1,
-        user,
-        couple,
-        token: {
-            APP_ACC_TKN
-        },
-        // user,
-        // couple,
-        // coupleSocketId,
+        success: 0,
+        isLogged: false,
+        message: CRT_ERROR_CODE["LOGIN_TOKEN"],
     });
 });
 

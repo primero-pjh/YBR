@@ -6,6 +6,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const app = express();
 const cors = require('cors');
+const fs = require('fs');
+const jwtFunc = require('./jwt');
+let CRT_ERROR_CODE = require(`./error_code`);
 
 let user_dict = new Object();
 /* view engine setup */
@@ -13,9 +16,22 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 /* middle ware */
-app.all('/*', function(req, res, next) {
+app.all('/api/*', async (req, res, next) => {
+    let url = req.url;
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With"); next();
+    res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+    if(url != '/api/user/login') {
+        let token = req.headers.authorization;
+        let resJwt = await jwtFunc.verify(token);
+        if(!resJwt) {
+            return res.json({
+                success: 0,
+                isLogged: false,
+                message: CRT_ERROR_CODE["LOGIN_TOKEN"],
+            });
+        }
+    }
+    next();
 });
 /* static variable */
 app.use(logger('dev'));
@@ -28,13 +44,30 @@ app.use(cors());
 
 /* router */
 app.use('/', require('./routes/index'));
-app.use('/', require('./routes/api/user/login'));
+function dfs(dir) {
+    fs.readdir(dir, (err, files) => {
+        files.forEach(file => {
+            let check = fs.statSync(`${dir}/${file}`).isDirectory();
+            if(check) {
+              dfs(`${dir}/${file}`);
+            } else {
+                let template = file.split(".")[0];
+                let path = `${dir}/${file}`;
+                console.log("path:", path);
+                app.use('/', require(path));
+            }
+        });
+    });
+}
+// dfs('./routes/api');
+app.use('/', require('./routes/api/user/login.js'));
 app.use('/', require('./routes/api/user/check'));
 app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
 app.use('/', require('./routes/api/admin/login'));
 app.use('/', require('./routes/api/admin/redis'));
 app.use('/', require('./routes/api/temp/upload/image'));
+app.use('/', require('./routes/api/schedules/post'));
 
 
 // catch 404 and forward to error handler

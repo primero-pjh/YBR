@@ -72,7 +72,7 @@ function dfs(dir) {
       		if(check) {
 		        dfs(`${dir}/${file}`);
       		} else {
-	        	// console.log(`require: ${dir}/${file}`);
+	        	console.log(`require: ${dir}/${file}`);
         		require(`${dir}/${file}`)(_socket);
       		}
     	});
