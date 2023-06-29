@@ -67,7 +67,11 @@ app.use('/', require('./routes/api/user/upload/backImage'));
 app.use('/', require('./routes/api/admin/login'));
 app.use('/', require('./routes/api/admin/redis'));
 app.use('/', require('./routes/api/temp/upload/image'));
+
 app.use('/', require('./routes/api/schedules/post'));
+app.use('/', require('./routes/api/schedules/put'));
+app.use('/', require('./routes/api/schedules/delete'));
+app.use('/', require('./routes/api/schedules/couple/get'));
 
 
 // catch 404 and forward to error handler

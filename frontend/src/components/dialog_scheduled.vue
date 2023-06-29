@@ -4,7 +4,7 @@
             <q-card-section>
                 <div style="display: flex; justify-content: space-between;">
                     <q-btn dense icon="close" flat @click="onClose" />
-                    <div class="text-h6 text-center">일정 생성</div>
+                    <div class="text-h6 text-center">일정 {{ schedule.id > 0 ? '수정' : '생성'}}</div>
                     <div></div>
                 </div>
                 
@@ -120,7 +120,9 @@
             <q-space></q-space>
             <q-card-section align="right">
                 <q-btn outline :label="'옵션 ' + (isDetail?'닫기':'더보기')" class="q-mr-sm" @click="isDetail=!isDetail" />
-                <q-btn color="positive" label="저장" @click="onSave" />
+                <q-btn outline color="negative" label="삭제" class="q-mr-sm" v-if="schedule.id > 0" @click="onDelete" />
+                <q-btn outline color="positive" label="저장" v-if="schedule.id > 0" @click="onSave" />
+                <q-btn outline color="positive" label="추가" v-else @click="onAdd" />
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -145,8 +147,8 @@ export default {
             ],
             schedule: {
                 id: 0,                          // 일정 ID
-                classification: 'default',      // 분류
                 calendarId: '',                 // 캘린더 ID
+                classification: 'default',      // 분류
                 title: '',                      // 일정 제목
                 body: '',                       // 일정 내용
                 isAllday: false,                // 종일 일정 여부
@@ -218,7 +220,7 @@ export default {
             vm.isOpen = true;
         },
 
-        onSave() {
+        onAdd() {
             let vm = this;
             vm.$q.loading.show();
             axios.post(`/api/schedules`, {
@@ -228,12 +230,55 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
-                    console.log("data:", data);
+                    vm.callback(vm.schedule);
                 }
                 vm.$q.loading.hide();
+                vm.isOpen = false;
             });
-            // vm.callback(vm.schedule);
-            vm.isOpen = false;
+        },
+        onSave() {
+            let vm = this;
+            vm.$q.loading.show();
+            let scheduleId = vm.schedule.id;
+            axios.put(`/api/schedules/${scheduleId}`, {
+                params: {
+                    schedule: vm.schedule,
+                }
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.callback(vm.schedule, 'edit');
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.setError(vm.formError, data.error);
+                    }
+                    if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                        alert(data.message);
+                    }
+                }
+                vm.$q.loading.hide();
+                vm.isOpen = false;
+            });
+        },
+        onDelete() {
+            let vm = this;
+            vm.$q.loading.show();
+            let scheduleId = vm.schedule.id;
+            axios.delete(`/api/schedules/${scheduleId}`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.callback(vm.schedule, 'delete');
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.setError(vm.formError, data.error);
+                    }
+                    if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                        alert(data.message);
+                    }
+                }
+                vm.$q.loading.hide();
+                vm.isOpen = false;
+            });
         },
     },
     mounted() {

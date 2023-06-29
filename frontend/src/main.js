@@ -15,18 +15,14 @@ axios.interceptors.request.use(function (config) {
   config.headers["Authorization"] = $c.getCookie("APP_ACC_TKN");
   return config;
 }, function (error) {
-  // Do something with request error
   return Promise.reject(error);
 });
 axios.interceptors.response.use((res) => {
   let data = res.data;
-  console.log("data:", data);
+  //console.log("axios.interceptors.response data:", data);
   if(data.success == 0 && Object.prototype.hasOwnProperty.call(data, "isLogged")) {
-    window.location.href = '/#/error';
     alert(data.message);
-    // return res;
   } else {
-    console.log("!!?");
     return res;
   }
 }, function (error) {
@@ -53,7 +49,6 @@ const $c = {
     min = min >= 10 ? min : `0${min}`;
     let sec = date.getSeconds();
     sec = sec >= 10 ? sec : `0${sec}`;
-
     if(type == 'date') {
       return `${date.getFullYear()}-${month}-${day}`; 
     } else if (type == 'date_ko') {
@@ -70,6 +65,9 @@ const $c = {
         form[k] = error[k];
       }
     }
+  },
+  tempObj(obj) {
+    return JSON.parse(JSON.stringify(obj));
   },
   getCookie: function (name) {
     let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');

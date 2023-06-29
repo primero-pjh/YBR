@@ -9,11 +9,9 @@
 
 <script>
 
+import axios from "axios";
 import Calendar from '@toast-ui/calendar';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
-// import 'tui-calendar/dist/tui-calendar.css';
-// import 'tui-date-picker/dist/tui-date-picker.css';
-// import 'tui-time-picker/dist/tui-time-picker.css';
 import dialog_scheduled from '@/components/dialog_scheduled.vue';
 
 export default {
@@ -24,13 +22,34 @@ export default {
     data() {
         return {
             calendar: null,
+            schedule_list: [],
         }
     },
     methods: {
-        
+        loadScheduleList() {
+            let vm = this;
+            vm.$q.loading.show();
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            axios.get(`/api/schedules/couple/${coupleInfoId}`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    let row = data.schedule_list;
+                    row.map((x) => {
+                        x.isAllday = x.isAllday ? true : false;
+                        x.attendees = JSON.parse(x.attendees);
+                    });
+                    vm.calendar.createEvents(row);
+                    vm.schedule_list = row;
+                }
+                vm.$q.loading.hide();
+            });
+            vm.calendar.render();
+            vm.calendar.clearGridSelections();
+        },
     },
     mounted: function() {
         let vm = this;
+
         const calendar = new Calendar('#calendar', {
             defaultView: 'month',
             // isReadOnly: false,
@@ -67,59 +86,59 @@ export default {
             };
             vm.$refs.dialog_scheduled.open('add', schedule, (schedule) => {
                 if(schedule) {
-                    calendar.createEvents([schedule]);  // 한개 이상의 캘린더 이벤트를 생성한다.
+                    vm.calendar.createEvents([schedule]);  // 한개 이상의 캘린더 이벤트를 생성한다.
                 }
-                calendar.clearGridSelections();     // 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다
+                vm.calendar.clearGridSelections();     // 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다
             });
         });
 
-        // calendar.on('beforeUpdateEvent', event => {
-        //     const {schedule, changes} = event;
-        //     console.log("beforeUpdateEvent");
-        //     console.log(schedule, changes);
-        //     // calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
-        // });
+        // 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 누르거나 이벤트를 드래그 앤 드랍했을 때 발생
+        calendar.on('beforeUpdateEvent', ( { event, changes }) => {
+            vm.$q.loading.show();
+            let start = vm.$c.formatDate(changes.start);
+            let end = vm.$c.formatDate(changes.end);
+            let schedule = vm.$c.tempObj(event);
+            schedule.start = start;
+            schedule.end = end;
+            let scheduleId = event.id;
+            axios.put(`/api/schedules/${scheduleId}`, {
+                params: {
+                    schedule,
+                }
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    alert(data.message);
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.setError(vm.formError, data.error);
+                    }
+                    if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                        alert(data.message);
+                    }
+                }
+                vm.$q.loading.hide();
+            });
+            vm.calendar.updateEvent(event.id, event.calendarId, changes);
+        });
         
         // 이벤트를 클릭할 때 발생
         calendar.on('clickEvent', ({ event }) => {
-            vm.$refs.dialog_scheduled.open('edit', event, function() {
-
+            vm.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
+                if(type == 'edit') {
+                    vm.calendar.updateEvent(schedule.id, schedule.calendarId, schedule);
+                } else if (type == 'delete') {
+                    vm.calendar.deleteEvent(schedule.id, schedule.calendarId);
+                }
+                
             });
         });
         // 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생
         calendar.on('clickMoreEventsBtn', (event) => {
             console.log(event.date, event.target);
         });
-        
-        //category : 일정 종류 ('time', 'allday', 'milestone', 'task')
-        calendar.createEvents([
-            {
-                id: '1',
-                calendarId: 'cal1',
-                title: '가족 영양',
-                category: 'time',
-                start: '2023-06-20T10:30:00',
-                end: '2023-06-20T11:30:00',
-                color: 'black',
-                bgColor: 'red',
-                borderColor: 'red',
-                // isVisible: true,
-                isPrivate: true,
-            },
-            {
-                id: '2',
-                calendarId: 'cal1',
-                category: 'time',
-                title: '소프트웨어 개론 레포트 제출',
-                start: '2023-06-20T14:30:00',
-                end: '2023-06-21T16:30:00',
-                isPrivate: true,
-                // isReadOnly: true // schedule is read-only
-            },
-        ]);
-        calendar.render();
-        calendar.clearGridSelections();
         vm.calendar = calendar;
+        vm.loadScheduleList();
     },
 }
 </script>
