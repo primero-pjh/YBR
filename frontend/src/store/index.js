@@ -52,10 +52,6 @@ const store = createStore({
                 obj[key] = "";
             }
         },
-        
-        tempObj: function(obj) {
-            return JSON.parse(JSON.stringify(obj));
-        },
     },
     getters: {
         getSocket(state) { return state.socket; },

@@ -9,7 +9,7 @@
                     <q-input outlined dense label="비밀번호" type="password" v-model="appUser.password" 
                         :error="formError.password?true:false" :error-message="formError.password" />
 
-                    <q-toggle label="자동 로그인" v-model="appUser.rememberMe" />
+                    <q-toggle label="자동 로그인" v-model="appUser.rememberMe" disable />
 
                     <q-btn class="q-mt-md" style="width: 100%;" label="로그인" color="primary" 
                         size="lg" @click="onLogin" 

@@ -16,14 +16,7 @@ router.put('/api/schedules/:scheduleId', async (req, res, next) => {
 
     let error = new Object();
     if(!schedule.title) {
-        error["title"] = "필수입력항목 입니다.";
-    }
-
-    if(Object.keys(error).length > 0) {
-        return res.json({
-            success: 1,
-            error,
-        });
+        schedule.title = '(제목없음)';
     }
 
     let [results] = await db.query(`

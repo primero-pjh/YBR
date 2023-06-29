@@ -223,14 +223,27 @@ export default {
         onAdd() {
             let vm = this;
             vm.$q.loading.show();
-            axios.post(`/api/schedules`, {
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            if(!vm.schedule.title) {
+                vm.schedule.title = "(제목없음)";
+            }
+            axios.post(`/api/schedules/couple/${coupleInfoId}`, {
                 params: {
                     schedule: vm.schedule,
                 }
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
+                    vm.$q.notify({
+                        message: data.message,
+                        color: 'black',
+                        position: 'bottom',
+                    });
                     vm.callback(vm.schedule);
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.setError(vm.formError, data.error);
+                    }
                 }
                 vm.$q.loading.hide();
                 vm.isOpen = false;
@@ -247,6 +260,11 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
+                    vm.$q.notify({
+                        message: data.message,
+                        color: 'black',
+                        position: 'bottom',
+                    });
                     vm.callback(vm.schedule, 'edit');
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
@@ -282,6 +300,8 @@ export default {
         },
     },
     mounted() {
+        let vm = this;
+        
     }
 }
 </script>
