@@ -1,15 +1,25 @@
 <template>
     <div id="app">
-        <layout>
-            <template v-slot:body>
-                <router-view></router-view>
-            </template>
-        </layout>
+        <template v-if="$store.state.user.isAdmin == true">
+            <adminLayout>
+                <template v-slot:body>
+                    <router-view />
+                </template>    
+            </adminLayout>
+        </template>
+        <template v-else>
+            <layout>
+                <template v-slot:body>
+                    <router-view />
+                </template>
+            </layout>
+        </template>
     </div>
 </template>
 
 <script>
 import layout from "@/components/layout.vue";
+import adminLayout from "@/components/adminLayout.vue";
 
 export default {
     name: 'App',
@@ -23,6 +33,7 @@ export default {
     },
     components: {
         layout,
+        adminLayout
     },
     data() {
         return {

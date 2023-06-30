@@ -6,9 +6,14 @@ import calendarVue from "../views/calendar.vue";
 import communityVue from "../views/community.vue";
 import profileVue from "../views/profile.vue";
 import errorVue from "../views/error.vue";
+
+/* admin */
+import _homeVue from "../views/admin/home.vue";
+import _dbVue from "../views/admin/db.vue";
 import store from "../store";
 
 const routes = [
+    /* default-user */
     { path: "/", name: "home", component: homeVue, label: "홈화면", },
     { path: "/home", name: "home", component: homeVue, label: "홈화면", },
     { path: "/login", name: "login", component: loginVue, label: "로그인", },
@@ -16,8 +21,13 @@ const routes = [
     { path: "/calendar", name: "calendar", component: calendarVue, label: "캘린더", },
     { path: "/community", name: "community", component: communityVue, label: "커뮤니티", },
     { path: "/profile", name: "profile", component: profileVue, label: "커뮤니티", },
-    { path: "/error", name: "error", component: errorVue, label: "404", },
 
+    /* admin */
+    { path: "/admin/home", name: "admin_home", component: _homeVue, label: "홈화면", },
+    { path: "/admin/db", name: "admin_db", component: _dbVue, label: "DATABASE", },
+
+    /*error*/
+    { path: "/error", name: "error", component: errorVue, label: "404", },
     { path: "/:pathMatch(.*)*", redirect: "/error" },
 ];
 
@@ -27,7 +37,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    // console.error(`from: ${from.fullPath}, to: ${to.fullPath}`);
+    console.error(`from: ${from.fullPath}, to: ${to.fullPath}`);
     // console.log(store.state.UID);
     if(!store.state.UID) {
         if(to.path != '/login') {

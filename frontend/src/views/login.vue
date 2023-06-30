@@ -67,7 +67,13 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {  
-                    console.log("data:", data);
+                    if(data.user.isAdmin) {
+                        vm.$store.commit("setUser", data.user);
+                        vm.$store.commit("setUserUID", data.user.UID);
+                        vm.$store.commit("setToken", data.token.APP_ACC_TKN);
+                        vm.$router.push("/admin/home");
+                        return;
+                    }
                     /*
                         login logic flow
                         1. 커플인 경우
