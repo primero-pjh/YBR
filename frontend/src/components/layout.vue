@@ -89,7 +89,7 @@ export default {
     methods: {
         onLogout() {
             let vm = this;
-            console.log("logout");
+            vm.$router.push("/login");
         },
         location_href(row) {
             let vm = this;

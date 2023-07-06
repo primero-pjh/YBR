@@ -10,6 +10,9 @@ import errorVue from "../views/error.vue";
 /* admin */
 import _homeVue from "../views/admin/home.vue";
 import _dbVue from "../views/admin/db.vue";
+import _personVue from "../views/admin/user/person.vue";
+import _coupleVue from "../views/admin/user/couple.vue";
+
 import store from "../store";
 
 const routes = [
@@ -25,6 +28,8 @@ const routes = [
     /* admin */
     { path: "/admin/home", name: "admin_home", component: _homeVue, label: "홈화면", },
     { path: "/admin/db", name: "admin_db", component: _dbVue, label: "DATABASE", },
+    { path: "/admin/user/person", name: "admin_person", component: _personVue, label: "DATABASE", },
+    { path: "/admin/user/couple", name: "admin_couple", component: _coupleVue, label: "DATABASE", },
 
     /*error*/
     { path: "/error", name: "error", component: errorVue, label: "404", },

@@ -20,6 +20,11 @@ app.all('/api/*', async (req, res, next) => {
     let url = req.url;
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+
+    /* 
+        url의 요청이 login이 아니라면
+        사용자가 추가한 authorization의 jwt token 값의 유효성을 검사한다.
+    */
     if(url != '/api/user/login') {
         let token = req.headers.authorization;
         let resJwt = await jwtFunc.verify(token);
@@ -66,6 +71,10 @@ app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
 app.use('/', require('./routes/api/admin/login'));
 app.use('/', require('./routes/api/admin/redis'));
+
+app.use('/', require('./routes/api/admin/user/get'));
+app.use('/', require('./routes/api/admin/couple/get'));
+
 app.use('/', require('./routes/api/temp/upload/image'));
 
 app.use('/', require('./routes/api/schedules/couple/post'));

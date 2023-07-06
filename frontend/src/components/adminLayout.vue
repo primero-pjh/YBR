@@ -87,8 +87,8 @@ export default {
                     { icon: 'chat-o', label: '대시보드', url: '/admin/dashboard', name: 'dashboard' },
                 ]  },
                 { label: '앱 유저', name: 'user', childrens: [
-                    { icon: 'chat-o', label: '계정 관리', url: '/admin/user', name: 'dashboard' },
-                    { icon: 'chat-o', label: '커플 관리', url: '/admin/couple', name: 'dashboard' },
+                    { icon: 'chat-o', label: '계정 관리', url: '/admin/user/person', name: 'dashboard' },
+                    { icon: 'chat-o', label: '커플 관리', url: '/admin/user/couple', name: 'dashboard' },
                 ]  },
                 { label: '데이터베이스', name: 'database', childrens: [
                     { icon: 'chat-o', label: '관리', url: '/admin/db', name: 'dashboard' },

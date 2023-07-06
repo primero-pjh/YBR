@@ -2,7 +2,7 @@
     <div id="homeVue" style="height: 100%;">
         <div>
             <div style="display: flex;">
-                <div>
+                <div style="min-width: 250px;">
                     <q-item clickable v-ripple style="font-size: 24px;">
                         <q-item-section>
                             <q-item-label>Item with caption</q-item-label>
@@ -10,20 +10,19 @@
                         </q-item-section>
                     </q-item>
                 </div>
-                <div>
+                <div style="width: 100%;">
                     <q-chat-message
                         name="me"
                         avatar="https://cdn.quasar.dev/img/avatar1.jpg"
-                        :text="['hey, how are you?']"
-                        stamp="7 minutes ago"
+                        :text="['hey, how are you?', 'heyhey']"
+                        stamp="7분전"
                         sent
                         bg-color="amber-7"
                     />
-                    <q-chat-message
-                        name="Jane"
+                    <q-chat-message name="Jane3"
                         avatar="https://cdn.quasar.dev/img/avatar5.jpg"
                         :text="['doing fine, how r you?']"
-                        stamp="4 minutes ago"
+                        stamp="4분전"
                         text-color="white"
                         bg-color="primary"
                     />
