@@ -25,7 +25,10 @@
                         stamp="4분전"
                         text-color="white"
                         bg-color="primary"
-                    />
+                        >
+                        <q-spinner-dots size="2rem" />
+                    </q-chat-message>
+                    <q-input></q-input>
                 </div>
             </div>
         </div>

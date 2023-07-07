@@ -34,6 +34,9 @@
                                     <q-td key="dateAdded" :props="props">
                                         {{ props.row.dateAdded }}
                                     </q-td>
+                                    <q-td key="status" :props="props">
+                                        {{ props.row.status }}
+                                    </q-td>
                                     <q-td key="coupleInfoId" :props="props">
                                         <template v-if="props.row.coupleInfoId > 0">
                                             <q-badge color="green">O</q-badge>
@@ -69,6 +72,7 @@ export default {
                 { name: 'phoneNumber', label: '휴대폰번호', field: 'phoneNumber' },
                 { name: 'spousePhoneNumber', label: '커플번호', field: 'spousePhoneNumber' },
                 { name: 'dateAdded', label: '등록일', field: 'dateAdded' },
+                { name: 'status', label: '상태', field: 'status' },
                 { name: 'coupleInfoId', label: 'coupleInfoId', field: 'coupleInfoId', },
             ],
             user_list: [],

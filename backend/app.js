@@ -74,6 +74,7 @@ app.use('/', require('./routes/api/admin/redis'));
 
 app.use('/', require('./routes/api/admin/user/get'));
 app.use('/', require('./routes/api/admin/couple/get'));
+app.use('/', require('./routes/api/admin/couple/delete'));
 
 app.use('/', require('./routes/api/temp/upload/image'));
 

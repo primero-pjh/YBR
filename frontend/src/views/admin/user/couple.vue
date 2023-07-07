@@ -25,13 +25,10 @@
                                     <q-td key="dateAdded" :props="props">
                                         {{ props.row.dateAdded }}
                                     </q-td>
-                                    <q-td key="coupleInfoId" :props="props">
-                                        <template v-if="props.row.coupleInfoId > 0">
-                                            <q-badge color="green">O</q-badge>
-                                        </template>
-                                        <template v-else>
-                                            <q-badge color="red">X</q-badge>
-                                        </template>
+                                    <q-td key="btns" :props="props">
+                                        <q-btn dense color="negative" @click="onClear(props.row)">
+                                            등록해제
+                                        </q-btn>
                                     </q-td>
                                 </q-tr>
                             </template>
@@ -53,10 +50,11 @@ export default {
     data() {
         return {
             couple_columns: [
-                { name: 'coupleInfoId', required: true, label: 'coupleInfoId', align: 'left' },
+                { name: 'coupleInfoId', required: true, label: 'idx', align: 'left' },
                 { name: 'toUserName', label: '닉네임', field: 'toUserName', sortable: true },
                 { name: 'fromUserName', label: '닉네임', field: 'fromUserName', sortable: true },
                 { name: 'dateAdded', label: '등록일', field: 'dateAdded', sortable: true },
+                { name: 'btns', label: '버튼', field: 'btns', sortable: false },
             ],
             couple_list: [],
 
@@ -69,7 +67,31 @@ export default {
         }
     },
     methods: {
-        load_user_list() {
+        onClear(row) {
+            let vm = this;
+            let result =confirm("등록해제를 진행하시겠어요?");
+            let coupleInfoId = row.coupleInfoId;
+            if(result) {
+                axios.delete(`/api/admin/couple/${coupleInfoId}`, {}).then((res) => {
+                    let data = res.data;
+                    if(data.success) {
+                        vm.load_couple_list();
+                        vm.$q.notify({
+                            message: data.message,
+                            position: 'bottom',
+                            color: 'postive',
+                        });
+                    } else {
+                        vm.$q.notify({
+                            message: data.message,
+                            position: 'bottom',
+                            color: 'negative',
+                        });
+                    }
+                })
+            }
+        },
+        load_couple_list() {
             let vm = this;
             vm.$q.loading.show();
                 axios.get(`/api/admin/couple`, {}).then((res) => {
@@ -84,7 +106,7 @@ export default {
     },
     mounted: function() {
         let vm = this;
-        vm.load_user_list();
+        vm.load_couple_list();
     },
 }
 </script>

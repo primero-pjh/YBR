@@ -48,8 +48,11 @@
                 </div>
             </div>
             <slot name="footer">
-                <div style="height: 58px; border-top: 1px solid #eaeaea;" class="q-pa-md">
-                    <p class="fkR" style="font-size: 16px; color: grey;">@primero-pjh. All right reserved.</p>
+                <div 
+                    style="height: 70px; border-top: 1px solid #eaeaea;"  class="q-pa-md">
+                    <p class="fkR" style="font-size: 16px; color: grey;">
+                        @primero-pjh. All right reserved.
+                    </p>
                 </div>
             </slot>
         </div>
@@ -96,7 +99,7 @@ export default {
             vm.$router.push(row.url);
         },
     },
-    mounted: function() {
+    mounted() {
         let vm = this;
         let routeName = vm.$router.currentRoute.value.name;
         let idx = vm.item_list.findIndex(x => x.name == routeName);

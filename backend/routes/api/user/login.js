@@ -38,8 +38,8 @@ router.post('/api/user/login', async function(req, res, next) {
                 us.salt
         from appUsers as u 
         join userSalts as us on u.UID=us.UID
-        where u.userId=?`, 
-        [userId]);
+        where u.userId=?
+    `, [userId]);
     let user = rows[0];
     /* user null check */
     if(!user) {
@@ -59,16 +59,22 @@ router.post('/api/user/login', async function(req, res, next) {
     }
 
     /* get couple info */
+    // if(user.coupleInfoId == 0) {
+    //     return res.json({
+    //         success: 1,
+    //         isWaiting: 1,
+    //     });
+    // }
     let couple = null;
-    if(user.spousePhoneNumber) {
+    if(user.coupleInfoId > 0) {
         let [rows, fields] = await db.query(`
-            select u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, 
-                    u.coupleInfoId,
-                    ci.backgroundImage
+            select 
+                u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
+                ci.backgroundImage
             from appUsers as u 
             join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
-            where u.phoneNumber=?`, 
-            [user.spousePhoneNumber]);
+            where u.phoneNumber=? and ci.status=1
+        `, [user.spousePhoneNumber]);
         couple = rows[0];
     }
     

@@ -15,7 +15,8 @@ router.get('/api/admin/user', async (req, res, next) => {
     
     let [rows, fields] = await db.query(`
         select 
-            u.UID, u.userId, u.userName, u.email, u.phoneNumber, u.spousePhoneNumber, u.coupleInfoId, u.dateAdded
+            u.UID, u.userId, u.userName, u.email, u.phoneNumber, u.spousePhoneNumber, u.coupleInfoId, u.dateAdded,
+            u.status
         from appUsers as u
     `, []);
 

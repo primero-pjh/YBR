@@ -21,6 +21,7 @@ router.get('/api/admin/couple', async (req, res, next) => {
         from coupleInfos as c_info
         join appUsers as to_user on c_info.toUID=to_user.UID
         join appUsers as from_user on c_info.fromUID=from_user.UID
+        where c_info.status=1
     `, []);
 
     return res.json({

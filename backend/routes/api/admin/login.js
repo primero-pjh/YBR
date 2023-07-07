@@ -41,13 +41,13 @@ router.get('/api/admin/login', async function(req, res, next) {
             error,
         });
     }
-
     if(user.isAdmin == 0) {
         return res.json({
             success: 0,
             message: "admin 권한이 없습니다."
         });    
     }
+    
     let token = null;
     if(rememberMe == 1) {
         token = jwt.sign({ 

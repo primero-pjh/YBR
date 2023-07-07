@@ -12,11 +12,23 @@
                             round dense icon="menu" /> -->
                         <q-toolbar-title class="q-ml-md">YBR</q-toolbar-title>
                         <div>
-                            {{ $store.state.user.userName }}님 반갑습니다.
+                            <q-btn>
+                                {{ $store.state.user.userName }}님 반갑습니다.
+                                <q-menu>
+                                    <q-list style="min-width: 100px">
+                                        <q-item clickable @click="onLogout">
+                                            <q-item-section class="fkR">로그아웃</q-item-section>
+                                        </q-item>
+                                        <!-- <q-separator /> -->
+                                    </q-list>
+                                </q-menu>
+                            </q-btn>
                         </div>
                     </q-toolbar>
                     <q-toolbar class="bg-white text-black shadow-1">
-                        <q-toolbar-title class="fkR q-ml-md" style="font-size: 16px;">관리자 > SUBHEADER > LIRGHT ASD</q-toolbar-title>
+                        <q-toolbar-title class="fkR q-ml-md" style="font-size: 16px;">
+                            관리자 > SUBHEADER > LIRGHT ASD
+                        </q-toolbar-title>
                     </q-toolbar>
                 </q-header>
                
@@ -37,20 +49,6 @@
                                 <q-separator spaced />
                             </template>
                         </q-list>
-                    </q-scroll-area>
-                </q-drawer>
-
-                <q-drawer
-                    side="right"
-                    v-model="drawerRight"
-                    bordered
-                    :width="200"
-                    :breakpoint="500"
-                >
-                    <q-scroll-area class="fit">
-                    <div class="q-pa-sm">
-                        <div v-for="n in 50" :key="n">Drawer {{ n }} / 50</div>
-                    </div>
                     </q-scroll-area>
                 </q-drawer>
 
@@ -107,7 +105,7 @@ export default {
     methods: {
         onLogout() {
             let vm = this;
-            console.log("logout");
+            window.location.reload();
         },
         location_href(row) {
             let vm = this;

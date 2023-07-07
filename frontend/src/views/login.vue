@@ -5,8 +5,10 @@
             <div style="padding: 55px 69px;">
                 <div>
                     <q-input outlined dense label="아이디" v-model="appUser.userId"
+                        @keyup.enter="onLogin"
                         :error="formError.userId?true:false" :error-message="formError.userId" />
-                    <q-input outlined dense label="비밀번호" type="password" v-model="appUser.password" 
+                    <q-input outlined dense label="비밀번호" type="password" v-model="appUser.password"
+                        @keyup.enter="onLogin" 
                         :error="formError.password?true:false" :error-message="formError.password" />
 
                     <q-toggle label="자동 로그인" v-model="appUser.rememberMe" disable />
