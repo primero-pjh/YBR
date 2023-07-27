@@ -69,6 +69,7 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {  
+                    console.log("data:", data);
                     if(data.user.isAdmin) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setUserUID", data.user.UID);
@@ -90,8 +91,15 @@ export default {
                         vm.$store.commit("setUserUID", data.user.UID);
                         vm.$router.push("/home");
                         return;
+                    } else {
+                        console.log(data.token.APP_ACC_TKN);
+                        // vm.$store.commit("setToken", data.token.APP_ACC_TKN);
+                        vm.$store.commit("setUser", data.user);
+                        // vm.$store.commit("setCouple", data.couple);
+                        vm.$store.commit("setUserUID", data.user.UID);
+                        vm.$router.push("/home");
+                        return;
                     }
-                    vm.$router.push("/waiting");
                 } else {
                     vm.$c.setError(vm.formError, data.error);
                 }
