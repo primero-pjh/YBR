@@ -12,9 +12,26 @@ function hashTest(salt, password) {
     // const salt = crypto.randomBytes(32).toString('hex');
     return crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 }
-/* 
-    user의 login controller
-*/
+/**
+ * @swagger
+ *  /product:
+ *    get:
+ *      tags:
+ *      - product
+ *      description: 모든 제품 조회
+ *      produces:
+ *      - application/json
+ *      parameters:
+ *        - in: query
+ *          name: category
+ *          required: false
+ *          schema:
+ *            type: integer
+ *            description: 카테고리
+ *      responses:
+ *       200:
+ *        description: 제품 조회 성공
+ */
 router.post('/api/user/login', async function(req, res, next) {
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
@@ -125,5 +142,6 @@ router.post('/api/user/login', async function(req, res, next) {
         // coupleSocketId,
     });
 });
+
 
 module.exports = router;

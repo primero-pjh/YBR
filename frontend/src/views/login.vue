@@ -97,7 +97,7 @@ export default {
                         vm.$store.commit("setUser", data.user);
                         // vm.$store.commit("setCouple", data.couple);
                         vm.$store.commit("setUserUID", data.user.UID);
-                        vm.$router.push("/home");
+                        vm.$router.push("/login/waiting");
                         return;
                     }
                 } else {

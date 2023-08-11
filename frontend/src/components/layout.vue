@@ -1,11 +1,12 @@
 <template>
     <div id="layoutVue" style="width: 100%; display: flex; justify-content: center;">
         <div style="width: 100%;">
-            <slot name="header" v-if="$router.currentRoute.value.path != '/login'">
+            <slot name="header" v-if="!$router.currentRoute.value.path.includes('/login')">
                 <div style="width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #eaeaea;">
                     <div style="width: 1300px; height: 72px; display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;" @click="$router.push('/home')">YBR</p>
+                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;" 
+                                @click="$router.push('/home')">YBR</p>
                         </div>
                         <div>
                             <q-tabs v-model="tab" class="text-black">
@@ -27,11 +28,11 @@
                                 <q-menu>
                                     <q-list style="min-width: 100px">
                                         <q-item clickable v-close-popup>
-                                            <q-item-section class="fkR">계정 관리</q-item-section>
+                                            <q-item-section class="ft18 fkR">계정 관리</q-item-section>
                                         </q-item>
                                         <q-separator />
                                         <q-item clickable @click="onLogout">
-                                            <q-item-section class="fkR">로그아웃</q-item-section>
+                                            <q-item-section class="ft18 fkR">로그아웃</q-item-section>
                                         </q-item>
                                     </q-list>
                                 </q-menu>

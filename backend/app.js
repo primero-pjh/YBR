@@ -10,6 +10,9 @@ const fs = require('fs');
 const jwtFunc = require('./jwt');
 let CRT_ERROR_CODE = require(`./error_code`);
 
+const swaggerFile = require('./swagger/swagger-output.json');
+const swaggerUi = require('swagger-ui-express');
+
 let user_dict = new Object();
 /* view engine setup */
 app.set('views', path.join(__dirname, 'views'));
@@ -83,6 +86,10 @@ app.use('/', require('./routes/api/schedules/put'));
 app.use('/', require('./routes/api/schedules/delete'));
 app.use('/', require('./routes/api/schedules/couple/get'));
 
+
+
+//Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

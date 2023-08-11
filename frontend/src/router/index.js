@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import homeVue from "../views/home.vue";
 import loginVue from "../views/login.vue";
-import waitingVue from "../views/waiting.vue";
+import waitingVue from "../views/login/waiting.vue";
 import chatVue from "../views/chat.vue";
 import calendarVue from "../views/calendar.vue";
 import communityVue from "../views/community.vue";
@@ -21,7 +21,7 @@ const routes = [
     { path: "/", name: "home", component: homeVue, label: "홈화면", },
     { path: "/home", name: "home", component: homeVue, label: "홈화면", },
     { path: "/login", name: "login", component: loginVue, label: "로그인", },
-    { path: "/waiting", name: "waiting", component: waitingVue, label: "대기", },
+    { path: "/login/waiting", name: "waiting", component: waitingVue, label: "대기", },
     { path: "/chat", name: "chat", component: chatVue, label: "채팅", },
     { path: "/calendar", name: "calendar", component: calendarVue, label: "캘린더", },
     { path: "/community", name: "community", component: communityVue, label: "커뮤니티", },
