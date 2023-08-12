@@ -51,7 +51,7 @@ router.post('/api/user/login', async function(req, res, next) {
     /* 암호화 */
     let [rows, fields] = await db.query(`
         select u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, 
-                u.isAdmin, u.coupleInfoId, u.password,
+                u.isAdmin, u.coupleInfoId, u.password, u.code,
                 us.salt
         from appUsers as u 
         join userSalts as us on u.UID=us.UID

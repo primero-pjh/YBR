@@ -69,7 +69,6 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {  
-                    console.log("data:", data);
                     if(data.user.isAdmin) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setUserUID", data.user.UID);

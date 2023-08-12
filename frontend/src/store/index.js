@@ -18,6 +18,7 @@ const store = createStore({
             image: '',
             socketId: '',
             isAdmin: '',
+            code: '',
             spousePhoneNumber: '',
         },
 
@@ -77,6 +78,7 @@ const store = createStore({
                 state.user.phoneNumber = "";
                 state.user.spousePhoneNumber = "";
                 state.user.isAdmin = "";
+                state.user.code = "";
             } else {
                 state.user.coupleInfoId = user.coupleInfoId;
                 state.user.userId = user.userId;
@@ -85,6 +87,7 @@ const store = createStore({
                 state.user.phoneNumber = user.phoneNumber;
                 state.user.spousePhoneNumber = user.spousePhoneNumber;
                 state.user.isAdmin = user.isAdmin;
+                state.user.code = user.code;
             }
         },
         setSocketId(state, id) {
@@ -130,6 +133,7 @@ const store = createStore({
             state.user.phoneNumber = "";
             state.user.spousePhoneNumber = "";
             state.user.isAdmin = "";
+            state.user.code = "";
 
             state.couple.coupleInfoId = 0;
             state.couple.userId = "";
