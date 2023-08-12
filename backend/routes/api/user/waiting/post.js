@@ -8,6 +8,7 @@ const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
 router.post('/api/user/waiting', async function(req, res, next) {
+    const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     let error = new Object();
     let targetCode = req.body.targetCode;
@@ -26,12 +27,27 @@ router.post('/api/user/waiting', async function(req, res, next) {
         select u.*
         from appUsers as u
         where u.code=?
-    `, [targetCode]);
+    `, [targetCode])
     
-    console.log("rows:", rows);
-    
+    if(rows.length == 0) {
+        error["targetCode"] = "해당 코드는 존재하지 않습니다.";
+        return res.json({
+            success: 0,
+            error,
+        });
+    }
+
+    let user = rows[0];
+    let [results] = await db.query(`
+        insert into waitings
+        (toUID, fromUID, dateAdded)
+        values
+        (?, ?, ?)
+    `, [ user.UID, UID, new Date() ]);
+
     return res.json({
         success: 1,
+        message: '신청 완료!',
     });
 });
 

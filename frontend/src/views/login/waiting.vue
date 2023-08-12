@@ -32,8 +32,9 @@
                             <div class="q-pa-sm" v-if="user">
                                 <div>
                                     초대코드: {{user.code}}
-                                    <q-btn icon="refresh" dense />
-                                    <q-btn icon="board" dense />
+                                    <q-btn icon="refresh" dense class="q-mr-md">
+                                    </q-btn>
+                                    <q-btn icon="board" dense></q-btn>
                                 </div>
                             </div>
                         </q-card-section>
@@ -48,14 +49,33 @@
                         <q-input dense outlined 
                             v-model="form.targetCode"
                             :error="formError.targetCode?true:false" :error-message="formError.targetCode"
-                            placeholder="상대방의 요청코드를 입력하세요."
+                            placeholder="상대방의 요청코드를 입력 후 엔터를 누르세요."
                             @keyup.enter="onSend" />
-                        <q-btn label="신청" @click="onSend"></q-btn>
+                        <div v-if="search_user">
+                            {{ search_user.userName }} 님이 맞나요 ?
+                            <q-btn label="예" @click="onSend"></q-btn>
+                            <q-btn label="아니오"></q-btn>
+                        </div>
+                        
                     </div>
                 </div>
                 <div style="width: 50%;" class="shadow-2 ">
                     <div class="q-pa-md">
-                        <div class="text-h6 fkR">대기열</div>
+                        <div style="width: 100%; display: flex; justify-content: space-between;">
+                            <div class="text-h6 fkR">신청 대기열</div>
+                            <div>
+                                <q-btn icon="refresh" dense flat></q-btn>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <q-list bordered separator>
+                                <q-item>
+                                    안넝?
+                                </q-item>
+                            </q-list>
+                        </div>
+                        <div class="text-h6 fkR">요청 대기열</div>
                         <div>
                             <q-list bordered separator>
                                 <q-item>
@@ -81,6 +101,7 @@ export default {
     data() {
         return {
             user: null,
+            search_user: null,
             form: {
                 targetCode: '',
                 userName: '',
@@ -97,16 +118,17 @@ export default {
     methods: {
         onSend() {
             let vm = this;
+            vm.$q.loading.show();
             axios.post(`/api/user/waiting`, {
                 targetCode: vm.form.targetCode.trim(),
             }).then((res) => {
                 let data = res.data;
-                // if(data.success) {
-
-                // } else {
-                    
-                // }
-                console.log(data);
+                if(data.success) {
+                    console.log("data: ", data);
+                } else {
+                    vm.$store.state.setError(vm.formError, data.error);
+                }
+                vm.$q.loading.hide();
             });
         },
         onUpload() {
