@@ -7,11 +7,12 @@ const cfg = require(`${path}/config`);
 const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
-router.post('/api/user/waiting', async function(req, res, next) {
+router.put('/api/user/waiting', async function(req, res, next) {
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     let error = new Object();
     let targetCode = req.body.targetCode;
+    let UID = req.body.UID;
     if(!targetCode) {
         error["targetCode"] = "코드를 입력해주세요.";
     }

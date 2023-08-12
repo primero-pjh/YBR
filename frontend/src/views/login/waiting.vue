@@ -64,23 +64,45 @@
                         <div style="width: 100%; display: flex; justify-content: space-between;">
                             <div class="text-h6 fkR">신청 대기열</div>
                             <div>
-                                <q-btn icon="refresh" dense flat></q-btn>
+                                <q-btn icon="refresh" dense flat @click="loadWaitingList" />
                             </div>
                         </div>
                         
                         <div>
                             <q-list bordered separator>
-                                <q-item>
-                                    안넝?
-                                </q-item>
+                                <template v-for="(row, idx) in from_user_list" :key="idx">
+                                    <q-item>
+                                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                                            <div class="fkR ft20">
+                                                {{ row.toUserName }}
+                                            </div>
+                                            <div>
+                                                <q-btn icon="close" dense flat color="negative"></q-btn>
+                                            </div>
+                                        </div>
+                                    </q-item>
+                                </template>
+                                
                             </q-list>
                         </div>
-                        <div class="text-h6 fkR">요청 대기열</div>
+                        <div class="text-h6 fkR">요청 대기열({{ to_user_list.length }})</div>
                         <div>
                             <q-list bordered separator>
-                                <q-item>
-                                    안넝?
-                                </q-item>
+                                <template v-for="(row, idx) in to_user_list" :key="idx">
+                                    <q-item>
+                                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                                            <div class="fkR ft20">
+                                                {{ row.fromUserName }}
+                                            </div>
+                                            <div>
+                                                <q-btn icon="done" dense flat color="positive" 
+                                                    class="q-mr-sm" 
+                                                    @click="onAccept(row)"/>
+                                                <q-btn icon="close" dense flat color="negative"></q-btn>
+                                            </div>
+                                        </div>
+                                    </q-item>
+                                </template>
                             </q-list>
                         </div>
                     </div>
@@ -113,18 +135,25 @@ export default {
                 targetCode: '',
             },
             waiting_list: [],
+            to_user_list: [],
+            from_user_list: [],
         }
     },
     methods: {
         onSend() {
             let vm = this;
             vm.$q.loading.show();
-            axios.post(`/api/user/waiting`, {
+            axios.put(`/api/user/waiting`, {
                 targetCode: vm.form.targetCode.trim(),
+                UID: vm.$store.state.UID,
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
-                    console.log("data: ", data);
+                    vm.$q.notify({
+                        icon: 'check',
+                        color: 'positive',
+                        message: data.message
+                    });
                 } else {
                     vm.$store.state.setError(vm.formError, data.error);
                 }
@@ -134,12 +163,46 @@ export default {
         onUpload() {
             let vm = this;
             console.log("onUpload");
+        },
+        onAccept(row) {
+            let vm = this;
+            axios.put(`/api/user/couple`, {
+                toUID: row.toUID,
+                fromUID: row.fromUID,
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.$store.commit("setCouple", data.couple);
+                    vm.$router.push("/home");
+                } else {
+                    vm.$q.notify({
+                        icon: 'error',
+                        color: 'negative',
+                        message: data.message
+                    });
+                }
+            });
+        },
+        loadWaitingList() {
+            let vm = this;
+            axios.get(`/api/waiting`, {
+                params: {
+                    UID: vm.$store.state.UID
+                }
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.to_user_list = data.to_user_list;
+                    vm.from_user_list = data.from_user_list;
+                }
+            });
         }
     },
     mounted: function() {
         let vm = this;
         let user = vm.$store.getters.getUser;
         vm.user = user;
+        vm.loadWaitingList();
     },
 }
 </script>

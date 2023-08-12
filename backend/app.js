@@ -70,7 +70,9 @@ function dfs(dir) {
 // dfs('./routes/api');
 app.use('/', require('./routes/api/user/login.js'));
 app.use('/', require('./routes/api/user/check'));
-app.use('/', require('./routes/api/user/waiting/post'));
+app.use('/', require('./routes/api/user/couple/put'));
+app.use('/', require('./routes/api/waiting/get'));
+app.use('/', require('./routes/api/user/waiting/put'));
 app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
 app.use('/', require('./routes/api/admin/login'));

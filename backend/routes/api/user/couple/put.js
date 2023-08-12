@@ -1,0 +1,56 @@
+const express = require('express');
+let appRoot = require("app-root-path");
+let path = appRoot.path;
+const router = express.Router();
+const knex = require(`${path}/db`);
+const cfg = require(`${path}/config`);
+const jwtFunc = require(`${path}/jwt`);
+let CRT_ERROR_CODE = require(`${path}/error_code`);
+
+router.put('/api/user/couple', async function(req, res, next) {
+    const db = require(`${path}/mysql2`);
+    let user_dict = require(`${path}/app`)["user_dict"];
+    let error = new Object();
+    let targetCode = req.body.targetCode;
+    let toUID = req.body.toUID;
+    let fromUID = req.body.fromUID;
+    if(!toUID || !fromUID) {
+        return res.json({
+            success: 0,
+            message: "잘못된 정보거나 로그인이 잘못되었습니다. 확인 후 다시 시도하세요.",
+        });
+    }
+
+    let [results] = await db.query(`
+        insert into coupleInfos 
+        (toUID, fromUID, image, backgroundImage, dateAdded, status)
+        values
+        (?, ?, ?, ?, ?, ?)
+    `, [toUID, fromUID, '', '', new Date(), 1])
+
+    let coupleInfoId = results.insertId;
+
+    let [rows, fields] = await db.query(`
+        select 
+            u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
+            ci.backgroundImage
+        from appUsers as u 
+        join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
+        where u.UID=? and ci.status=1
+    `, [toUID]);
+    let couple = rows[0];
+
+    await db.query(`
+        update appUsers
+        set coupleInfoId=?
+        where UID in (?, ?)
+    `, [coupleInfoId, toUID, fromUID]);
+
+    return res.json({
+        success: 1,
+        couple,
+        message: '커플 등록 완료!'
+    });
+});
+
+module.exports = router;
