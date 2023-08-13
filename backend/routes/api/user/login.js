@@ -50,9 +50,10 @@ router.post('/api/user/login', async function(req, res, next) {
     }
     /* 암호화 */
     let [rows, fields] = await db.query(`
-        select u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, 
-                u.isAdmin, u.coupleInfoId, u.password, u.code,
-                us.salt
+        select 
+            u.userId, u.UID, u.phoneNumber, u.image, u.userName, 
+            u.isAdmin, u.coupleInfoId, u.password, u.code,
+            us.salt
         from appUsers as u 
         join userSalts as us on u.UID=us.UID
         where u.userId=?
@@ -76,22 +77,16 @@ router.post('/api/user/login', async function(req, res, next) {
     }
 
     /* get couple info */
-    // if(user.coupleInfoId == 0) {
-    //     return res.json({
-    //         success: 1,
-    //         isWaiting: 1,
-    //     });
-    // }
     let couple = null;
     if(user.coupleInfoId > 0) {
         let [rows, fields] = await db.query(`
             select 
-                u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
+                u.userId, u.UID, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
                 ci.backgroundImage
             from appUsers as u 
             join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
-            where u.phoneNumber=? and ci.status=1
-        `, [user.spousePhoneNumber]);
+            where ci.status=1 and u.UID != ?
+        `, [user.UID]);
         couple = rows[0];
     }
     

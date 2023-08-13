@@ -69,6 +69,16 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {  
+                    /* socket 등록 */
+                    const token = data.token.APP_ACC_TKN;
+                    const socket = io("ws://localhost:3000", {
+                        // reconnectionDelayMax: 10000,
+                        auth: {
+                            token,
+                        },
+                    });
+                    vm.$store.commit("setSocket", socket);
+                    
                     if(data.user.isAdmin) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setUserUID", data.user.UID);
@@ -91,7 +101,6 @@ export default {
                         vm.$router.push("/home");
                         return;
                     } else {
-                        console.log(data.token.APP_ACC_TKN);
                         // vm.$store.commit("setToken", data.token.APP_ACC_TKN);
                         vm.$store.commit("setUser", data.user);
                         // vm.$store.commit("setCouple", data.couple);

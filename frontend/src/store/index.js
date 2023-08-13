@@ -57,6 +57,7 @@ const store = createStore({
     getters: {
         getSocket(state) { return state.socket; },
         getUser(state) { return state.user; },
+        getToken(state) { return state.APP_ACC_TKN; },
     },
     mutations: {
         setUserUID(state, UID) {

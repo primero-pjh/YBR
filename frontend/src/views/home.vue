@@ -8,6 +8,9 @@
 
 <script>
 
+import { io } from "socket.io-client";
+
+
 export default {
     name: 'homeVue',
     components: {
@@ -22,6 +25,7 @@ export default {
     },
     mounted: function() {
         let vm = this;
+        
     },
 }
 </script>
