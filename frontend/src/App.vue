@@ -41,9 +41,15 @@ export default {
     },
     mounted: function() {
         let vm = this;
-        if(!vm.$store.state.UID) {
-            vm.$router.push("/login");
-        }
+        // console.log("query:", vm.$router.currentRoute.value.query);
+        // if(!vm.$store.state.UID) {
+        //     if(Object.prototype.hasOwnProperty.call(vm.$router.currentRoute.value.query, "code")) {
+        //         let code = vm.$router.currentRoute.value.query.code; 
+        //         vm.$router.push("/login?code=" + code);
+        //     } else {
+        //         vm.$router.push("/login");
+        //     }
+        // }
     }
 }
 </script>

@@ -31,10 +31,22 @@
                             </div>
                             <div class="q-pa-sm" v-if="user">
                                 <div>
-                                    초대코드: {{user.code}}
-                                    <q-btn icon="refresh" dense class="q-mr-md">
+                                    
+                                    <template v-if="user.code">
+                                        초대코드: 
+                                        {{user.code}}
+                                    </template>
+                                    <template v-else>
+                                        <span class="text-negative">
+                                            초대코드가 존재하지 않습니다. 발급 후 이용해주세요.
+                                        </span>
+                                    </template>
+                                    <q-btn dense icon="refresh" color="positive" flat
+                                        @click="refreshCode">
+                                        <q-tooltip>
+                                            재발급
+                                        </q-tooltip>
                                     </q-btn>
-                                    <q-btn icon="board" dense></q-btn>
                                 </div>
                             </div>
                         </q-card-section>
@@ -50,7 +62,7 @@
                             v-model="form.targetCode"
                             :error="formError.targetCode?true:false" :error-message="formError.targetCode"
                             placeholder="상대방의 요청코드를 입력 후 엔터를 누르세요."
-                            @keyup.enter="onSend" />
+                            @keyup.enter="onApply" />
                         <div v-if="search_user">
                             {{ search_user.userName }} 님이 맞나요 ?
                             <q-btn label="예" @click="onSend"></q-btn>
@@ -97,8 +109,9 @@
                                             <div>
                                                 <q-btn icon="done" dense flat color="positive" 
                                                     class="q-mr-sm" 
-                                                    @click="onAccept(row)"/>
-                                                <q-btn icon="close" dense flat color="negative"></q-btn>
+                                                    @click="onAccept(row)" />
+                                                <q-btn icon="close" dense flat color="negative"
+                                                    @click="onDismiss(row)" />
                                             </div>
                                         </div>
                                     </q-item>
@@ -140,12 +153,12 @@ export default {
         }
     },
     methods: {
-        onSend() {
+        /* 상대방에게 요청을 보냄 */
+        onApply() {
             let vm = this;
             vm.$q.loading.show();
-            axios.put(`/api/user/waiting`, {
+            axios.post(`/api/user/waiting`, {
                 targetCode: vm.form.targetCode.trim(),
-                UID: vm.$store.state.UID,
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
@@ -160,10 +173,25 @@ export default {
                 vm.$q.loading.hide();
             });
         },
+        refreshCode() {
+            let vm = this;
+            vm.$q.loading.show();
+            axios.put(`/api/user/code`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.user.code = data.code;
+                }
+                vm.$q.loading.hide();
+            });
+        },
+        
+        /* image */
         onUpload() {
             let vm = this;
             console.log("onUpload");
         },
+
+        /* 요청 대기열의 수락 */
         onAccept(row) {
             let vm = this;
             axios.put(`/api/user/couple`, {
@@ -183,6 +211,12 @@ export default {
                 }
             });
         },
+        /* 요청 대기열의 거절 */
+        onDismiss(row) {
+            let vm = this;
+            console.log("row:", row);
+        },
+
         loadWaitingList() {
             let vm = this;
             axios.get(`/api/waiting`, {
@@ -200,6 +234,9 @@ export default {
     },
     mounted: function() {
         let vm = this;
+        if(!vm.$store.state.UID) {
+            vm.$router.push("/login");
+        }
         let user = vm.$store.getters.getUser;
         vm.user = user;
         vm.loadWaitingList();

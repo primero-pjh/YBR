@@ -4,12 +4,20 @@ import { createStore } from "vuex";
 const store = createStore({
     state : {
         socket: null,
-        APP_ACC_TKN: null,
         host: process.env.VUE_APP_HOST,
         width: window.screen.width,
         height: window.screen.height,
         UID: null,
+        isSigned: false,
 
+        kakao_account: {
+            kakaoId: '',
+            nickname: '',
+            profile_image_url: '',
+            email: '',
+            memo: '',
+            is_default_image: false,
+        },
         user: {
             coupleInfoId: 0,
             userId: '',
@@ -20,6 +28,7 @@ const store = createStore({
             isAdmin: '',
             code: '',
             spousePhoneNumber: '',
+            memo: '',
         },
 
         couple: {
@@ -29,10 +38,12 @@ const store = createStore({
             phoneNumber: '',
             image: '',
             socketId: '',
+            memo: '',
         },
 
         /* useful function */
         getCookie: function (name) {
+            //APP_ACC_TKN
             let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
             return value? value[2] : null;
         },
@@ -57,7 +68,7 @@ const store = createStore({
     getters: {
         getSocket(state) { return state.socket; },
         getUser(state) { return state.user; },
-        getToken(state) { return state.APP_ACC_TKN; },
+        getKakaoAccount(state) { return state.kakao_account; },
     },
     mutations: {
         setUserUID(state, UID) {
@@ -66,8 +77,21 @@ const store = createStore({
         setSocket(state, socket) {
             state.socket = socket;
         },
-        setToken(state, APP_ACC_TKN) {
-            state.APP_ACC_TKN = APP_ACC_TKN;
+        setKakaoAccount(state, kakao_account) {
+            if(!kakao_account) {
+                state.kakao_account.kakaoId = "";
+                state.kakao_account.email = "";
+                state.kakao_account.nikcname = "";
+                state.kakao_account.profile_image_url = "";
+                state.kakao_account.memo = "";
+                state.kakao_account.is_default_image = false;
+            } else {
+                state.kakao_account.kakaoId = kakao_account.kakaoId;
+                state.kakao_account.email = kakao_account.email;
+                state.kakao_account.profile_image_url = kakao_account.profile_image_url;
+                state.kakao_account.nickname = kakao_account.nickname;
+                state.kakao_account.is_default_image = kakao_account.is_default_image;
+            }
         },
         /* user function */
         setUser(state, user) {
@@ -80,6 +104,7 @@ const store = createStore({
                 state.user.spousePhoneNumber = "";
                 state.user.isAdmin = "";
                 state.user.code = "";
+                state.user.memo = "";
             } else {
                 state.user.coupleInfoId = user.coupleInfoId;
                 state.user.userId = user.userId;
@@ -89,6 +114,7 @@ const store = createStore({
                 state.user.spousePhoneNumber = user.spousePhoneNumber;
                 state.user.isAdmin = user.isAdmin;
                 state.user.code = user.code;
+                state.user.memo = user.memo;
             }
         },
         setSocketId(state, id) {
@@ -105,6 +131,7 @@ const store = createStore({
                 state.couple.phoneNumber = "";
                 state.couple.socketId = "";
                 state.couple.backgroundImage = "";
+                state.couple.memo = "";
             } else {
                 state.couple.coupleInfoId = couple.coupleInfoId;
                 state.couple.userId = couple.userId;
@@ -113,6 +140,7 @@ const store = createStore({
                 state.couple.phoneNumber = couple.phoneNumber;
                 state.couple.socketId = couple.socketId;
                 state.couple.backgroundImage = couple.backgroundImage;
+                state.couple.memo = couple.memo;
             }
         },
         setCoupleSocketId(state, id) {
@@ -135,6 +163,7 @@ const store = createStore({
             state.user.spousePhoneNumber = "";
             state.user.isAdmin = "";
             state.user.code = "";
+            state.user.memo = "";
 
             state.couple.coupleInfoId = 0;
             state.couple.userId = "";
@@ -143,6 +172,7 @@ const store = createStore({
             state.couple.phoneNumber = "";
             state.couple.socketId = "";
             state.couple.backgroundImage = "";
+            state.couple.memo = "";
             
             state.token = '';
             state.setCookie('token', '');

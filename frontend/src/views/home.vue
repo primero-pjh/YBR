@@ -25,7 +25,7 @@ export default {
     },
     mounted: function() {
         let vm = this;
-        
+        console.log("home");
     },
 }
 </script>

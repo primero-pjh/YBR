@@ -5,5 +5,10 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+router.get('/user/kakao/login', function(req, res, next) {
+  let code = req.query.code;
+  let url = `http://localhost:8080/#/login?code=${code}`;
+  res.redirect(url);
+});
 
 module.exports = router;

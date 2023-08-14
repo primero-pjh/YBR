@@ -45,9 +45,18 @@
                                             </q-item-section>
                                         </q-item>
                                     </template> 
+                                    
                                 </div>
                                 <q-separator spaced />
                             </template>
+                            <q-item-label header style="height: 30px;">특수앱</q-item-label>
+                            <q-item clickable v-ripple >
+                                <q-item-section @click="goto_swagger">
+                                    <q-item-label class="fkR ft20">
+                                        Swagger
+                                    </q-item-label>
+                                </q-item-section>
+                            </q-item>
                         </q-list>
                     </q-scroll-area>
                 </q-drawer>
@@ -111,6 +120,11 @@ export default {
             let vm = this;
             vm.$router.push(row.url);
         },
+
+        goto_swagger() {
+            let vm = this;
+            window.open('/api-docs');
+        }
     },
     mounted: function() {
         let vm = this;

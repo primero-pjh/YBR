@@ -38,7 +38,9 @@ app.all('/api/*', async (req, res, next) => {
                 message: CRT_ERROR_CODE["LOGIN_TOKEN"],
             });
         }
+        req.self = resJwt;
     }
+    
     next();
 });
 /* static variable */
@@ -61,7 +63,7 @@ function dfs(dir) {
             } else {
                 let template = file.split(".")[0];
                 let path = `${dir}/${file}`;
-                console.log("path:", path);
+                // console.log("path:", path);
                 app.use('/', require(path));
             }
         });
@@ -71,10 +73,14 @@ function dfs(dir) {
 app.use('/', require('./routes/api/user/login.js'));
 app.use('/', require('./routes/api/user/check'));
 app.use('/', require('./routes/api/user/couple/put'));
-app.use('/', require('./routes/api/waiting/get'));
-app.use('/', require('./routes/api/user/waiting/put'));
+app.use('/', require('./routes/api/user/waiting/post'));
 app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
+app.use('/', require('./routes/api/user/code'));
+
+app.use('/', require('./routes/api/waiting/get'));
+
+
 app.use('/', require('./routes/api/admin/login'));
 app.use('/', require('./routes/api/admin/redis'));
 
@@ -89,7 +95,9 @@ app.use('/', require('./routes/api/schedules/put'));
 app.use('/', require('./routes/api/schedules/delete'));
 app.use('/', require('./routes/api/schedules/couple/get'));
 
-
+app.use('/', require('./routes/user/upload/temp/image'));
+app.use('/', require('./routes/user/kakao/oauth/token'));
+app.use('/', require('./routes/user/kakao/signup'));
 
 //Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));

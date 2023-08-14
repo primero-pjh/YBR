@@ -72,7 +72,7 @@ function dfs(dir) {
       		if(check) {
 		        dfs(`${dir}/${file}`);
       		} else {
-	        	console.log(`require: ${dir}/${file}`);
+	        	// console.log(`require: ${dir}/${file}`);
         		require(`${dir}/${file}`)(_socket);
       		}
     	});
@@ -83,12 +83,12 @@ const path = appRoot.path;
 
 io.on("connection", async (socket) => { 
 	socket.emit('connection', socket.id);
-	console.log(chalk.yellow.bgRed.bold(socket.id)); 
+	var auth = socket.handshake.auth;
+	console.log(chalk.yellow.bgGreen.bold('connection-socket:', socket.id));
 	socket.onAny(async (e) => {
-		console.log(chalk.yellow.bgRed.bold( `소켓이벤트: ${e}`)); 
 		const headers = socket.handshake.headers;
 		const auth = socket.handshake.auth;
-        
+		console.log(chalk.yellow.bgRed.bold( `소켓이벤트: ${e}`)); 
 		if(e.includes("/*")) {
             const token = auth.token.split(" ")[1];
             jwtFunc.verify(token).then(async (res) => {
@@ -100,19 +100,8 @@ io.on("connection", async (socket) => {
                     });
                     return;
                 }
-                await knex.table("socketLogs").insert({
-                    event: e,
-                    uid: res.UID,
-                    host: headers.host,
-                    origin: headers.origin,
-                    connection: headers.connection,
-                    platform: headers["sec-ch-ua-platform"],
-                    agent: headers["user-agent"],
-                    dateAdded: new Date(),
-                });
             });
 		}
-		
 	});
   	// console.log('connect-socket', socket.id);
   	_socket = socket;
@@ -120,10 +109,8 @@ io.on("connection", async (socket) => {
   
     socket.on("disconnect", () => {
         let socketId = socket.id;
-        console.log("disconnect:", socket.id);
-        
+        console.log(chalk.yellow.bgRed.bold('disconnect:', socket.id));
         for(let key in user_dict) {
-            
             if( user_dict.hasOwnProperty(key) && user_dict[key].socketId == socketId ) {
                 /* couple 이 있다면 logout(disconnect) 을 알림 */
                 if(user_dict[key].hasOwnProperty("coupleInfoId")) {

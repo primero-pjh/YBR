@@ -2,9 +2,10 @@ let cfg = require('./config');
 const jwt = require('jsonwebtoken');
 
 let jwtFunc = {
-    sign: (userId) => {
+    sign: (kakaoId, UID) => {
         let token = jwt.sign({ 
-            userId: userId,
+            kakaoId: kakaoId,
+            UID: userId,
         }, 
         cfg.jwtKey, 
         {

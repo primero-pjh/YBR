@@ -12,7 +12,8 @@ import axios from 'axios';
 // import { Service } from 'axios-middleware';
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
-  config.headers["Authorization"] = $c.getCookie("APP_ACC_TKN");
+  let token = $c.getCookie('token');
+  config.headers["Authorization"] = token;
   return config;
 }, function (error) {
   return Promise.reject(error);
@@ -22,6 +23,7 @@ axios.interceptors.response.use((res) => {
   console.log("axios.interceptors.response data:", data);
   if(data.success == 0 && Object.prototype.hasOwnProperty.call(data, "isLogged")) {
     alert(data.message);
+    window.location = "/#/login";
   } else if (data.success == 0 && Object.prototype.hasOwnProperty.call(data, "code")) {
     if(data.code == "COUPLE_EMPTY_ERROR") {
       alert(data.message);

@@ -16,8 +16,9 @@
                     <q-btn class="q-mt-md" style="width: 100%;" label="로그인" color="primary" 
                         size="lg" @click="onLogin" 
                         :loading="isLoading" :disable="isLoading" />
-                    <q-img src="/images/kakao_login_medium_wide.png" 
-                        class="q-mt-md" style="height: 51px; cursor: pointer;" />
+                    <q-separator class="q-my-md"></q-separator>
+                    <q-img src="/images/kakao_login_medium_wide.png" @click="onLoginKakao"
+                        style="height: 51px; cursor: pointer;" />
                     <div style="display: flex; justify-content: space-between; height: 20px;" class="q-mt-md">
                         <div>
                             <p style="cursor: pointer;">회원가입</p>
@@ -36,6 +37,7 @@
 
 <script>
 import { io } from "socket.io-client";
+import axios from "axios";
 
 export default {
     name: 'loginVue',
@@ -70,7 +72,8 @@ export default {
                 let data = res.data;
                 if(data.success) {  
                     /* socket 등록 */
-                    const token = data.token.APP_ACC_TKN;
+                    let token = data.token.APP_ACC_TKN;
+                    vm.$store.state.setCookie("token", token);
                     const socket = io("ws://localhost:3000", {
                         // reconnectionDelayMax: 10000,
                         auth: {
@@ -78,7 +81,12 @@ export default {
                         },
                     });
                     vm.$store.commit("setSocket", socket);
-                    
+                    socket.emit(`/socket/user/connect`, {
+                        UID: data.user.UID,
+                    }, (callback) => {
+                        console.log("callback:", callback);
+                    });
+
                     if(data.user.isAdmin) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setUserUID", data.user.UID);
@@ -114,11 +122,65 @@ export default {
                 vm.isLoading = !vm.isLoading;
             });
         },
+
+        onGetTokenWithInfo(code) {
+            let vm = this;
+            axios.post(`${vm.$store.state.host}/user/kakao/oauth/token`, {
+                code: code,
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    const token = data.token.APP_ACC_TKN;
+                    vm.$store.state.setCookie("token", token);
+                    const socket = io(`${vm.$store.state.host}`, {
+                        auth: { token, },
+                    });
+                    vm.$store.commit("setSocket", socket);
+                    socket.emit(`/socket/user/connect`, {
+                        UID: data.user.UID,
+                    }, (callback) => {
+                        console.log("callback:", callback);
+                    });
+                    if(data.isSigned) {
+                        vm.$store.state.isSigned = true;
+                        vm.$store.commit("setKakaoAccount", data.kakao_account);
+                        vm.$router.push("/login/signup");
+                        return;
+                    }
+                    
+                    if(data.couple) {
+                        vm.$store.commit("setUser", data.user);
+                        vm.$store.commit("setCouple", data.couple);
+                        vm.$store.commit("setUserUID", data.user.UID);
+                        vm.$router.push("/home");
+                        return;
+                    } else {
+                        vm.$store.commit("setUser", data.user);
+                        vm.$store.commit("setUserUID", data.user.UID);
+                        vm.$router.push("/login/waiting");
+                        return;
+                    }
+                } else {
+                    vm.$q.notify({
+                        icon: 'close',
+                        color: 'negative',
+                        message: "[" + data.code + "] " + data.message,
+                    });
+                    vm.$router.push("/login");
+                }
+            });
+        },
         onLoginKakao: function() {
             let vm = this;
+            window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=6d428fae7a51015c7356f1c83935cfe0&redirect_uri=http://localhost:3000/user/kakao/login&response_type=code&prompt=login`;
         },
     },
     mounted: function() {
+        let vm = this;
+        if(Object.prototype.hasOwnProperty.call(vm.$router.currentRoute.value.query, "code")) {
+            let code = vm.$router.currentRoute.value.query.code; 
+            vm.onGetTokenWithInfo(code);
+        }
     },
     created: function() {
     },
