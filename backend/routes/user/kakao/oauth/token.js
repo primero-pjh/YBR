@@ -16,6 +16,7 @@ const formUrlEncoded = x =>
 router.post('/user/kakao/oauth/token', async function(req, res, next) {
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
+    const io = require(`${path}/bin/www`)["io"];
     let code = req.body.code;
     axios.post(`https://kauth.kakao.com/oauth/token`, formUrlEncoded({
         grant_type: 'authorization_code',
@@ -72,6 +73,15 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                     `, [user.coupleUID]);
                     let couple = couples[0];
 
+                    let coupleSocketId = "";
+                    if(couple) {
+                        if(user_dict.hasOwnProperty(couple.UID)) {
+                            coupleSocketId = user_dict[couple.UID];
+                            io.to(coupleSocketId).emit(`/client/couple/login`, {
+                                coupleSocketId,
+                            });
+                        }
+                    }
                     return res.json({
                         success: 1,
                         couple: couple,
@@ -99,6 +109,7 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                 });
             }
         }).catch((err) => {
+            console.log("err:", err);
             return res.json({
                 success: 0,
                 code: err.code,
@@ -106,6 +117,7 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
             });
         });
     }).catch((err) => {
+        console.log("err:", err);
         return res.json({
             success: 0,
             code: '/user/kakao/oauth/token',

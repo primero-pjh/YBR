@@ -195,6 +195,7 @@ export default {
         onAccept(row) {
             let vm = this;
             axios.put(`/api/user/couple`, {
+                waitingId: row.waitingId,
                 toUID: row.toUID,
                 fromUID: row.fromUID,
             }).then((res) => {

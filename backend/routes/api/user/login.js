@@ -35,6 +35,7 @@ function hashTest(salt, password) {
 router.post('/api/user/login', async function(req, res, next) {
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
+    const io = require(`${path}/bin/www`)["io"];
     let userId = req.body.params.userId;
     let password = req.body.params.password;
     let rememberMe = req.body.params.rememberMe;
@@ -102,28 +103,19 @@ router.post('/api/user/login', async function(req, res, next) {
     }, cfg.jwtKey, {
         expiresIn: "1 hours",
     });
-    res.cookie('APP_ACC_TKN', APP_ACC_TKN);
+    res.cookie('token', APP_ACC_TKN);
 
-    /* 
-        자동로그인이 되어 있다면 refresh token(30일)을 발급 후 redis에 저장한다.
-    */
-    if(rememberMe == 1) {
-        APP_REF_TKN = jwt.sign({ 
-            userId: userId,
-            UID: user.UID
-        }, cfg.jwtKey, {
-            expiresIn: "30 days",
-        });
-        await redis.set(user.UID, APP_REF_TKN);
+    /* couple socketId */
+    let coupleSocketId = "";
+    if(couple) {
+        if(user_dict.hasOwnProperty(couple.UID)) {
+            coupleSocketId = user_dict[couple.UID];
+            io.to(coupleSocketId).emit(`/client/couple/login`, {
+                coupleSocketId,
+            });
+        }
     }
-
-    // /* couple socketId */
-    // let coupleSocketId = "";
-    // if(couple) {
-    //     if(user_dict.hasOwnProperty(couple.phoneNumber)) {
-    //         coupleSocketId = user_dict[couple.phoneNumber].socketId;
-    //     }
-    // }
+    
 
     return res.json({
         success: 1,

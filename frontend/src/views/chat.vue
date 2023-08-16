@@ -12,8 +12,14 @@
                         <q-item clickable v-ripple v-if="couple">
                             <q-item-section>
                                 <q-item-label>
-                                    <div class="fkR ft20">
-                                        {{ couple.userName }}
+                                    <div class="fkR ft20" style="display: flex; justify-content: space-between;">
+                                        <div>
+                                            {{ couple.userName }}
+                                        </div>
+                                        <div>
+                                            <q-badge color="positive" rounded v-if="couple.socketId" />
+                                            <q-badge color="negative" rounded v-else />
+                                        </div>
                                     </div>
                                 </q-item-label>
                             </q-item-section>

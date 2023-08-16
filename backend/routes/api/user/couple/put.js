@@ -11,7 +11,7 @@ router.put('/api/user/couple', async function(req, res, next) {
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     let error = new Object();
-    let targetCode = req.body.targetCode;
+    let waitingId = req.body.waitingId;
     let toUID = req.body.toUID;
     let fromUID = req.body.fromUID;
     if(!toUID || !fromUID) {
@@ -30,9 +30,21 @@ router.put('/api/user/couple', async function(req, res, next) {
 
     let coupleInfoId = results.insertId;
 
-    let [rows, fields] = await db.query(`
+    await db.query(`
+        update appUsers
+        set coupleInfoId=?, coupleUID=?
+        where UID=?
+    `, [coupleInfoId, fromUID, toUID]);
+
+    await db.query(`
+        update appUsers
+        set coupleInfoId=?, coupleUID=?
+        where UID=?
+    `, [coupleInfoId, toUID, fromUID]);
+
+    let [rows] = await db.query(`
         select 
-            u.userId, u.UID, u.spousePhoneNumber, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
+            u.userId, u.UID, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
             ci.backgroundImage
         from appUsers as u 
         join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
@@ -41,10 +53,9 @@ router.put('/api/user/couple', async function(req, res, next) {
     let couple = rows[0];
 
     await db.query(`
-        update appUsers
-        set coupleInfoId=?
-        where UID in (?, ?)
-    `, [coupleInfoId, toUID, fromUID]);
+        DELETE FROM waitings
+        WHERE waitingId=?
+    `, [waitingId]);
 
     return res.json({
         success: 1,

@@ -1,5 +1,5 @@
 <template>
-    <div id="homeVue" style="height: 100%;">
+    <div id="communityVue" style="height: 100%;">
         <div>
             <p class="fkR">채팅</p>
         </div>
@@ -9,7 +9,7 @@
 <script>
 
 export default {
-    name: 'homeVue',
+    name: 'communityVue',
     components: {
     },
     data() {

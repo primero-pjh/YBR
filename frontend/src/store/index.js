@@ -76,6 +76,10 @@ const store = createStore({
         },
         setSocket(state, socket) {
             state.socket = socket;
+            socket.on('/client/couple/login', (data) => {
+                let coupleSocketId = data.coupleSocketId;
+                state.couple.socketId = coupleSocketId;
+            });
         },
         setKakaoAccount(state, kakao_account) {
             if(!kakao_account) {
