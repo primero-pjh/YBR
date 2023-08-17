@@ -3,7 +3,7 @@
         <div>
             <div style="display: flex;" class="q-pa-md">
                 <div style="min-width: 250px;" class="q-mr-md">
-                    <q-input v-model="search" filled dense placeholder="검색할 유저를 입력하세요.">
+                    <q-input v-model="search" readonly filled dense placeholder="검색할 유저를 입력하세요.">
                         <template v-slot:append>
                             <q-icon name="search" />
                         </template>

@@ -52,7 +52,10 @@
                     style="height: 70px; border-top: 1px solid #eaeaea;"  class="q-pa-md">
                     <p class="fkR" style="font-size: 16px; color: grey;">
                         @primero-pjh. All right reserved.
+                        <q-btn label="github" 
+                            @click="goto_github"/>
                     </p>
+                    
                 </div>
             </slot>
         </div>
@@ -91,6 +94,9 @@ export default {
         },
     },
     methods: {
+        goto_github() {
+            window.open('https://github.com/primero-pjh');
+        },
         onLogout() {
             let vm = this;
             vm.$router.push("/login");
