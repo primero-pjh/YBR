@@ -10,6 +10,16 @@ let CRT_ERROR_CODE = require(`${path}/error_code`);
     
 */
 router.get('/api/waiting', async (req, res, next) => {
+    /*
+        #swagger.description = '해당 유저의 신청(요청)목록을 모두 들고오는 API'
+        #swagger.tags = ['waiting']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                
+            }
+        }
+    */
     let user_dict = require(`${path}/app`)["user_dict"];
     const db = require(`${path}/mysql2`);
     

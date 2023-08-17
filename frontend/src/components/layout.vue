@@ -1,12 +1,11 @@
 <template>
     <div id="layoutVue" style="width: 100%; display: flex; justify-content: center;">
         <div style="width: 100%;">
-            <slot name="header" v-if="!$router.currentRoute.value.path.includes('/login')">
+            <slot name="header" v-if="!$router.currentRoute.value.path.includes('/login') && $router.currentRoute.value.path != '/error'">
                 <div style="width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #eaeaea;">
                     <div style="width: 1300px; height: 72px; display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;" 
-                                @click="$router.push('/home')">YBR</p>
+                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;">YBR</p>
                         </div>
                         <div>
                             <q-tabs v-model="tab" class="text-black">
@@ -75,6 +74,7 @@ export default {
                 admin: true,
             },
             item_list: [
+                { icon: 'calendar-o', label: '홈', url: '/home', name: 'home',  },
                 { icon: 'calendar-o', label: '캘린더', url: '/calendar', name: 'calendar',  },
                 { icon: 'chat-o', label: '채팅', url: '/chat', name: 'chat', isCustom: true,  },
                 { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community',  },

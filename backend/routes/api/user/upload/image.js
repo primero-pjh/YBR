@@ -25,6 +25,18 @@ const upload = multer({ storage: storage });
 
 /* GET users listing. */
 router.post('/api/user/upload/image', upload.single('file'), async function(req, res, next) {
+    /*
+        #swagger.description = '사용자의 프로필 이미지를 업로드하는 API'
+        #swagger.tags = ['user']
+        #swagger.summary = 'token*'
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                coupleInfoId: 0,
+                file: 'file',
+            }
+        }
+    */
     let user_dict = require(`${path}/app`)["user_dict"];
     let io = require(`${path}/bin/www`)["io"];
 

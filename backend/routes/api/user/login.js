@@ -12,27 +12,23 @@ function hashTest(salt, password) {
     // const salt = crypto.randomBytes(32).toString('hex');
     return crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 }
-/**
- * @swagger
- *  /product:
- *    get:
- *      tags:
- *      - product
- *      description: 모든 제품 조회
- *      produces:
- *      - application/json
- *      parameters:
- *        - in: query
- *          name: category
- *          required: false
- *          schema:
- *            type: integer
- *            description: 카테고리
- *      responses:
- *       200:
- *        description: 제품 조회 성공
- */
+
 router.post('/api/user/login', async function(req, res, next) {
+    /*
+        #swagger.description = 'YBR에서 제공하는 일반 로그인 API'
+        #swagger.tags = ['user']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                params: {
+                    userId: 'primero',
+                    password: '1234',
+                    rememberMe: true,
+                }
+            }
+        }
+        
+    */
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     const io = require(`${path}/bin/www`)["io"];

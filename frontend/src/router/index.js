@@ -48,8 +48,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     console.error(`from: ${from.fullPath}, to: ${to.fullPath}`);
     if(!store.state.UID) {
+        // console.log("to.path:",to.path);
         if(!to.path.includes('/login')) {
-            window.location.href = "/#/login";
+            router.push('/login');
+            // window.location.href = "/#/login";
         } else {
             next();
         }

@@ -9,6 +9,16 @@ let CRT_ERROR_CODE = require(`${path}/error_code`);
 
 /* GET users listing. */
 router.get('/api/user/check', async function(req, res, next) {
+    /*
+        #swagger.description = ''
+        #swagger.tags = ['user']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                
+            }
+        }
+    */
     let user_dict = require(`${path}/app`)["user_dict"];
     let token = req.query.token;
   

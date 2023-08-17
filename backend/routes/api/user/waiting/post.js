@@ -8,6 +8,16 @@ const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
 router.post('/api/user/waiting', async function(req, res, next) {
+    /*
+        #swagger.description = '입력한 초대코드로 상대방에게 요청을 보내는 API'
+        #swagger.tags = ['user']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                targetCode: 'ABCDEFG1',
+            }
+        }
+    */
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     let io = require(`${path}/bin/www`)["io"];

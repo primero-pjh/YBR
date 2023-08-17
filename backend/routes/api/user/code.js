@@ -12,6 +12,16 @@ let CRT_ERROR_CODE = require(`${path}/error_code`);
 const { v4 } = require('uuid');
 
 router.put('/api/user/code', async function(req, res, next) {
+    /*
+        #swagger.description = '일반 사용자의 초대(인가)코드를 재발급받는 API'
+        #swagger.tags = ['user']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                
+            }
+        }
+    */
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
 

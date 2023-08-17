@@ -6,7 +6,7 @@ const store = createStore({
         socket: null,
         host: process.env.VUE_APP_HOST,
         width: window.screen.width,
-        height: window.screen.height,
+        height: window.innerHeight,
         UID: null,
         isSigned: false,
 
