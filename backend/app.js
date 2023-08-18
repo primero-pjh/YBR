@@ -78,6 +78,8 @@ app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
 app.use('/', require('./routes/api/user/code'));
 
+app.use('/', require('./routes/api/couple/chat'));
+
 app.use('/', require('./routes/api/waiting/get'));
 
 

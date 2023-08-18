@@ -63,6 +63,7 @@
                         </div>
                         <q-separator></q-separator>
                         <q-input v-model="form.msg" filled class="fkR ft20"
+                            placeholder="Send to Message.."
                             @keyup.enter="onSend">
                             <!-- <template v-slot:prepend>
                                 <q-btn icon="add_circle_outline" flat size="lg"></q-btn>
@@ -81,6 +82,8 @@
 </template>
 
 <script>
+
+import axios from 'axios';
 
 export default {
     name: 'chatVue',
@@ -122,12 +125,16 @@ export default {
         },
         onLoad() {
             let vm = this;
-
+            axios.get(`/api/couple/${vm.$store.state.couple.coupleInfoId}/chat`, {}).then((res) => {
+                let data = res.data;
+                console.log("data:", data);
+            })
         },
         
     },
     mounted: function() {
         let vm = this;
+        vm.onLoad();
         vm.couple = vm.$store.state.couple;
         vm.$nextTick(() => {
             vm.onMoveChatScroll(1.0);

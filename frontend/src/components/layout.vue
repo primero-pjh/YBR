@@ -95,7 +95,7 @@ export default {
     },
     methods: {
         goto_github() {
-            window.open('https://github.com/primero-pjh');
+            window.open('https://github.com/primero-pjh/ybr');
         },
         onLogout() {
             let vm = this;

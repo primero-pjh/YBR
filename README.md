@@ -1,17 +1,19 @@
 # YBR
 커플앱
 
-vue3
+Vue 3.0
 
-vant
+Quasar 2.0
 
-knex
-
-mysql
+MySQL
 
 socket io 4.5.4
-(handshake)
+
+axios...
 
 jwt
 
-안넝
+chat logs 저장 방식
+1. 매일 밤 1시에 table[Chats]의 행 중 전날의 message들을 가져다 /logs/chats/:chatId/month에 저장한다.
+- crontab 사용
+
