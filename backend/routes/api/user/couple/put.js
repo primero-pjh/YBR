@@ -30,12 +30,31 @@ router.put('/api/user/couple', async function(req, res, next) {
 
     let coupleInfoId = results.insertId;
 
+    /* chatInfo 생성 */
+    let [chatInfo_results] = await db.query(`
+        insert into chatInfos (status, dateAdded)
+        values(?, ?)
+    `, [1, new Date()]);
+    let chatInfoId = chatInfo_results.insertId;
+
+    /* chatMembers 생성 */
+    await db.query(`
+    insert into chatMembers (chatInfoId, UID, isHost, dateAdded)
+    values(?, ?, ?, ?)
+    `, [chatInfoId, toUID, 0, new Date()]);
+    await db.query(`
+    insert into chatMembers (chatInfoId, UID, isHost, dateAdded)
+    values(?, ?, ?, ?)
+    `, [chatInfoId, fromUID, 0, new Date()]);
+
+    /* appUsers의 coupleInfo 변경 */
     await db.query(`
         update appUsers
         set coupleInfoId=?, coupleUID=?
         where UID=?
     `, [coupleInfoId, fromUID, toUID]);
 
+    /* appUsers의 coupleInfo 변경 */
     await db.query(`
         update appUsers
         set coupleInfoId=?, coupleUID=?

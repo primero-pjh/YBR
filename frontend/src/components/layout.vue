@@ -18,23 +18,12 @@
                                 </template>
                             </q-tabs>
                         </div>
-                        <div>
-                            <q-chip>
+                        <div @click="openRightDialog">
+                            <q-chip >
                                 <q-avatar>
                                     <img :src="$store.state.host + $store.state.user.image">
                                 </q-avatar>
                                 <p class="q-ma-none fkR ft20">{{ $store.state.user.userName }}</p>
-                                <q-menu>
-                                    <q-list style="min-width: 100px">
-                                        <q-item clickable v-close-popup>
-                                            <q-item-section class="ft18 fkR">계정 관리</q-item-section>
-                                        </q-item>
-                                        <q-separator />
-                                        <q-item clickable @click="onLogout">
-                                            <q-item-section class="ft18 fkR">로그아웃</q-item-section>
-                                        </q-item>
-                                    </q-list>
-                                </q-menu>
                             </q-chip>
                         </div>
                     </div>
@@ -52,12 +41,41 @@
                     style="height: 70px; border-top: 1px solid #eaeaea;"  class="q-pa-md">
                     <p class="fkR" style="font-size: 16px; color: grey;">
                         @primero-pjh. All right reserved.
-                        <q-btn label="github" 
-                            @click="goto_github"/>
+                        <q-btn label="github" outline color="black" @click="goto_github"/>
                     </p>
-                    
                 </div>
             </slot>
+        </div>
+        <div>
+            <q-dialog v-model="isRightDialog" position="right" full-height>
+                <q-card class="column full-height" style="width: 350px">
+                    <q-linear-progress :value="1.0" color="primary" />
+                    <q-card-section>
+                        <div v-if="$store.state.user">
+                            <q-item dense class="q-pa-sm" style="border: 1px solid #eee;">
+                                <q-item-section side>
+                                    <q-avatar rounded size="48px">
+                                        <q-img :src="$store.state.host + $store.state.user.image" style="border-radius: 15px;"/>
+                                    </q-avatar>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="fkR ft20">{{ $store.state.user.userName }}</q-item-label>
+                                    <q-item-label class="fkR ft20">{{ $store.state.user.email }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </div>
+                    </q-card-section>
+                    <q-card-section class="col q-ma-md fkR ft16" style="border: 1px solid #eee;">
+                        알림
+                    </q-card-section>
+                    <q-card-actions class="q-pa-md">
+                        <q-btn outline label="계정설정" v-close-popup style="width: 100%; margin-left: 0;" 
+                            class="q-mb-md" @click="goto_setting"/>
+                        <q-btn outline label="로그아웃" v-close-popup style="width: 100%; margin-left: 0;" 
+                            @click="onLogout" />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
         </div>
     </div>
 </template>
@@ -70,6 +88,8 @@ export default {
             height: 0,
             tab: 'home',
             isShow: true,
+            isRightDialog: false,
+            
             unShowPage: {
                 login: true,
                 error: true,
@@ -94,6 +114,13 @@ export default {
         },
     },
     methods: {
+        openRightDialog() {
+            let vm = this;
+            vm.isRightDialog = !vm.isRightDialog;
+        },
+        goto_setting() {
+            this.$router.push("/setting");
+        },
         goto_github() {
             window.open('https://github.com/primero-pjh/ybr');
         },

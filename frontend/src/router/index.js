@@ -7,6 +7,7 @@ import chatVue from "../views/chat.vue";
 import calendarVue from "../views/calendar.vue";
 import communityVue from "../views/community.vue";
 import profileVue from "../views/profile.vue";
+import settingVue from "../views/setting.vue";
 import errorVue from "../views/error.vue";
 
 /* admin */
@@ -28,6 +29,7 @@ const routes = [
     { path: "/calendar", name: "calendar", component: calendarVue, label: "캘린더", },
     { path: "/community", name: "community", component: communityVue, label: "커뮤니티", },
     { path: "/profile", name: "profile", component: profileVue, label: "커뮤니티", },
+    { path: "/setting", name: "setting", component: settingVue, label: "설정", },
 
     /* admin */
     { path: "/admin/home", name: "admin_home", component: _homeVue, label: "홈화면", },

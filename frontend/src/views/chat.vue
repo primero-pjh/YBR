@@ -123,22 +123,28 @@ export default {
                 console.log("data:", data);
             });
         },
-        onLoad() {
+        onLoadChatRooms() {
             let vm = this;
-            axios.get(`/api/couple/${vm.$store.state.couple.coupleInfoId}/chat`, {}).then((res) => {
+            axios.get(`/api/user/chat/rooms`, {}).then((res) => {
                 let data = res.data;
                 console.log("data:", data);
-            })
+            });
         },
-        
+        onLoadMessage(chatInfoId) {
+            let vm = this;
+            axios.get(`/api/chat/${chatInfoId}`, {}).then((res) => {
+                let data = res.data;
+                console.log("data:", data);
+            });
+        },
     },
     mounted: function() {
         let vm = this;
-        vm.onLoad();
+        vm.onLoadChatRooms();
         vm.couple = vm.$store.state.couple;
-        vm.$nextTick(() => {
-            vm.onMoveChatScroll(1.0);
-        });
+        // vm.$nextTick(() => {
+        //     vm.onMoveChatScroll(1.0);
+        // });
     },
 }
 </script>
