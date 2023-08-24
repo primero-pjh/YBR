@@ -366,6 +366,93 @@
         }
       }
     },
+    "/api/user/chat/rooms": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "token*",
+        "description": "유저가 가지고 있는 chat-room-list를 들고오는 API",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/chat/{chatInfoId}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "token*",
+        "description": "유저가 가지고 있는 chat-room-list를 들고오는 API",
+        "parameters": [
+          {
+            "name": "chatInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "chatInfoId": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/couple/{coupleInfoId}/chat": {
       "get": {
         "tags": [
