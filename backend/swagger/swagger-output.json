@@ -56,68 +56,6 @@
         }
       }
     },
-    "/api/user/login": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "description": "YBR에서 제공하는 일반 로그인 API",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "params",
-            "in": "params",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "params": {
-                  "type": "object",
-                  "properties": {
-                    "userId": {
-                      "type": "string",
-                      "example": "primero"
-                    },
-                    "password": {
-                      "type": "string",
-                      "example": "1234"
-                    },
-                    "rememberMe": {
-                      "type": "boolean",
-                      "example": true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "params": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/user/check": {
       "get": {
         "tags": [
@@ -190,6 +128,33 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/user/waiting/{waitingId}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "waitingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -863,6 +828,68 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "YBR에서 제공하는 일반 로그인 API",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "example": "primero"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "1234"
+                    },
+                    "rememberMe": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "params": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

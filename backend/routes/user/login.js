@@ -13,7 +13,7 @@ function hashTest(salt, password) {
     return crypto.pbkdf2Sync(password, salt, 1, 32, 'sha512').toString('hex');
 }
 
-router.post('/api/user/login', async function(req, res, next) {
+router.post('/user/login', async function(req, res, next) {
     /*
         #swagger.description = 'YBR에서 제공하는 일반 로그인 API'
         #swagger.tags = ['user']
@@ -27,7 +27,6 @@ router.post('/api/user/login', async function(req, res, next) {
                 }
             }
         }
-        
     */
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
@@ -56,6 +55,17 @@ router.post('/api/user/login', async function(req, res, next) {
         where u.userId=?
     `, [userId]);
     let user = rows[0];
+
+    /* 로그인이 존재하는 경우 기존 로그인까지도 해제 */
+    if(user_dict.hasOwnProperty(user.UID)) {
+        io.to(user_dict[user.UID].socketId).emit('/client/user/duplication/login');
+        return res.json({
+            success: 0,
+            isDuplicationLogin: true
+        });
+    }
+
+    user_dict[user.UID] = new Object();
     /* user null check */
     if(!user) {
         error["userId"] = "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다.";
@@ -73,6 +83,11 @@ router.post('/api/user/login', async function(req, res, next) {
         });
     }
 
+    user_dict[user.UID]["couple"] = {
+        socketId: '',
+        UID: ''
+    };
+
     /* get couple info */
     let couple = null;
     if(user.coupleInfoId > 0) {
@@ -85,6 +100,7 @@ router.post('/api/user/login', async function(req, res, next) {
             where ci.status=1 and u.UID != ?
         `, [user.UID]);
         couple = rows[0];
+        user_dict[user.UID].couple.UID = couple.UID;
     }
     
     // /* set cookie */
@@ -105,10 +121,9 @@ router.post('/api/user/login', async function(req, res, next) {
     let coupleSocketId = "";
     if(couple) {
         if(user_dict.hasOwnProperty(couple.UID)) {
-            coupleSocketId = user_dict[couple.UID];
-            io.to(coupleSocketId).emit(`/client/couple/login`, {
-                coupleSocketId,
-            });
+            coupleSocketId = user_dict[couple.UID].socketId;
+            user_dict[user.UID].couple.socketId = coupleSocketId;
+            couple.socketId = coupleSocketId;
         }
     }
     

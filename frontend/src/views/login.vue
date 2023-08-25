@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            isLoading: false,
+            isLoading: false,   /* login button loading state */
 
             appUser: {
                 userId: '',
@@ -59,10 +59,11 @@ export default {
         }
     },
     methods: {
+        /* YBR에서 제공하는 LOGIN */
         onLogin() {
             let vm = this;
             vm.isLoading = !vm.isLoading;
-            vm.$axios.post(`/api/user/login`, {
+            axios.post(`${vm.$store.state.host}/user/login`, {
                 params: {
                     userId: vm.appUser.userId,
                     password: vm.appUser.password,
@@ -74,23 +75,25 @@ export default {
                     /* socket 등록 */
                     let token = data.token.APP_ACC_TKN;
                     vm.$store.state.setCookie("token", token);
-                    const socket = io("ws://localhost:3000", {
+                    const socket = io(`${vm.$store.state.host}`, {
                         // reconnectionDelayMax: 10000,
                         auth: {
                             token,
                         },
                     });
                     vm.$store.commit("setSocket", socket);
+
+                    /* user_dict의 socketId 등록 */
                     socket.emit(`/socket/user/connect`, {
                         UID: data.user.UID,
                     }, (callback) => {
-                        console.log("callback:", callback);
+                        
                     });
 
+                    /* admin 계정일 경우 */
                     if(data.user.isAdmin) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setUserUID", data.user.UID);
-                        vm.$store.commit("setToken", data.token.APP_ACC_TKN);
                         vm.$router.push("/admin/home");
                         return;
                     }
@@ -102,7 +105,6 @@ export default {
                             -> user의 값만 store에 저장 후 waiting 화면으로 이동
                     */
                     if(data.couple) {
-                        vm.$store.commit("setToken", data.token.APP_ACC_TKN);
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setCouple", data.couple);
                         vm.$store.commit("setUserUID", data.user.UID);
@@ -117,6 +119,9 @@ export default {
                         return;
                     }
                 } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "isDuplicationLogin")) {
+                        alert("이미 로그인 중인 계정입니다. 다시 로그인해주세요.");
+                    }
                     vm.$c.setError(vm.formError, data.error);
                 }
                 vm.isLoading = !vm.isLoading;
@@ -139,7 +144,7 @@ export default {
                     socket.emit(`/socket/user/connect`, {
                         UID: data.user.UID,
                     }, (callback) => {
-                        console.log("callback:", callback);
+                        
                     });
                     if(data.isSigned) {
                         vm.$store.state.isSigned = true;
@@ -161,12 +166,17 @@ export default {
                         return;
                     }
                 } else {
-                    vm.$q.notify({
-                        icon: 'close',
-                        color: 'negative',
-                        message: "[" + data.code + "] " + data.message,
-                    });
-                    vm.$router.push("/login");
+                    if(Object.prototype.hasOwnProperty.call(data, "isDuplicationLogin")) {
+                        alert("이미 로그인 중인 계정입니다. 다시 로그인해주세요.");
+                    }
+                    if(Object.prototype.hasOwnProperty.call(data, "message")) {
+                        vm.$q.notify({
+                            icon: 'close',
+                            color: 'negative',
+                            message: "[" + data.code + "] " + data.message,
+                        });
+                        vm.$router.push("/login");
+                    }
                 }
             });
         },

@@ -9,6 +9,10 @@ const store = createStore({
         height: window.innerHeight,
         UID: null,
         isSigned: false,
+        
+        alarmList: [],
+        alarmListCount: 0,
+        chatCount: 0,
 
         kakao_account: {
             kakaoId: '',
@@ -19,19 +23,21 @@ const store = createStore({
             is_default_image: false,
         },
         user: {
+            UID: '',
             coupleInfoId: 0,
             userId: '',
             userName: '',
             phoneNumber: '',
             image: '',
-            socketId: '',
             isAdmin: '',
             code: '',
             spousePhoneNumber: '',
             memo: '',
+            socketId: '',
         },
 
         couple: {
+            UID: '',
             coupleInfoId: 0,
             userId: '',
             userName: '',
@@ -64,13 +70,58 @@ const store = createStore({
                 obj[key] = "";
             }
         },
+        formatDate(date, type) {
+            date = new Date(date);
+            let month = date.getMonth() + 1;
+            month = month >= 10 ? month : `0${month}`;
+            let day = date.getDate();
+            day = day >= 10 ? day : `0${day}`;
+        
+            let hours = date.getHours();
+            hours = hours >= 10 ? hours : `0${hours}`;
+            let min = date.getMinutes();
+            min = min >= 10 ? min : `0${min}`;
+            let sec = date.getSeconds();
+            sec = sec >= 10 ? sec : `0${sec}`;
+            if(type == 'date') {
+                return `${date.getFullYear()}-${month}-${day}`; 
+            } else if (type == 'date_ko') {
+                return `${date.getFullYear()}년 ${month}월 ${day}일`; 
+            } else if (type == 'date_2') {
+                return `${month}.${day}`; 
+            } else {
+                return `${date.getFullYear()}-${month}-${day} ${hours}:${min}:${sec}`; 
+            }
+        }
     },
     getters: {
         getSocket(state) { return state.socket; },
         getUser(state) { return state.user; },
         getKakaoAccount(state) { return state.kakao_account; },
+        getAlarmList(state) { return state.alarmList; },
     },
     mutations: {
+        addChatCount(state, cnt) {
+            if(cnt == 0) {
+                state.chatCount = 0;
+            } else {
+                state.chatCount += cnt;
+            }
+        },
+        pushAlarm(state, alarm) {
+            state.alarmList.push(alarm);
+            state.alarmListCount++;
+        },
+        deleteAlarm(state, idx) {
+            state.alarmList.splice(idx, 1);
+            state.alarmListCount--;
+            if(state.alarmListCount <= 0) {
+                state.alarmListCount = 0;
+            }
+        },
+        setAlarmListCount(state, cnt) {
+            state.alarmListCount = cnt;
+        },
         setUserUID(state, UID) {
             state.UID = UID;
         },
@@ -79,6 +130,22 @@ const store = createStore({
             socket.on('/client/couple/login', (data) => {
                 let coupleSocketId = data.coupleSocketId;
                 state.couple.socketId = coupleSocketId;
+                this.commit("pushAlarm", {
+                    message: `${state.couple.userName}님이 로그인 하셨습니다.`,
+                    dateView: `${state.formatDate(new Date())}`,
+                });
+            });
+            socket.on('/client/couple/logOut', (data) => {
+                state.couple.socketId = "";
+                this.commit("pushAlarm", {
+                    message: `${state.couple.userName}님이 로그아웃 하셨습니다.`,
+                    dateView: `${state.formatDate(new Date())}`,
+                });
+            });
+            
+            socket.on(`/client/user/duplication/login`, (data) => {
+                alert("다른 브라우저에서 로그인이 감지되었습니다.");
+                window.location.reload();
             });
         },
         setKakaoAccount(state, kakao_account) {
@@ -109,6 +176,7 @@ const store = createStore({
                 state.user.isAdmin = "";
                 state.user.code = "";
                 state.user.memo = "";
+                state.user.UID = "";
             } else {
                 state.user.coupleInfoId = user.coupleInfoId;
                 state.user.userId = user.userId;
@@ -119,6 +187,7 @@ const store = createStore({
                 state.user.isAdmin = user.isAdmin;
                 state.user.code = user.code;
                 state.user.memo = user.memo;
+                state.user.UID = user.UID;
             }
         },
         setSocketId(state, id) {
@@ -136,6 +205,7 @@ const store = createStore({
                 state.couple.socketId = "";
                 state.couple.backgroundImage = "";
                 state.couple.memo = "";
+                state.couple.UID = "";
             } else {
                 state.couple.coupleInfoId = couple.coupleInfoId;
                 state.couple.userId = couple.userId;
@@ -145,6 +215,7 @@ const store = createStore({
                 state.couple.socketId = couple.socketId;
                 state.couple.backgroundImage = couple.backgroundImage;
                 state.couple.memo = couple.memo;
+                state.couple.UID = couple.UID;
             }
         },
         setCoupleSocketId(state, id) {
@@ -161,6 +232,7 @@ const store = createStore({
 
             state.user.coupleInfoId = 0;
             state.user.userId = "";
+            state.user.UID = "";
             state.user.userName = "";
             state.user.image = "";
             state.user.phoneNumber = "";
@@ -171,6 +243,7 @@ const store = createStore({
 
             state.couple.coupleInfoId = 0;
             state.couple.userId = "";
+            state.couple.UID = "";
             state.couple.userName = "";
             state.couple.image = "";
             state.couple.phoneNumber = "";

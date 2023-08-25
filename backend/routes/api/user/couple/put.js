@@ -2,7 +2,6 @@ const express = require('express');
 let appRoot = require("app-root-path");
 let path = appRoot.path;
 const router = express.Router();
-const knex = require(`${path}/db`);
 const cfg = require(`${path}/config`);
 const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);

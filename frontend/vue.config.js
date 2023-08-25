@@ -1,4 +1,4 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
 const path = require('path');
 console.log("VUE_APP_HOST:", process.env.VUE_APP_HOST);
 module.exports = defineConfig({

@@ -17,7 +17,6 @@ module.exports = function(socket) {
                 error,
             });
         }
-        console.log("data:", data);
         let date = new Date();
         await db.query(`
             insert into chatLogs (chatInfoId, content, senderUID, dateAdded)
@@ -30,9 +29,13 @@ module.exports = function(socket) {
             senderUID: data.UID,
             dateAdded: date,
         };
-        console.log("user_dict:", user_dict);
-        // io.to(targetSocketId).emit(`/client/chat/message/send`, message);
-        
+        if(user_dict[data.UID].hasOwnProperty('couple')) {
+            io.to(user_dict[data.UID].couple.socketId).emit(`/client/chat/message/send`, {
+                success: 1,
+                message,
+            });
+        }
+
         return callback({
             success: 1,
             message,

@@ -36,9 +36,8 @@
                         <div class="q-pa-md" style="">
                             <q-scroll-area style="height: 500px; width: 100%;" 
                                 :style="{height: $store.state.height - 280 + 'px'}"
-                                visible
+                                class="q-px-md"
                                 @scroll="onScroll"
-                                class="q-pa-md"
                                 ref="chat_scroll">
                                 <div v-if="$store.state.user && couple && msg_list.length > 0">
                                     <template v-for="(row, idx) in msg_list" :key="idx">
@@ -46,7 +45,7 @@
                                             <q-chat-message 
                                                 class="fkR"
                                                 :avatar="$store.state.host + $store.state.user.image"
-                                                :text="[row.content]"
+                                                :text="row.content"
                                                 :stamp="row.timeView"
                                                 sent
                                                 bg-color="amber-7"
@@ -56,7 +55,7 @@
                                             <q-chat-message class="fkR"
                                                 :name="couple.userName"
                                                 :avatar="$store.state.host + couple.image"
-                                                :text="[row.content]"
+                                                :text="row.content"
                                                 :stamp="row.timeView"
                                                 text-color="white" bg-color="primary">
                                             </q-chat-message>
@@ -109,6 +108,8 @@ export default {
     },
     data() {
         return {
+            msg_dict: new Object(),
+
             coupleChat: null,
             selectChatInfo: null,
             selectChatMember: [],
@@ -127,9 +128,16 @@ export default {
         /* 입력에 따른 scroll percentage 변화 */
         onMoveChatScroll(num) {
             let vm = this;
-            vm.$nextTick(() => {
-                vm.$refs.chat_scroll.setScrollPercentage('vertical', num);
-            });
+            setTimeout(() => {
+                // console.log("isSending:", vm.isSending);
+                // console.log("chat_scroll:", vm.$refs.chat_scroll);
+                // let chat_scroll = vm.$refs.chat_scroll.getScroll();
+                // console.log("onMoveChatScroll:", chat_scroll);
+                // vm.$refs.chat_scroll.setScrollPosition('vertical', chat_scroll.verticalSize, 50);
+                if(Object.prototype.hasOwnProperty.call(vm.$refs, "chat_scroll")) {
+                    vm.$refs.chat_scroll.setScrollPercentage('vertical', num, 50);
+                }
+            }, 500);
         },
 
         onFocusMessage() {
@@ -141,7 +149,7 @@ export default {
         onBlurMessage() {
             let vm = this;
             vm.$store.state.socket.emit(`/socket/chat/event/blur`, {
-                UID: vm.$store.state.couple.UID,
+                socketId: vm.$store.state.couple.socketId,
             });
         },
 
@@ -150,6 +158,7 @@ export default {
             let vm = this;
             vm.isShowDownSRLBTN = args1.verticalPercentage == 1 ? false : true;
         },
+        /* send message */
         onSend() {
             let vm = this;
             if(!vm.form.content) { return; }
@@ -160,13 +169,16 @@ export default {
             }, (data) => {
                 if(data.success) {
                     vm.form.content = '';
-                    data.message["isSent"] = true;
-                    data.message["timeView"] = vm.setTimeView(data.message.dateAdded);
-                    vm.msg_list.push(data.message);
+                    // data.message["isSent"] = true;
+                    // data.message["timeView"] = vm.setTimeView(data.message.dateAdded);
+                    // vm.msg_list.push(data.message);
+                    vm.pushMessage(data.message, true);
                     vm.onMoveChatScroll(1.0);
                 }
             });
         },
+
+        /* load chat rooms */
         onLoadChatRooms() {
             let vm = this;
             axios.all([
@@ -192,6 +204,10 @@ export default {
             }));
         },
 
+        setDateView(date_time) {
+            let date = new Date(date_time);
+            return `${date.getFullYear()}${date.getMonth()}${date.getDate()} ${date.getHours()}${date.getMinutes()}`;
+        },
         setTimeView(date_time) {
             let date = new Date(date_time);
             let hours = date.getHours();
@@ -199,42 +215,103 @@ export default {
             let time = `${hours < 10 ? '0' + hours : hours}:${min < 10 ? '0' + min : min}`;
             return time;
         },
+
+        /* msg log load */
         onLoadMessage(chatInfoId) {
             let vm = this;
+            vm.$q.loading.show();
             axios.get(`/api/user/chat/${chatInfoId}`, {}).then((res) => {
                 let data = res.data;
                 if(data.success) {
                     let row = data.msg_list;
+                    let dict = new Object();
                     let UID = vm.$store.state.UID;
+                    let msg_list = new Array();
                     row.map((x) => {
+                        x["dateView"] = vm.setDateView(x.dateAdded);
                         x["timeView"] = vm.setTimeView(x.dateAdded);
                         x["isSent"] = x.senderUID == UID ? true : false;
                     });
-                    vm.msg_list = row;
+
+                    msg_list.push({
+                        dateView: row[0].dateView,
+                        timeView: row[0].timeView,
+                        isSent: row[0].isSent,
+                        content: [row[0].content],
+                    });
+                    let prev_key = `${row[0].dateView}/${row[0].isSent}`;
+                    for(let i=1; i<row.length; i++) {
+                        let key = `${row[i].dateView}/${row[i].isSent}`;
+                        if(prev_key == key) {
+                            msg_list[msg_list.length - 1].content.push(row[i].content);
+                        } else {
+                            msg_list.push({
+                                dateView: row[i].dateView,
+                                timeView: row[i].timeView,
+                                isSent: row[i].isSent,
+                                content: [row[i].content],
+                            });
+                            prev_key = `${row[i].dateView}/${row[i].isSent}`;
+                        }
+                    }
+
+                    vm.msg_list = msg_list;
+                    console.log("msg_list:", msg_list);
                     vm.onMoveChatScroll(1.0);
                 }
+                vm.$q.loading.hide();
             });
         },
+
+        pushMessage(message, isSent) {
+            let vm = this;
+            message["isSent"] = isSent;
+            message["timeView"] = vm.setTimeView(message.dateAdded);
+            message["dateView"] = vm.setDateView(message.dateAdded);
+            let last_msg = vm.msg_list[vm.msg_list.length-1];
+            let prev_key = `${last_msg.dateView}/${last_msg.isSent}`;
+            let key = `${message.dateView}/${isSent}`;
+            if(prev_key == key) {
+                vm.msg_list[vm.msg_list.length-1].content.push(message.content);
+            } else {
+                vm.msg_list.push({
+                    isSent,
+                    timeView: message.timeView,
+                    dateView: message.dateView,
+                    content: [message.content],
+                })
+            }
+        }
     },
     mounted: function() {
         let vm = this;
+        vm.$store.commit("addChatCount", 0);
         vm.onLoadChatRooms();
         vm.couple = vm.$store.state.couple;
         // vm.$nextTick(() => {
         //     vm.onMoveChatScroll(1.0);
         // });
         vm.$store.state.socket.on(`/client/chat/event/focus`, (data) => {
-            alert(`/client/chat/event/focus`);
             vm.isSending = true;
+            vm.onMoveChatScroll(1.0);
         });
         vm.$store.state.socket.on(`/client/chat/event/blur`, (data) => {
-            alert(`/client/chat/event/blur`);
             vm.isSending = false;
+            vm.onMoveChatScroll(1.0);
+        });
+        vm.$store.state.socket.on(`/client/chat/message/send`, (data) => {
+            vm.pushMessage(data.message, false);
+            // data.message["isSent"] = false;
+            // data.message["timeView"] = vm.setTimeView(data.message.dateAdded);
+            // data.message["dateView"] = vm.setDateView(data.message.dateAdded);
+            // vm.msg_list.push(data.message);
+            vm.onMoveChatScroll(1.0);
         });
     },
     unmounted() {
         this.$store.state.socket.off(`/client/chat/event/focus`);
         this.$store.state.socket.off(`/client/chat/event/blur`);
+        this.$store.state.socket.off(`/client/chat/message/send`);
     }
 }
 </script>

@@ -31,9 +31,8 @@
                             </div>
                             <div class="q-pa-sm" v-if="user">
                                 <div>
-                                    
                                     <template v-if="user.code">
-                                        초대코드: 
+                                        초대코드 :
                                         {{user.code}}
                                     </template>
                                     <template v-else>
@@ -41,11 +40,10 @@
                                             초대코드가 존재하지 않습니다. 발급 후 이용해주세요.
                                         </span>
                                     </template>
-                                    <q-btn dense icon="refresh" color="positive" flat
+                                    <q-btn dense flat
+                                        icon="refresh" color="positive" class="q-ml-sm"
                                         @click="refreshCode">
-                                        <q-tooltip>
-                                            재발급
-                                        </q-tooltip>
+                                        <q-tooltip>재발급</q-tooltip>
                                     </q-btn>
                                 </div>
                             </div>
@@ -153,9 +151,23 @@ export default {
         }
     },
     methods: {
+        /* code 재발급 */
+        refreshCode() {
+            let vm = this;
+            vm.$q.loading.show();
+            axios.put(`/api/user/code`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.user.code = data.code;
+                }
+                vm.$q.loading.hide();
+            });
+        },
+
         /* 상대방에게 요청을 보냄 */
         onApply() {
             let vm = this;
+            vm.formError.targetCode = "";
             vm.$q.loading.show();
             axios.post(`/api/user/waiting`, {
                 targetCode: vm.form.targetCode.trim(),
@@ -173,17 +185,7 @@ export default {
                 vm.$q.loading.hide();
             });
         },
-        refreshCode() {
-            let vm = this;
-            vm.$q.loading.show();
-            axios.put(`/api/user/code`, {}).then((res) => {
-                let data = res.data;
-                if(data.success) {
-                    vm.user.code = data.code;
-                }
-                vm.$q.loading.hide();
-            });
-        },
+        
         
         /* image */
         onUpload() {
@@ -215,7 +217,12 @@ export default {
         /* 요청 대기열의 거절 */
         onDismiss(row) {
             let vm = this;
-            console.log("row:", row);
+            axios.delete(`/api/user/waiting/${row.waitingId}`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.loadWaitingList();
+                }
+            });
         },
 
         loadWaitingList() {
@@ -237,10 +244,39 @@ export default {
         let vm = this;
         if(!vm.$store.state.UID) {
             vm.$router.push("/login");
+            return;
         }
+
+        /* 다른 유저로부터 커플 신청이 왔을 때 */
+        vm.$store.state.socket.on(`/client/user/waiting/post`, (data) => {
+            if(data.success) {
+                vm.$q.notify({
+                    icon: 'check',
+                    color: 'positive',
+                    message: data.message
+                });
+                vm.loadWaitingList();
+            }
+        });
+        vm.$store.state.socket.on(`/client/user/waiting/delete`, (data) => {
+            if(data.success) {
+                vm.$q.notify({
+                    icon: 'close',
+                    color: 'negative',
+                    message: data.message
+                });
+                vm.loadWaitingList();
+            }
+        });
         let user = vm.$store.getters.getUser;
         vm.user = user;
         vm.loadWaitingList();
     },
+    unmounted() {
+        if(this.$store.state.socket) {
+            this.$store.state.socket.off(`/client/user/waiting/post`);
+            this.$store.state.socket.off(`/client/user/waiting/delete`);
+        }
+    }
 }
 </script>

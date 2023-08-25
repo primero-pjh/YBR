@@ -5,26 +5,44 @@
                 <div style="width: 100%; display: flex; justify-content: center; border-bottom: 1px solid #eaeaea;">
                     <div style="width: 1300px; height: 72px; display: flex; align-items: center; justify-content: space-between;">
                         <div>
-                            <p class="fkB " style="font-size: 32px; margin: 0; cursor: pointer;">YBR</p>
+                            <p class="fkB " style="font-size: 36px; margin: 0;">YBR</p>
                         </div>
                         <div>
                             <q-tabs v-model="tab" class="text-black">
                                 <template v-for="row,idx in item_list" :key="idx">
-                                    <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
-                                        <template v-slot:default>
-                                            <p class="q-ma-none ft20">{{ row.label }}</p>
-                                        </template>
-                                    </q-tab>
+                                    <template v-if="row.name == 'chat'">
+                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                            <template v-slot:default>
+                                                <p class="q-ma-none ft20">{{ row.label }}</p>
+                                                <q-badge floating color="negative" v-if="chatCount > 0"> 
+                                                    {{ chatCount }} 
+                                                </q-badge>
+                                            </template>
+                                        </q-tab>
+                                    </template>
+                                    <template v-else>
+                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                            <template v-slot:default>
+                                                <p class="q-ma-none ft20">{{ row.label }}</p>
+                                            </template>
+                                        </q-tab>
+                                    </template>
                                 </template>
                             </q-tabs>
                         </div>
                         <div @click="openRightDialog">
-                            <q-chip >
-                                <q-avatar>
-                                    <img :src="$store.state.host + $store.state.user.image">
-                                </q-avatar>
-                                <p class="q-ma-none fkR ft20">{{ $store.state.user.userName }}</p>
-                            </q-chip>
+                            <q-item clickable v-ripple>
+                                <q-item-section side>
+                                    <q-avatar rounded size="48px">
+                                    <img :src="$store.state.host + user.image" />
+                                    <q-badge floating color="negative"> {{ alarmListCount }} </q-badge>
+                                    </q-avatar>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="fkR ft20">{{ user.userName }}</q-item-label>
+                                    <q-item-label caption class="fkR">{{ user.email }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
                         </div>
                     </div>
                 </div>
@@ -66,7 +84,27 @@
                         </div>
                     </q-card-section>
                     <q-card-section class="col q-ma-md fkR ft16" style="border: 1px solid #eee;">
-                        알림
+                        <div>
+                            <div class="text-h6">알림({{alarmList.length}})</div>
+                            <q-list bordered separator>
+                                <template v-for="row, idx in alarmList" :key="idx">
+                                    <q-item>
+                                        <q-item-section>
+                                            <q-item-label>{{ row.message }}</q-item-label>
+                                            <q-item-label caption>{{ row.dateView }}</q-item-label>
+                                        </q-item-section>
+                                        <q-menu auto-close>
+                                            <q-list style="min-width: 100px">
+                                                <q-item clickable @click="onRight(idx)">
+                                                    <q-item-section>삭제</q-item-section>
+                                                </q-item>
+                                            </q-list>
+                                        </q-menu>
+                                    </q-item>
+                                </template>
+                            </q-list>
+                        </div>
+                        
                     </q-card-section>
                     <q-card-actions class="q-pa-md">
                         <q-btn outline label="계정설정" v-close-popup style="width: 100%; margin-left: 0;" 
@@ -109,14 +147,23 @@ export default {
     props: {
     },
     computed: {
+        user: function() { return this.$store.state.user; },
+        alarmList: function() { return this.$store.state.alarmList; },
+        alarmListCount: function() { return this.$store.state.alarmListCount; },
+        chatCount: function() { return this.$store.state.chatCount; },
         isAdmin: function() {
             return this.$store.state.user.isAdmin;
         },
     },
     methods: {
+        onRight(idx) {
+            let vm = this;
+            vm.$store.commit("deleteAlarm", idx);
+        },
         openRightDialog() {
             let vm = this;
             vm.isRightDialog = !vm.isRightDialog;
+            vm.$store.commit("setAlarmListCount", 0);
         },
         goto_setting() {
             this.$router.push("/setting");
@@ -126,6 +173,9 @@ export default {
         },
         onLogout() {
             let vm = this;
+            vm.$store.state.socket.emit(`/socket/user/logOut`, {
+                coupleSocketId: vm.$store.state.couple.socketId,
+            });
             vm.$router.push("/login");
         },
         location_href(row) {

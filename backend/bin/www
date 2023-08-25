@@ -83,7 +83,7 @@ const path = appRoot.path;
 
 io.on("connection", async (socket) => { 
 	socket.emit('connection', socket.id);
-	var auth = socket.handshake.auth;
+	const auth = socket.handshake.auth;
 	console.log(chalk.yellow.bgGreen.bold('connection-socket:', socket.id));
 	socket.onAny(async (e) => {
 		const headers = socket.handshake.headers;
@@ -107,23 +107,28 @@ io.on("connection", async (socket) => {
   	_socket = socket;
   	dfs(path + '/routes/socket');
   
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
         let socketId = socket.id;
+		const auth = socket.handshake.auth;
+		let user = await jwtFunc.verify(auth.token);
         console.log(chalk.yellow.bgRed.bold('disconnect:', socket.id));
-        for(let key in user_dict) {
-            if( user_dict.hasOwnProperty(key) && user_dict[key].socketId == socketId ) {
-                /* couple 이 있다면 logout(disconnect) 을 알림 */
-                if(user_dict[key].hasOwnProperty("coupleInfoId")) {
-                    io.to(`/${user_dict[key].coupleInfoId}`).emit('/client/couple/logOut');
-                }
-                /* admin-page data 전달 */
-                io.to("admin").emit(`/client/admin/disconnect/user`, { 
-                    phoneNumber: key, 
-                    socketId 
-                });
-                delete user_dict[key];
-            }
-        }
+		let key = user.UID;
+		if(user_dict.hasOwnProperty(key)) {
+			
+			if( user_dict[key].hasOwnProperty('couple') ) {
+				let coupleUID = user_dict[key].couple.UID;
+				/* couple 이 있다면 logout(disconnect) 을 알림 */
+				if(coupleUID && user_dict.hasOwnProperty(coupleUID)) {
+					io.to(user_dict[coupleUID].socketId).emit('/client/couple/logOut');
+					/* admin-page data 전달 */
+					io.to("admin").emit(`/client/admin/disconnect/user`, { 
+						phoneNumber: key, 
+						socketId 
+					});
+				}
+			}
+			delete user_dict[key];
+		}
     });
 
   	module.exports = {

@@ -70,9 +70,10 @@ router.post('/api/user/waiting', async function(req, res, next) {
         values
         (?, ?, ?)
     `, [ user.UID, UID, new Date() ]);
-    let target_socket_id = user_dict[user.UID];
+    let target_socket_id = user_dict[user.UID].socketId;
     console.log("target_socket_id:", target_socket_id);
     io.to(target_socket_id).emit(`/client/user/waiting/post`, {
+        success: 1,
         message: `${user.userName}님에게 신청이 왔습니다`,
     });
 

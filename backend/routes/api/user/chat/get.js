@@ -30,6 +30,7 @@ router.get('/api/user/chat/:chatInfoId', async function(req, res, next) {
         select cl.* 
         from chatLogs as cl
         where cl.chatInfoId=?
+        order by cl.chatId asc
     `, [chatInfoId]);
     
     return res.json({

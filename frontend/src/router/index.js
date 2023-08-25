@@ -12,6 +12,7 @@ import errorVue from "../views/error.vue";
 
 /* admin */
 import _homeVue from "../views/admin/home.vue";
+import _dashBoardVue from "../views/admin/dashBoard.vue";
 import _dbVue from "../views/admin/db.vue";
 import _personVue from "../views/admin/user/person.vue";
 import _coupleVue from "../views/admin/user/couple.vue";
@@ -36,6 +37,7 @@ const routes = [
     { path: "/admin/db", name: "admin_db", component: _dbVue, label: "DATABASE", },
     { path: "/admin/user/person", name: "admin_person", component: _personVue, label: "DATABASE", },
     { path: "/admin/user/couple", name: "admin_couple", component: _coupleVue, label: "DATABASE", },
+    { path: "/admin/dashbaord", name: "admin_dashbaord", component: _dashBoardVue, label: "DATABASE", },
 
     /*error*/
     { path: "/error", name: "error", component: errorVue, label: "404", },

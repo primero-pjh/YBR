@@ -70,9 +70,9 @@ function dfs(dir) {
     });
 }
 // dfs('./routes/api');
-app.use('/', require('./routes/api/user/login.js'));
 app.use('/', require('./routes/api/user/check'));
 app.use('/', require('./routes/api/user/couple/put'));
+app.use('/', require('./routes/api/user/waiting/delete'));
 app.use('/', require('./routes/api/user/waiting/post'));
 app.use('/', require('./routes/api/user/upload/image'));
 app.use('/', require('./routes/api/user/upload/backImage'));
@@ -100,6 +100,7 @@ app.use('/', require('./routes/api/schedules/put'));
 app.use('/', require('./routes/api/schedules/delete'));
 app.use('/', require('./routes/api/schedules/couple/get'));
 
+app.use('/', require('./routes/user/login.js'));
 app.use('/', require('./routes/user/upload/temp/image'));
 app.use('/', require('./routes/user/kakao/oauth/token'));
 app.use('/', require('./routes/user/kakao/signup'));

@@ -44,7 +44,7 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
             let kakao_account = response2.data.kakao_account.profile;
             kakao_account["kakaoId"] = kakaoId;
             kakao_account["email"] = response2.data.kakao_account.email;
-            let [rows,fields] = await db.query(`
+            let [rows, fields] = await db.query(`
                 select 
                     u.userId, u.UID, u.phoneNumber, u.image, u.userName, 
                     u.isAdmin, u.coupleInfoId, u.coupleUID, u.password, u.code
@@ -55,6 +55,16 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
             if(rows.length > 0) {
                 let user = rows[0];
 
+                /* 로그인이 존재하는 경우 기존 로그인까지도 해제 */
+                if(user_dict.hasOwnProperty(user.UID)) {
+                    io.to(user_dict[user.UID].socketId).emit('/client/user/duplication/login');
+                    return res.json({
+                        success: 0,
+                        isDuplicationLogin: true
+                    });
+                }
+                
+                user_dict[user.UID] = new Object();
                 let APP_ACC_TKN = jwt.sign({ 
                     kakaoId: user.kakaoId,
                     UID: user.UID
@@ -74,30 +84,34 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                     let couple = couples[0];
 
                     let coupleSocketId = "";
+                    user_dict[user.UID]["couple"] = {
+                        socketId: '',
+                        UID: couple.UID,
+                    }
                     if(couple) {
                         if(user_dict.hasOwnProperty(couple.UID)) {
-                            coupleSocketId = user_dict[couple.UID];
-                            io.to(coupleSocketId).emit(`/client/couple/login`, {
-                                coupleSocketId,
-                            });
+                            coupleSocketId = user_dict[couple.UID].socketId;
+                            user_dict[user.UID].couple.socketId = coupleSocketId;
+                            couple.socketId = coupleSocketId;
                         }
                     }
+                    console.log("user_dict:", user_dict);
                     return res.json({
                         success: 1,
-                        couple: couple,
+                        user,
+                        couple,
                         token: {
                             APP_ACC_TKN,
                         },
-                        user,
                     });
                 } else {
                     return res.json({
                         success: 1,
                         couple: null,
+                        user,
                         token: {
                             APP_ACC_TKN,
                         },
-                        user,
                     });
                 }
             } else {

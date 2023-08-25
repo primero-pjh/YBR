@@ -8,6 +8,7 @@ module.exports = function(socket) {
         let io = require(`${path}/bin/www`)["io"];
         
         io.to(data.socketId).emit(`/client/chat/event/focus`);
+        
     });
 
     socket.on("/socket/chat/event/blur", async (data, callback) => {
