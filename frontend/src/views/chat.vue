@@ -129,10 +129,7 @@ export default {
         onMoveChatScroll(num) {
             let vm = this;
             setTimeout(() => {
-                // console.log("isSending:", vm.isSending);
-                // console.log("chat_scroll:", vm.$refs.chat_scroll);
                 // let chat_scroll = vm.$refs.chat_scroll.getScroll();
-                // console.log("onMoveChatScroll:", chat_scroll);
                 // vm.$refs.chat_scroll.setScrollPosition('vertical', chat_scroll.verticalSize, 50);
                 if(Object.prototype.hasOwnProperty.call(vm.$refs, "chat_scroll")) {
                     vm.$refs.chat_scroll.setScrollPercentage('vertical', num, 50);
@@ -256,7 +253,6 @@ export default {
                     }
 
                     vm.msg_list = msg_list;
-                    console.log("msg_list:", msg_list);
                     vm.onMoveChatScroll(1.0);
                 }
                 vm.$q.loading.hide();
