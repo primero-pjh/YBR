@@ -8,7 +8,7 @@
             </adminLayout>
         </template>
         <template v-else>
-            <layout>
+            <layout ref="layout">
                 <template v-slot:body>
                     <router-view />
                 </template>

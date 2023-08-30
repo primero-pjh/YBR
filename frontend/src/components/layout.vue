@@ -8,10 +8,10 @@
                             <p class="fkB " style="font-size: 36px; margin: 0;">YBR</p>
                         </div>
                         <div>
-                            <q-tabs v-model="tab" class="text-black">
+                            <q-tabs v-model="tab" class="text-black" >
                                 <template v-for="row,idx in item_list" :key="idx">
                                     <template v-if="row.name == 'chat'">
-                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                        <q-tab :name="row.name" class="fkB" @click="goto_page(row)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
                                                 <q-badge floating color="negative" v-if="chatCount > 0"> 
@@ -124,9 +124,9 @@ export default {
     data() {
         return {
             height: 0,
-            tab: 'home',
             isShow: true,
             isRightDialog: false,
+            tab: 'home',
             
             unShowPage: {
                 login: true,
@@ -136,7 +136,7 @@ export default {
             },
             item_list: [
                 { icon: 'calendar-o', label: '홈', url: '/home', name: 'home',  },
-                { icon: 'calendar-o', label: '캘린더', url: '/calendar', name: 'calendar',  },
+                { icon: 'calendar-o', label: '캘린더', url: '/calendar/0', name: 'calendar',  },
                 { icon: 'chat-o', label: '채팅', url: '/chat', name: 'chat', isCustom: true,  },
                 { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community',  },
                 { icon: 'smile-o', label: '프로필', url: '/profile', name: 'profile',  },
@@ -164,6 +164,11 @@ export default {
             let vm = this;
             vm.isRightDialog = !vm.isRightDialog;
             vm.$store.commit("setAlarmListCount", 0);
+        },
+        goto_page(args) {
+            let vm = this;
+            vm.$store.commit("setTab", args.name);
+            vm.$router.push(args.url);
         },
         goto_setting() {
             this.$router.push("/setting");

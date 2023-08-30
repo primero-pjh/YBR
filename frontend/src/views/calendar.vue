@@ -30,10 +30,10 @@ export default {
             let vm = this;
             vm.$q.loading.show();
             let coupleInfoId = vm.$store.state.user.coupleInfoId;
-            axios.get(`/api/schedules/couple/${coupleInfoId}`, {}).then((res) => {
+            axios.get(`/api/couple/${coupleInfoId}/schedules`, {}).then((res) => {
                 let data = res.data;
                 if(data.success) {
-                    let row = data.schedule_list;
+                    let row = data.sche_list;
                     row.map((x) => {
                         x.isAllday = x.isAllday ? true : false;
                         x.attendees = JSON.parse(x.attendees);
@@ -46,10 +46,27 @@ export default {
             vm.calendar.render();
             vm.calendar.clearGridSelections();
         },
+        loadSchedule(id) {
+            let vm = this;
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            axios(`/api/couple/${coupleInfoId}/schedules/${id}`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    let schedule = data.schedule;
+                    schedule.isAllday = schedule.isAllday ? true : false;
+                    vm.$refs.dialog_scheduled.open('edit', schedule, (schedule, type) => {
+                        if(type == 'edit') {
+                            vm.calendar.updateEvent(schedule.id, schedule.calendarId, schedule);
+                        } else if (type == 'delete') {
+                            vm.calendar.deleteEvent(schedule.id, schedule.calendarId);
+                        }
+                    });
+                }
+            });
+        },
     },
     mounted: function() {
         let vm = this;
-
         const calendar = new Calendar('#calendar', {
             defaultView: 'month',
             // isReadOnly: false,
@@ -130,7 +147,6 @@ export default {
                 } else if (type == 'delete') {
                     vm.calendar.deleteEvent(schedule.id, schedule.calendarId);
                 }
-                
             });
         });
         // 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생
@@ -138,7 +154,16 @@ export default {
             console.log(event.date, event.target);
         });
         vm.calendar = calendar;
-        vm.loadScheduleList();
+
+        if(Object.prototype.hasOwnProperty.call(vm.$router.currentRoute.value.params, "id")) {
+            let id = vm.$router.currentRoute.value.params.id;
+            if(id == 0) {
+                vm.loadScheduleList();
+            } else {
+                vm.loadScheduleList();
+                vm.loadSchedule(id);
+            }
+        }
     },
 }
 </script>
