@@ -229,26 +229,27 @@ export default {
                         x["timeView"] = vm.setTimeView(x.dateAdded);
                         x["isSent"] = x.senderUID == UID ? true : false;
                     });
-
-                    msg_list.push({
-                        dateView: row[0].dateView,
-                        timeView: row[0].timeView,
-                        isSent: row[0].isSent,
-                        content: [row[0].content],
-                    });
-                    let prev_key = `${row[0].dateView}/${row[0].isSent}`;
-                    for(let i=1; i<row.length; i++) {
-                        let key = `${row[i].dateView}/${row[i].isSent}`;
-                        if(prev_key == key) {
-                            msg_list[msg_list.length - 1].content.push(row[i].content);
-                        } else {
-                            msg_list.push({
-                                dateView: row[i].dateView,
-                                timeView: row[i].timeView,
-                                isSent: row[i].isSent,
-                                content: [row[i].content],
-                            });
-                            prev_key = `${row[i].dateView}/${row[i].isSent}`;
+                    if(row.length > 0) {
+                        msg_list.push({
+                            dateView: row[0].dateView,
+                            timeView: row[0].timeView,
+                            isSent: row[0].isSent,
+                            content: [row[0].content],
+                        });
+                        let prev_key = `${row[0].dateView}/${row[0].isSent}`;
+                        for(let i=1; i<row.length; i++) {
+                            let key = `${row[i].dateView}/${row[i].isSent}`;
+                            if(prev_key == key) {
+                                msg_list[msg_list.length - 1].content.push(row[i].content);
+                            } else {
+                                msg_list.push({
+                                    dateView: row[i].dateView,
+                                    timeView: row[i].timeView,
+                                    isSent: row[i].isSent,
+                                    content: [row[i].content],
+                                });
+                                prev_key = `${row[i].dateView}/${row[i].isSent}`;
+                            }
                         }
                     }
 

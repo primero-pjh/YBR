@@ -1,44 +1,65 @@
 <template>
-    <div id="homeVue" style="height: 100%;">
-        <div style="display: flex; align-items: center;" class="q-py-sm shadow-2 q-my-md">
-            <div>
-                <q-btn icon="chevron_left" flat @click="move_date(-1)"></q-btn>
+    <div id="calendarVue" style="height: 100%;">
+        <div style="display: flex; align-items: center; justify-content: start;" 
+            class="q-pa-md shadow-2 q-my-md">
+            <div class="q-mr-md">
+                <q-btn-group>
+                    <q-btn dense style="width: 50px;" label="월" 
+                        :color="(view_type=='month')?'primary':'white'"
+                        :text-color="(view_type=='month')?'white':'black'" 
+                        @click="changeViewType('month')" />
+                    <q-btn dense style="width: 50px;" label="주" 
+                        :color="(view_type=='week')?'primary':''" 
+                        :text-color="(view_type=='week')?'white':'black'" 
+                        @click="changeViewType('week')" />
+                    <q-btn dense style="width: 50px;" label="일" 
+                        :color="(view_type=='day')?'primary':''" 
+                        :text-color="(view_type=='day')?'white':'black'" 
+                        @click="changeViewType('day')" />
+                </q-btn-group>
             </div>
-            <div>
+            <div class="q-mr-md">
+                <q-btn dense icon="chevron_left" outline @click="move_date(-1)"></q-btn>
+            </div>
+            <div class="q-mr-md">
                 <div class="fkB ft24 q-px-md">{{ standard_date }}</div>
             </div>
-            <div>
-                <q-btn icon="chevron_right" flat @click="move_date(1)"></q-btn>
+            <div class="q-mr-md">
+                <q-btn dense icon="chevron_right" outline @click="move_date(1)"></q-btn>
             </div>
             <div>
-                <q-btn label="오늘" outline color="primary" class="fkR" @click="move_date(0)" />
+                <q-btn dense label="오늘" outline color="primary" class="fkR" 
+                    style="width: 50px;"
+                    @click="move_date(0)" />
             </div>
         </div>
-        <div class="row">
-            <div class="col-3">
-                <div style="border: 1px solid #eee;" class="q-mr-md">
-                    <div class="text-h6 fkR text-center">
-                        <div class="row q-py-sm q-px-md bg-primary">
-                            <div style="color: white;"><span>캘린더 필터</span></div>
+        <div style="display:flex; justify-content: center; width: 100%;">
+            <div style="width: 100%;">
+                <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
+            </div>
+            <div style="min-width: 200px;">
+                <div class="fkR" style="border: 1px solid #eee;">
+                    <div class="text-h6 text-center">
+                        <div class="row q-py-sm q-px-md">
+                            <div><span>캘린더 필터</span></div>
                             <q-space></q-space>
-                            <q-btn icon="add" color="white" dense flat>
+                            <q-btn icon="add" color="positive" dense flat>
                                 <q-menu>
                                     <div class="q-pa-md">
                                         <div>
                                             <q-input dense label="카테고리" outlined
-                                                v-model="category.title"
+                                                v-model="classification.title"
                                                 :error="formError.title?true:false"
                                                 :error-message="formError.title" />
                                         </div>
                                         <div>
-                                            <q-color v-model="category.color" 
-                                                @update:model-value="changeColor"
-                                                no-header class="my-picker" />
+                                            <q-color v-model="classification.color" />
                                         </div>
                                     </div>
                                     <q-separator></q-separator>
                                     <div style="display: flex; justify-content: end;" class="q-pa-sm">
-                                        <q-btn label="추가" outline color="positive" />
+                                        <q-btn label="추가" outline color="positive" 
+                                            @click="onAddClassification"/>
                                     </div>
                                 </q-menu>
                             </q-btn>
@@ -47,10 +68,10 @@
                     </div>
                     
                     <div>
-                        <q-list separator >
-                            <template v-for="row, idx in category_list" :key="idx"> 
-                            <q-item clickable v-ripple @click="row.isSelected = !row.isSelected">
-                                <q-item-section>
+                        <q-list >
+                            <template v-for="row, idx in classification_list" :key="idx"> 
+                            <q-item clickable>
+                                <q-item-section @click="selectClassification(row)">
                                     <div style="display: flex; align-items: center;">
                                         <div class="q-mr-md">
                                             <div style="border: 1px solid grey; border-radius: 15px;
@@ -58,19 +79,19 @@
                                                 :style="{backgroundColor: row.isSelected ? row.color : 'white'}">
                                             </div>
                                         </div>
-                                        <div>
+                                        <div class="ft16">
                                             {{ row.title }}
                                         </div>
                                     </div>
+                                </q-item-section>
+                                <q-item-section side>
+                                    <q-btn icon="close" flat dense @click="onDeleteClassification"/>
                                 </q-item-section>
                             </q-item>
                             </template>
                         </q-list>
                     </div>
                 </div>
-            </div>
-            <div class="col-9">
-                <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
             </div>
         </div>
         <dialog_scheduled ref="dialog_scheduled" />
@@ -85,33 +106,79 @@ import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import dialog_scheduled from '@/components/dialog_scheduled.vue';
 
 export default {
-    name: 'homeVue',
+    name: 'calendarVue',
     components: {
         dialog_scheduled,
     },
     data() {
         return {
-            category_list: [],
+            view_type: 'month', 
+            classification_list: [],
             standard_date: '',
             is_check: false,
             calendar: null,
             schedule_list: [],
 
-            category: {
+            classification: {
                 title: '',
                 color: '',
             },
             formError: {
                 title: '',
-
             },
         }
     },
     methods: {
-        changeColor(args) {
+        /* classification */
+        onAddClassification() {
             let vm = this;
-            console.log("args:", args);
-        },
+            vm.$q.loading.show();
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            vm.$store.state.clearError(vm.formError);
+            axios.post(`/api/couple/${coupleInfoId}/schedules-classifications`, {
+                title: vm.classification.title,
+                color: vm.classification.color,
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.$q.notify({
+                        icon: 'check',
+                        color: 'positive',
+                        message: data.message,
+                    });
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.state.setError(vm.formError, data.error);
+                    }
+                    if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                        vm.$q.notify({
+                            icon: 'error',
+                            color: 'negative',
+                            message: data.message,
+                        });
+                    }
+                }
+                vm.$q.loading.hide();
+            });
+        },  
+        onDeleteClassification() {
+            let vm = this;
+        },  
+
+        /* select */
+        selectClassification(row) {
+            let vm = this;
+            row.isSelected = !row.isSelected;
+            vm.calendar.setCalendarVisibility(String(row.coupleScheduleClassificationId), row.isSelected);
+        },  
+        /* change */
+        changeViewType(view_type) {
+            let vm = this;
+            vm.view_type = view_type;
+            vm.calendar.changeView(view_type);
+        },  
+
+        /* function */
         move_date(num) {
             let vm = this;
             if(num == -1) {
@@ -124,6 +191,8 @@ export default {
             let date = vm.$c.formatDate(vm.calendar.getDate(), "date");
             vm.standard_date = date.slice(0, 7);
         },
+
+        /* load */
         loadScheduleList() {
             let vm = this;
             vm.$q.loading.show();
@@ -162,24 +231,24 @@ export default {
                 }
             });
         },
-        loadScheduleCategroyList() {
+        loadScheduleClassificationList() {
             let vm = this;
-            axios.get(`/api/couple/${vm.$store.state.user.coupleInfoId}/schedules-categorys`, {}).then((res) => {
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            axios.get(`/api/couple/${coupleInfoId}/schedules-classifications`, {}).then((res) => {
                 let data = res.data;
                 if(data.success) {
-                    let row = data.category_list;
+                    let row = data.classification_list;
                     row.map((x) => {
                         x["isSelected"] = true;
                     });
-                    console.log("row:", row);
-                    vm.category_list = row;
+                    vm.classification_list = row;
                 }
             });
         },
     },
     mounted: function() {
         let vm = this;
-        vm.loadScheduleCategroyList();
+        vm.loadScheduleClassificationList();
         let date = new Date();
         vm.standard_date = `${date.getFullYear()}-${(date.getMonth()+1)>=10?(date.getMonth()+1):'0'+(date.getMonth()+1)}`;
         const calendar = new Calendar('#calendar', {
@@ -190,12 +259,13 @@ export default {
             useFormPopup: false,
             // gridSelection: false,
         });
+        calendar.clearGridSelections();    
         // 특정 날짜 혹은 시간을 드래그 앤 드랍했을 때 발생
         calendar.on('selectDateTime', (info) => {
             let schedule = {
                 id: 0,                          //	일정 ID
-                calendarId: '',    // 캘린더 ID
-                title: '',             // 일정 제목
+                calendarId: '',                 // 캘린더 ID
+                title: '',                      // 일정 제목
                 body: '',                       // 일정 내용
                 isAllday: false,                // 종일 일정 여부
                 start: info.start,              // 일정이 시작하는 일시.
@@ -210,9 +280,10 @@ export default {
                 isReadOnly: false,	            // 수정 가능한 일정 여부
                 isPrivate: false,	            // 개인적인 일정 여부
                 color:	'#000',	                // 일정 요소의 텍스트 색상
-                backgroundColor:	'#a1b56c',	// 일정 요소의 배경 색상
-                dragBackgroundColor:	'#a1b56c',	// 일정 요소를 드래그했을 때 배경 색상
+                backgroundColor: '#a1b56c',	    // 일정 요소의 배경 색상
+                dragBackgroundColor: '#a1b56c',	// 일정 요소를 드래그했을 때 배경 색상
                 borderColor:	'#000',     	// 일정 요소의 좌측 테두리 색상
+                classification: '기념일',       // 일정의 분류(필터)
                 // customStyle:	{},	            // 일정 요소에 적용할 스타일. CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체이다.
                 // raw:	null,	                // 실제 일정 데이터
             };
@@ -263,6 +334,9 @@ export default {
         
         // 이벤트를 클릭할 때 발생
         calendar.on('clickEvent', ({ event }) => {
+            const { id, calendarId } = event;
+            let temp = vm.schedule_list.find(x=>x.id == id);
+            event["classification"] = temp.classification;
             vm.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
                 if(type == 'edit') {
                     vm.calendar.updateEvent(schedule.id, schedule.calendarId, schedule);

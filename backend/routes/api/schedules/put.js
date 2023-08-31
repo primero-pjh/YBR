@@ -23,12 +23,12 @@ router.put('/api/schedules/:scheduleId', async (req, res, next) => {
         update schedules
         set calendarId=?, title=?, body=?, isAllday=?, start=?,
             end=?, location=?, attendees=?, category=?, dueDateClass=?,
-            isVisible=?, isPending=?, isFocused=?, isPrivate=?
+            isVisible=?, isPending=?, isFocused=?, isPrivate=?, classification=?
         where id=?
     `, [
-        '', schedule.title, schedule.body, (schedule.isAllday ? 1 : 0), schedule.start, 
+        schedule.calendarId, schedule.title, schedule.body, (schedule.isAllday ? 1 : 0), schedule.start, 
         schedule.end, schedule.location, JSON.stringify(schedule.attendees), schedule.category, schedule.dueDateClass, 
-        1, 0, 0, 0, scheduleId
+        1, 0, 0, 0, scheduleId, schedule.classification
     ]);
   
     return res.json({

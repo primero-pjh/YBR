@@ -82,9 +82,9 @@ router.put('/api/user/couple', async function(req, res, next) {
         where UID=?
     `, [coupleInfoId, toUID, fromUID]);
 
-    /* coupleInfoId에 default-schedule-category 을 등록한다. */
+    /* coupleInfoId에 default-schedule-classifications 을 등록한다. */
     await db.query(`
-        insert into coupleScheduleCategorys (coupleInfoId, title, color, status, dateAdded)
+        insert into coupleScheduleClassifications (coupleInfoId, title, color, status, dateAdded)
         values ?
     `, [
             [
@@ -109,7 +109,6 @@ router.put('/api/user/couple', async function(req, res, next) {
         WHERE waitingId=?
     `, [waitingId]);
 
-    console.log("couple:", couple);
     try {
         io.to(user_dict[toUID].socketId).emit(`/client/user/couple/put`);
         io.to(user_dict[fromUID].socketId).emit(`/client/user/couple/put`);

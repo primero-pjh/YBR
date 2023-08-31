@@ -5,13 +5,10 @@ const router = express.Router();
 const cfg = require(`${path}/config`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
-/*
-    schedule list를 읽어오는 controller
-*/
-router.get('/api/couple/:coupleInfoId/schedules-categorys', async (req, res, next) => {
+router.get('/api/couple/:coupleInfoId/schedules-classifications', async (req, res, next) => {
     /*
-        #swagger.description = '특정 커플의 모든 일정-카테고리를 들고오는 API'
-        #swagger.tags = ['couple']
+        #swagger.description = '특정 커플의 모든 일정-분류를 들고오는 API'
+        #swagger.tags = ['/couple/schedules/classifications']
         #swagger.summary = 'token*'
         #swagger.parameters['params'] = {
             in: 'params',
@@ -29,15 +26,15 @@ router.get('/api/couple/:coupleInfoId/schedules-categorys', async (req, res, nex
             isLogged: false,
         });
     }
-    let [category_list, fields] = await db.query(`
+    let [classification_list, fields] = await db.query(`
         select s.*
-        from coupleScheduleCategorys as s
+        from coupleScheduleClassifications as s
         where s.coupleInfoId=? and status=?
     `, [coupleInfoId, 1]);
     
     return res.json({
         success: 1,
-        category_list,
+        classification_list,
     });
 });
 

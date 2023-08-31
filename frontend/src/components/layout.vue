@@ -11,7 +11,7 @@
                             <q-tabs v-model="tab" class="text-black" >
                                 <template v-for="row,idx in item_list" :key="idx">
                                     <template v-if="row.name == 'chat'">
-                                        <q-tab :name="row.name" class="fkB" @click="goto_page(row)">
+                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
                                                 <q-badge floating color="negative" v-if="chatCount > 0"> 

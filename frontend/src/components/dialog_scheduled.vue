@@ -12,7 +12,23 @@
             <q-separator />
             <q-card-section class="col q-pt-none">
                 <div style="width: 100%;">
-                    <q-select dense v-model="schedule.classification" :options="classification_list" label="분류" />
+                    <q-checkbox  color="negative" checked-icon="flag" unchecked-icon="outlined_flag" 
+                        label="중요도" dense @update:model-value="onChangeMileStone"
+                        v-model="isMileStone" class="q-py-md fkR ft18"/>
+                    <q-select dense v-model="schedule.classification" :options="classification_list" 
+                        label="분류(필터)">
+                        <template v-slot:option="scope">
+                            <q-item v-bind="scope.itemProps" dense @click="onClickClassification(scope.opt)">
+                                <q-item-section avatar>
+                                    <q-badge :style="{backgroundColor: scope.opt.color}" />
+                                </q-item-section>
+                                <q-item-section >
+                                    <q-item-label>{{ scope.opt.title }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                    
                     <q-input dense label="일정 제목 *" v-model="schedule.title" label-color="red" @keyup.enter="onSave" />
                     <q-input v-if="isDetail" dense label="일정 내용" v-model="schedule.body" type="textarea" 
                         placeholder="500자 내로 작성하세요." />
@@ -135,20 +151,17 @@ export default {
     name: 'dialog_scheduled',
     data() {
         return {
+            
             position: 'right',
             isOpen: false,
             isDetail: false,
+            isMileStone: false,
             callback: null,
             attend: '',
-            classification_list: [
-                { label: '기본', value: 'default', color: 'black', },
-                { label: '친구', value: 'friend', color: 'green', },
-                { label: '가족', value: 'family', color: 'pink', },
-            ],
             schedule: {
                 id: 0,                          // 일정 ID
                 calendarId: '',                 // 캘린더 ID
-                classification: 'default',      // 분류
+                classification: '기념일',      // 분류
                 title: '',                      // 일정 제목
                 body: '',                       // 일정 내용
                 isAllday: false,                // 종일 일정 여부
@@ -170,27 +183,28 @@ export default {
                 // customStyle: {},	            // 일정 요소에 적용할 스타일. CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체이다.
             },
             formError: {},
+
+            classification: null,
+            classification_list: [],
         }
     },
     methods: {
-        setSchedule(schedule) {
+        /* change */
+        onChangeMileStone(args) {
             let vm = this;
-            vm.schedule = schedule;
-            vm.schedule.classification = '기본';
-            vm.schedule.start = vm.$c.formatDate(schedule.start);
-            vm.schedule.end = vm.$c.formatDate(schedule.end);
+            vm.$nextTick(() => {
+                if(args) {
+                    vm.schedule.category = 'milestone';
+                } else {
+                    if(vm.schedule.isAllday) {
+                        vm.schedule.category = 'allday';
+                    } else {
+                        vm.schedule.category = 'time';
+                    }
+                }
+            });
         },
-
-        onRemoveAttend(idx) {
-            let vm = this;
-            vm.schedule.attendees.splice(idx, 1);
-        },
-        onAddAttend() {
-            let vm = this;
-            let text = vm.attend;
-            vm.schedule.attendees.push(text);
-            vm.attend = '';
-        },  
+        /* allday */
         onChangeAllDay(args) {
             let vm = this;
             vm.$nextTick(() => {
@@ -204,14 +218,52 @@ export default {
                     vm.schedule.start = vm.schedule.start + " 00:00:00";
                     vm.schedule.end = vm.schedule.end + " 00:00:00";
                 }
+
+                if(!vm.isMileStone) {
+                    if(args) {
+                        vm.schedule.category = 'allday';
+                    } else {
+                        vm.schedule.category = 'time';
+                    }
+                }
             });
         },
+        setSchedule(schedule) {
+            let vm = this;
+            vm.schedule = schedule;
+            vm.isMileStone = schedule.category == 'milestone' ? true : false;
+            vm.schedule.start = vm.$c.formatDate(schedule.start);
+            vm.schedule.end = vm.$c.formatDate(schedule.end);
+        },
+
+        /* classification */
+        onClickClassification(args) {
+            let vm = this;
+            vm.classification = args;
+            vm.schedule.classification = args.title;
+            vm.schedule.calendarId = args.coupleScheduleClassificationId;
+        },
+
+        /* attend */
+        onRemoveAttend(idx) {
+            let vm = this;
+            vm.schedule.attendees.splice(idx, 1);
+        },
+        onAddAttend() {
+            let vm = this;
+            let text = vm.attend;
+            vm.schedule.attendees.push(text);
+            vm.attend = '';
+        },  
+
+        
+
+        /* function */
         onClose() {
             let vm = this;
             vm.isOpen = false;
             if(vm.callback) { vm.callback(); }
         },
-        
         open(mode, scheduleData, callback) {
             let vm = this;
             vm.mode = mode;
@@ -251,7 +303,7 @@ export default {
         },
         onSave() {
             let vm = this;
-            vm.$q.loading.show();
+            // vm.$q.loading.show();
             let scheduleId = vm.schedule.id;
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
@@ -261,9 +313,9 @@ export default {
                 let data = res.data;
                 if(data.success) {
                     vm.$q.notify({
+                        icon: 'check',
                         message: data.message,
-                        color: 'black',
-                        position: 'bottom',
+                        color: 'positive',
                     });
                     vm.callback(vm.schedule, 'edit');
                 } else {
@@ -271,6 +323,11 @@ export default {
                         vm.$store.setError(vm.formError, data.error);
                     }
                     if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                        vm.$q.notify({
+                            icon: 'error',
+                            color: 'negative',
+                            message: data.message,
+                        });
                         alert(data.message);
                     }
                 }
@@ -298,10 +355,26 @@ export default {
                 vm.isOpen = false;
             });
         },
+
+        /* load */
+        loadScheduleClassificationList() {
+            let vm = this;
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            axios.get(`/api/couple/${coupleInfoId}/schedules-classifications`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    let row = data.classification_list;
+                    row.map((x) => {
+                        x["isSelected"] = true;
+                    });
+                    vm.classification_list = row;
+                }
+            });
+        },
     },
     mounted() {
         let vm = this;
-        
+        vm.loadScheduleClassificationList();
     }
 }
 </script>

@@ -100,7 +100,8 @@ app.use('/', require('./routes/api/schedules/put'));
 app.use('/', require('./routes/api/schedules/delete'));
 
 app.use('/', require('./routes/api/couple/schedules/get'));
-app.use('/', require('./routes/api/couple/schedules/categorys/get'));
+app.use('/', require('./routes/api/couple/schedules/classifications/get'));
+app.use('/', require('./routes/api/couple/schedules/classifications/post'));
 
 app.use('/', require('./routes/user/login.js'));
 app.use('/', require('./routes/user/upload/temp/image'));

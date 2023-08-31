@@ -932,13 +932,13 @@
         }
       }
     },
-    "/api/couple/{coupleInfoId}/schedules-categorys": {
+    "/api/couple/{coupleInfoId}/schedules-classifications": {
       "get": {
         "tags": [
-          "couple"
+          "/couple/schedules/classifications"
         ],
         "summary": "token*",
-        "description": "특정 커플의 모든 일정-카테고리를 들고오는 API",
+        "description": "특정 커플의 모든 일정-분류를 들고오는 API",
         "parameters": [
           {
             "name": "coupleInfoId",
@@ -972,6 +972,65 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "/couple/schedules/classifications"
+        ],
+        "summary": "token*",
+        "description": "특정 커플의 일정-카테고리를 생성하는 API",
+        "parameters": [
+          {
+            "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coupleInfoId": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "any"
+                  },
+                  "color": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
