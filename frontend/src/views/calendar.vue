@@ -1,7 +1,77 @@
 <template>
     <div id="homeVue" style="height: 100%;">
-        <div>
-            <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
+        <div style="display: flex; align-items: center;" class="q-py-sm shadow-2 q-my-md">
+            <div>
+                <q-btn icon="chevron_left" flat @click="move_date(-1)"></q-btn>
+            </div>
+            <div>
+                <div class="fkB ft24 q-px-md">{{ standard_date }}</div>
+            </div>
+            <div>
+                <q-btn icon="chevron_right" flat @click="move_date(1)"></q-btn>
+            </div>
+            <div>
+                <q-btn label="오늘" outline color="primary" class="fkR" @click="move_date(0)" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div style="border: 1px solid #eee;" class="q-mr-md">
+                    <div class="text-h6 fkR text-center">
+                        <div class="row q-py-sm q-px-md bg-primary">
+                            <div style="color: white;"><span>캘린더 필터</span></div>
+                            <q-space></q-space>
+                            <q-btn icon="add" color="white" dense flat>
+                                <q-menu>
+                                    <div class="q-pa-md">
+                                        <div>
+                                            <q-input dense label="카테고리" outlined
+                                                v-model="category.title"
+                                                :error="formError.title?true:false"
+                                                :error-message="formError.title" />
+                                        </div>
+                                        <div>
+                                            <q-color v-model="category.color" 
+                                                @update:model-value="changeColor"
+                                                no-header class="my-picker" />
+                                        </div>
+                                    </div>
+                                    <q-separator></q-separator>
+                                    <div style="display: flex; justify-content: end;" class="q-pa-sm">
+                                        <q-btn label="추가" outline color="positive" />
+                                    </div>
+                                </q-menu>
+                            </q-btn>
+                        </div>
+                        <q-separator />
+                    </div>
+                    
+                    <div>
+                        <q-list separator >
+                            <template v-for="row, idx in category_list" :key="idx"> 
+                            <q-item clickable v-ripple @click="row.isSelected = !row.isSelected">
+                                <q-item-section>
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="q-mr-md">
+                                            <div style="border: 1px solid grey; border-radius: 15px;
+                                                width: 15px; height: 15px;"
+                                                :style="{backgroundColor: row.isSelected ? row.color : 'white'}">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {{ row.title }}
+                                        </div>
+                                    </div>
+                                </q-item-section>
+                            </q-item>
+                            </template>
+                        </q-list>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div id="calendar" style="height: 600px; border: 1px solid #eee;"></div>
+            </div>
         </div>
         <dialog_scheduled ref="dialog_scheduled" />
     </div>
@@ -21,11 +91,39 @@ export default {
     },
     data() {
         return {
+            category_list: [],
+            standard_date: '',
+            is_check: false,
             calendar: null,
             schedule_list: [],
+
+            category: {
+                title: '',
+                color: '',
+            },
+            formError: {
+                title: '',
+
+            },
         }
     },
     methods: {
+        changeColor(args) {
+            let vm = this;
+            console.log("args:", args);
+        },
+        move_date(num) {
+            let vm = this;
+            if(num == -1) {
+                vm.calendar.prev();
+            } else if (num == 0) {
+                vm.calendar.today();
+            } else if (num == 1) {
+                vm.calendar.next();
+            }
+            let date = vm.$c.formatDate(vm.calendar.getDate(), "date");
+            vm.standard_date = date.slice(0, 7);
+        },
         loadScheduleList() {
             let vm = this;
             vm.$q.loading.show();
@@ -64,17 +162,34 @@ export default {
                 }
             });
         },
+        loadScheduleCategroyList() {
+            let vm = this;
+            axios.get(`/api/couple/${vm.$store.state.user.coupleInfoId}/schedules-categorys`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    let row = data.category_list;
+                    row.map((x) => {
+                        x["isSelected"] = true;
+                    });
+                    console.log("row:", row);
+                    vm.category_list = row;
+                }
+            });
+        },
     },
     mounted: function() {
         let vm = this;
+        vm.loadScheduleCategroyList();
+        let date = new Date();
+        vm.standard_date = `${date.getFullYear()}-${(date.getMonth()+1)>=10?(date.getMonth()+1):'0'+(date.getMonth()+1)}`;
         const calendar = new Calendar('#calendar', {
             defaultView: 'month',
-            // isReadOnly: false,
+            isReadOnly: false,
             useDetailPopup: false,
             usageStatistics: false,
             useFormPopup: false,
+            // gridSelection: false,
         });
-        
         // 특정 날짜 혹은 시간을 드래그 앤 드랍했을 때 발생
         calendar.on('selectDateTime', (info) => {
             let schedule = {
@@ -105,18 +220,25 @@ export default {
                 if(schedule) {
                     vm.calendar.createEvents([schedule]);  // 한개 이상의 캘린더 이벤트를 생성한다.
                 }
-                vm.calendar.clearGridSelections();     // 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다
+                // 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다
+                vm.calendar.clearGridSelections();    
             });
         });
 
         // 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 누르거나 이벤트를 드래그 앤 드랍했을 때 발생
         calendar.on('beforeUpdateEvent', ( { event, changes }) => {
-            vm.$q.loading.show();
+            // vm.$q.loading.show();
+            const { id, calendarId } = event;
+            // console.log(id, calendarId);
+            // console.log("event:", event);
+            // console.log('changes:', changes);
+            console.log(Object.keys(changes).length);
             let start = vm.$c.formatDate(changes.start);
             let end = vm.$c.formatDate(changes.end);
             let schedule = vm.$c.tempObj(event);
             schedule.start = start;
             schedule.end = end;
+            // console.log(start, end);
             let scheduleId = event.id;
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
@@ -150,11 +272,10 @@ export default {
             });
         });
         // 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생
-        calendar.on('clickMoreEventsBtn', (event) => {
-            console.log(event.date, event.target);
-        });
+        // calendar.on('clickMoreEventsBtn', (event) => {
+        //     console.log(event.date, event.target);
+        // });
         vm.calendar = calendar;
-
         if(Object.prototype.hasOwnProperty.call(vm.$router.currentRoute.value.params, "id")) {
             let id = vm.$router.currentRoute.value.params.id;
             if(id == 0) {

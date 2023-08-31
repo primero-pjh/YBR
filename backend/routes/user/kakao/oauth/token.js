@@ -14,6 +14,18 @@ const formUrlEncoded = x =>
     Object.keys(x).reduce((p, c) => p + `&${c}=${encodeURIComponent(x[c])}`, '')
 
 router.post('/user/kakao/oauth/token', async function(req, res, next) {
+    /*
+        #swagger.description = 'YBR에서 제공하는 카카오 로그인 API'
+        #swagger.tags = ['user']
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                params: {
+                    code: '12731283akjkahvkjasvnkahrjk',
+                }
+            }
+        }
+    */
     const db = require(`${path}/mysql2`);
     let user_dict = require(`${path}/app`)["user_dict"];
     const io = require(`${path}/bin/www`)["io"];
@@ -64,7 +76,13 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                     });
                 }
                 
+                
                 user_dict[user.UID] = new Object();
+                user_dict[user.UID]["couple"] = {
+                    socketId: '',
+                    UID: ''
+                };
+                
                 let APP_ACC_TKN = jwt.sign({ 
                     kakaoId: user.kakaoId,
                     UID: user.UID

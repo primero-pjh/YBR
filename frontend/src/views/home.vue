@@ -106,7 +106,6 @@ export default {
 
         openTimeline() {
             let vm = this;
-            console.log("openTimeline");
             vm.$refs.dialog_schedule_timeline.open(vm.sche_list, function() {
 
             });
@@ -126,7 +125,6 @@ export default {
                         x["startDateView"] = vm.$c.formatDate(new Date(x.start), "date");
                     });
                     vm.sche_list = row;
-                    console.log("sche_list:", vm.sche_list);
                 }
             });
         }

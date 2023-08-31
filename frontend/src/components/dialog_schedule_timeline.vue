@@ -146,7 +146,6 @@ export default {
             list.sort((a, b) => {
                 return (b.startDateView - a.startDateView) ? 1 : -1;
             });
-            console.log("list:", list);
             vm.schedule_list = list;
             if(callback) { vm.callback = callback; }
             vm.isOpen = true;

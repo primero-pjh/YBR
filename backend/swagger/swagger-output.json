@@ -95,13 +95,38 @@
     },
     "/api/user/couple": {
       "put": {
-        "description": "",
+        "tags": [
+          "couple"
+        ],
+        "summary": "token*",
+        "description": "커플을 등록하는 API<br>\r  * 로직<br>\r  1. coupleInfo에 등록한다.<br>\r  2. chatInfo type:couple 을 등록한다. (chatMembers도 추가)<br>\r  3. appUser에 coupleInfoId 및 coupleUID를 등록한다.<br>\r  4. default-schedule-category 등록한다. <br>\r  5. waiting(대기열)의 모든 목록을 삭제한다.<br>\r  6. 접속 중인 자신 및 상대방에게 재로그인을 요청한다.<br>\r  ",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "waitingId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "toUID": {
+                  "type": "string",
+                  "example": ""
+                },
+                "fromUID": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
             }
           }
         ],
@@ -468,7 +493,7 @@
           "couple"
         ],
         "summary": "token*",
-        "description": "커플 연결 해제하는 API",
+        "description": "커플 연결 해제하는 API<br><br>\r  \r  * 로직<br>\r  1. coupleInfo의 status를 0으로 변경<br>\r  2. 해당 appUsers의 coupleInfoId와 coupleUID를 초기화 <br>\r  3. 해당 appUsers의 모든 chatInfo의 status를 초기화<br>\r  4. 접속 중인 커플이 있다면 LOGIN PAGE로 강제 이동<br>\r  ",
         "parameters": [
           {
             "name": "coupleInfoId",
@@ -907,6 +932,50 @@
         }
       }
     },
+    "/api/couple/{coupleInfoId}/schedules-categorys": {
+      "get": {
+        "tags": [
+          "couple"
+        ],
+        "summary": "token*",
+        "description": "특정 커플의 모든 일정-카테고리를 들고오는 API",
+        "parameters": [
+          {
+            "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coupleInfoId": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/user/login": {
       "post": {
         "tags": [
@@ -1007,13 +1076,34 @@
     },
     "/user/kakao/oauth/token": {
       "post": {
-        "description": "",
+        "tags": [
+          "user"
+        ],
+        "description": "YBR에서 제공하는 카카오 로그인 API",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "12731283akjkahvkjasvnkahrjk"
+                    }
+                  }
+                }
+              }
             }
           }
         ],

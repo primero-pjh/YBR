@@ -15,15 +15,18 @@ module.exports = function(socket) {
             let coupleUID = user_dict[data.UID].couple.UID;
             /* 커플이 접속한 경우 커플의 couple에 나의 socketId 등록 */
             if(user_dict.hasOwnProperty(coupleUID)) {
-                user_dict[coupleUID].couple.socketId = socket.id;
-
-                io.to(user_dict[data.UID].couple.socketId).emit(`/client/couple/login`, {
-                    coupleSocketId: socket.id,
-                });
+                try {
+                    user_dict[coupleUID].couple.socketId = socket.id;
+                    io.to(user_dict[data.UID].couple.socketId).emit(`/client/couple/login`, {
+                        coupleSocketId: socket.id,
+                    });
+                } catch(e) {
+                    console.log(e);
+                }
             }
         }
 
-        console.log("/socket/user/connect> user_dict:", user_dict);
+        console.log("user_dict:", user_dict);
 
         return callback({
             success: 1,

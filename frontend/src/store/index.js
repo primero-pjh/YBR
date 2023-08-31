@@ -147,6 +147,15 @@ const store = createStore({
                 alert("다른 브라우저에서 로그인이 감지되었습니다.");
                 window.location.reload();
             });
+
+            socket.on(`/client/couple/delete`, () => {
+                alert("커플 연결이 해제되었습니다. 로그인 화면으로 이동합니다.");
+                window.location.reload();
+            });
+            socket.on(`/client/user/couple/put`, () => {
+                alert("커플이 연결되었습니다.. 로그인 화면으로 이동합니다.");
+                window.location.reload();
+            });
         },
         setKakaoAccount(state, kakao_account) {
             if(!kakao_account) {

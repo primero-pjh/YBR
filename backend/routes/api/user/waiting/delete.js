@@ -46,10 +46,13 @@ router.delete('/api/user/waiting/:waitingId', async function(req, res, next) {
     `, [targetUID]);
     let user = users[0];
 
-    io.to(user_dict[waiting.fromUID].socketId).emit(`/client/user/waiting/delete`, {
-        success: 1,
-        message: `${user.userName}님에게 보낸 신청이 거절되었습니다.`,
-    });
+    if(user_dict.hasOwnProperty(waiting.fromUID) && user_dict[waiting.fromUID].hasOwnProperty("socketId")) {
+        io.to(user_dict[waiting.fromUID].socketId).emit(`/client/user/waiting/delete`, {
+            success: 1,
+            message: `${user.userName}님에게 보낸 신청이 거절되었습니다.`,
+        });
+    }
+    
 
     return res.json({
         success: 1,
