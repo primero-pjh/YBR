@@ -11,9 +11,7 @@ router.put('/api/schedules/:scheduleId', async (req, res, next) => {
     let user_dict = require(`${path}/app`)["user_dict"];
     
     let scheduleId = req.params.scheduleId;
-    console.log("scheduleId:", scheduleId);
     let schedule = req.body.params.schedule;
-
     let error = new Object();
     if(!schedule.title) {
         schedule.title = '(제목없음)';
@@ -28,7 +26,7 @@ router.put('/api/schedules/:scheduleId', async (req, res, next) => {
     `, [
         schedule.calendarId, schedule.title, schedule.body, (schedule.isAllday ? 1 : 0), schedule.start, 
         schedule.end, schedule.location, JSON.stringify(schedule.attendees), schedule.category, schedule.dueDateClass, 
-        1, 0, 0, 0, scheduleId, schedule.classification
+        1, 0, 0, 0, schedule.classification, scheduleId
     ]);
   
     return res.json({

@@ -59,7 +59,7 @@
                                     <q-separator></q-separator>
                                     <div style="display: flex; justify-content: end;" class="q-pa-sm">
                                         <q-btn label="추가" outline color="positive" 
-                                            @click="onAddClassification"/>
+                                            @click="onAddClassification" v-close-popup />
                                     </div>
                                 </q-menu>
                             </q-btn>
@@ -85,7 +85,7 @@
                                     </div>
                                 </q-item-section>
                                 <q-item-section side>
-                                    <q-btn icon="close" flat dense @click="onDeleteClassification"/>
+                                    <q-btn icon="close" flat dense @click="onDeleteClassification(row)"/>
                                 </q-item-section>
                             </q-item>
                             </template>
@@ -114,6 +114,8 @@ export default {
         return {
             view_type: 'month', 
             classification_list: [],
+            classification_dict: {},
+            classification_id_dict: {},
             standard_date: '',
             is_check: false,
             calendar: null,
@@ -146,6 +148,7 @@ export default {
                         color: 'positive',
                         message: data.message,
                     });
+                    vm.loadScheduleClassificationList();
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
                         vm.$store.state.setError(vm.formError, data.error);
@@ -161,8 +164,27 @@ export default {
                 vm.$q.loading.hide();
             });
         },  
-        onDeleteClassification() {
+        onDeleteClassification(row) {
             let vm = this;
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            let coupleScheduleClassificationId = row.coupleScheduleClassificationId;
+            axios.delete(`/api/couple/${coupleInfoId}/schedules-classifications/${coupleScheduleClassificationId}`).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    vm.$q.notify({
+                        icon: 'check',
+                        color: 'positive',
+                        message: data.message,
+                    });
+                    vm.loadScheduleClassificationList();
+                } else {
+                    vm.$q.notify({
+                        icon: 'close',
+                        color: 'negative',
+                        message: data.message,
+                    });
+                }
+            });
         },  
 
         /* select */
@@ -204,6 +226,8 @@ export default {
                     row.map((x) => {
                         x.isAllday = x.isAllday ? true : false;
                         x.attendees = JSON.parse(x.attendees);
+                        x["backgroundColor"] = vm.classification_dict[x.classification]?.color;
+                        x["dragBackgroundColor"] = vm.classification_dict[x.classification]?.color;
                     });
                     vm.calendar.createEvents(row);
                     vm.schedule_list = row;
@@ -238,17 +262,23 @@ export default {
                 let data = res.data;
                 if(data.success) {
                     let row = data.classification_list;
+                    vm.classification_dict = new Object();
                     row.map((x) => {
                         x["isSelected"] = true;
+                        vm.classification_dict[x.title] = x;
+                        vm.classification_id_dict[x.coupleScheduleClassificationId] = x;
                     });
                     vm.classification_list = row;
                 }
             });
         },
     },
-    mounted: function() {
+    created() {
         let vm = this;
         vm.loadScheduleClassificationList();
+    },  
+    mounted: function() {
+        let vm = this;
         let date = new Date();
         vm.standard_date = `${date.getFullYear()}-${(date.getMonth()+1)>=10?(date.getMonth()+1):'0'+(date.getMonth()+1)}`;
         const calendar = new Calendar('#calendar', {
@@ -264,7 +294,7 @@ export default {
         calendar.on('selectDateTime', (info) => {
             let schedule = {
                 id: 0,                          //	일정 ID
-                calendarId: '',                 // 캘린더 ID
+                calendarId: '100011',           // 캘린더 ID
                 title: '',                      // 일정 제목
                 body: '',                       // 일정 내용
                 isAllday: false,                // 종일 일정 여부
@@ -280,16 +310,17 @@ export default {
                 isReadOnly: false,	            // 수정 가능한 일정 여부
                 isPrivate: false,	            // 개인적인 일정 여부
                 color:	'#000',	                // 일정 요소의 텍스트 색상
-                backgroundColor: '#a1b56c',	    // 일정 요소의 배경 색상
-                dragBackgroundColor: '#a1b56c',	// 일정 요소를 드래그했을 때 배경 색상
+                backgroundColor: '#C10015',	    // 일정 요소의 배경 색상
+                dragBackgroundColor: '#C10015',	// 일정 요소를 드래그했을 때 배경 색상
                 borderColor:	'#000',     	// 일정 요소의 좌측 테두리 색상
                 classification: '기념일',       // 일정의 분류(필터)
                 // customStyle:	{},	            // 일정 요소에 적용할 스타일. CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체이다.
                 // raw:	null,	                // 실제 일정 데이터
             };
-            vm.$refs.dialog_scheduled.open('add', schedule, (schedule) => {
-                if(schedule) {
-                    vm.calendar.createEvents([schedule]);  // 한개 이상의 캘린더 이벤트를 생성한다.
+            vm.$refs.dialog_scheduled.open('add', schedule, (scheduleData) => {
+                if(scheduleData) {
+                    vm.schedule_list.push(scheduleData);
+                    vm.calendar.createEvents([scheduleData]);  // 한개 이상의 캘린더 이벤트를 생성한다.
                 }
                 // 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다
                 vm.calendar.clearGridSelections();    
@@ -300,17 +331,23 @@ export default {
         calendar.on('beforeUpdateEvent', ( { event, changes }) => {
             // vm.$q.loading.show();
             const { id, calendarId } = event;
-            // console.log(id, calendarId);
-            // console.log("event:", event);
-            // console.log('changes:', changes);
-            console.log(Object.keys(changes).length);
-            let start = vm.$c.formatDate(changes.start);
+
             let end = vm.$c.formatDate(changes.end);
             let schedule = vm.$c.tempObj(event);
-            schedule.start = start;
-            schedule.end = end;
-            // console.log(start, end);
             let scheduleId = event.id;
+            schedule["classification"] = vm.classification_id_dict[event.calendarId].title;
+            // drag
+            if(Object.keys(changes).length == 1) {
+                let start = vm.$c.formatDate(event.start);
+                schedule.start = start;
+                schedule.end = end;
+                
+            } else {
+                let start = vm.$c.formatDate(changes.start);
+                schedule.start = start;
+                schedule.end = end;
+            }
+            console.log("schedule:", schedule);
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
                     schedule,
@@ -318,13 +355,21 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if(data.success) {
-                    alert(data.message);
+                    vm.$q.notify({
+                        icon: 'check',
+                        color: 'positive',
+                        message: data.message
+                    });
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
                         vm.$store.setError(vm.formError, data.error);
                     }
                     if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
-                        alert(data.message);
+                        vm.$q.notify({
+                            icon: 'close',
+                            color: 'negative',
+                            message: data.message
+                        });
                     }
                 }
                 vm.$q.loading.hide();
@@ -336,10 +381,17 @@ export default {
         calendar.on('clickEvent', ({ event }) => {
             const { id, calendarId } = event;
             let temp = vm.schedule_list.find(x=>x.id == id);
-            event["classification"] = temp.classification;
+            if(temp && temp.classification) {
+                event["classification"] = temp.classification;
+            }
             vm.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
+                if(schedule && schedule.classification) {
+                    schedule["backgroundColor"] = vm.classification_dict[schedule.classification].color;
+                    schedule["dragBackgroundColor"] = vm.classification_dict[schedule.classification].color;
+                }
                 if(type == 'edit') {
-                    vm.calendar.updateEvent(schedule.id, schedule.calendarId, schedule);
+                    vm.schedule_list.find(x=>x.id == id).classification = schedule.classification;
+                    vm.calendar.updateEvent(schedule.id, schedule.prevCalendarId, schedule);
                 } else if (type == 'delete') {
                     vm.calendar.deleteEvent(schedule.id, schedule.calendarId);
                 }

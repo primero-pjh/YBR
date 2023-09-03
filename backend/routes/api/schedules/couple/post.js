@@ -29,17 +29,18 @@ router.post('/api/schedules/couple/:coupleInfoId', async (req, res, next) => {
             coupleInfoId, calendarId, title, body, isAllday, 
             start, end, location, attendees, category,
             dueDateClass, isVisible, isPending, isFocused, isPrivate,
-            dateAdded, dateDeleted, status
+            dateAdded, dateDeleted, status, classification
         )
-        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [coupleInfoId, 0, schedule.title, schedule.body, (schedule.isAllday ? 1 : 0), schedule.start, schedule.end,
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [coupleInfoId, schedule.calendarId, schedule.title, schedule.body, (schedule.isAllday ? 1 : 0), schedule.start, schedule.end,
         schedule.location, JSON.stringify(schedule.attendees), schedule.category, schedule.dueDateClass, 1, 0,
-        0, 0, new Date(), null, 1
+        0, 0, new Date(), null, 1, schedule.classification
     ]);
     let id = results.insertId;
   
     return res.json({
         success: 1,
+        id,
         message: '일정을 추가하였습니다.',
     });
 });

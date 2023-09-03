@@ -241,7 +241,10 @@ export default {
             let vm = this;
             vm.classification = args;
             vm.schedule.classification = args.title;
-            vm.schedule.calendarId = args.coupleScheduleClassificationId;
+            vm.schedule["prevCalendarId"] = vm.schedule.calendarId;
+            vm.schedule.calendarId = String(args.coupleScheduleClassificationId);
+            vm.schedule["backgroundColor"] = args.color;
+            vm.schedule["dragBackgroundColor"] = args.color;
         },
 
         /* attend */
@@ -256,7 +259,6 @@ export default {
             vm.attend = '';
         },  
 
-        
 
         /* function */
         onClose() {
@@ -287,10 +289,12 @@ export default {
                 let data = res.data;
                 if(data.success) {
                     vm.$q.notify({
+                        icon: 'check',
+                        color: 'positive',
                         message: data.message,
-                        color: 'black',
-                        position: 'bottom',
                     });
+                    vm.schedule.id = data.id;
+                    console.log("schedule:", vm.schedule);
                     vm.callback(vm.schedule);
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
@@ -303,7 +307,7 @@ export default {
         },
         onSave() {
             let vm = this;
-            // vm.$q.loading.show();
+            vm.$q.loading.show();
             let scheduleId = vm.schedule.id;
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
