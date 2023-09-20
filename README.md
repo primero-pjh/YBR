@@ -15,7 +15,6 @@ $ npm run start // BE Execute
 ```
 ### 2. 리얼서버
 ```
-- 프론트엔드 빌드
 $ npm run build  // FE Build
 $ npm start      // BE Execute
 ```
