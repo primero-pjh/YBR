@@ -3,8 +3,15 @@
 </div>
 
 <div align="left">
-    
-## :camera: 프로젝트 미리보기
+
+## ✨ 프로젝트 설명
+```
+보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션입니다.
+'캘린더', '채팅', '앨범' 기능이 있으며 기존의 앱과의 차별성으로 'Live Shared' 라는 기능을 추가하여
+자신과 상대방의 동시 작업이 가능한 웹 애플리케이션 입니다.
+```
+
+## 🔍 미리보기
 
 ## :zap: YBR 실행
 
@@ -18,6 +25,13 @@ $ npm run start // BE Execute
 $ npm run build  // FE Build
 $ npm start      // BE Execute
 ```
+
+<details>
+    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
+    - crontab list
+    - code
+
+</details>
     
 ## :hammer: 기술 스택
     
@@ -39,6 +53,8 @@ $ npm start      // BE Execute
 <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 </div>
+
+## ⚡ 시스템 아키텍
 
 ## :link: 링크
 :one: &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
