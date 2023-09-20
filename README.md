@@ -1,13 +1,29 @@
-# YBR
-커플앱
+<div align="center">
+    <h1> :couple: YBR - Couple Application</h1>
+</div>
 
-사용한 프레임 워크 및 라이브러리
-Vue@3.0
-Quasar@2.0
-MySQL@5.6
-SocketIO@4.5.4
-axios
-JWT
+
+
+<div align="left">
+    
+### 프레임워크
+    
+<img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">    
+<img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white"> 
+<br>
+<img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white">
+<img src="https://img.shields.io/badge/SocketIO-010101?style=for-the-badge&logo=socketdotio&logoColor=white"> 
+<img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"> 
+<br>
+<img src="https://img.shields.io/badge/AXIOS-5A29E4?style=for-the-badge&logo=axios&logoColor=white">    
+<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=&logoColor=white">    
+<img src="https://img.shields.io/badge/Toast-000000?style=for-the-badge&logo=&logoColor=white">    
+<br>
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+<img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=white"> 
+<img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"> 
+<br>
+</div>
 ToastUI/Calendar@2.3.1
 
 # DEFAULT FONT
