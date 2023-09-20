@@ -50,7 +50,7 @@ Login Authorization
 * 로그인 후 USER_DICT의 변화
 
 
-# COUPLE REGISTER
+# COUPLE REGISTER1
 1. 커플 등록
 
 2. 커플 해제
