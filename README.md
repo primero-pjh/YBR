@@ -33,11 +33,11 @@ $ npm start
 </div>
 
 ## :link: 링크
-:one: &nbsp; <a href="https://ybr.pritras.com">사용자 페이지</a>
+:one: &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
 <br>
-2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" >Swagger</a>
+2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
 <br>
-3️⃣ &nbsp; <a href="https://ybr.pritras.com/admin">관리자 페이지</a>
+3️⃣ &nbsp; <a href="https://ybr.pritras.com/admin" target="_blank">관리자 페이지</a>
 # DEFAULT FONT
     > KakaoRegular || KakaoBold
 
@@ -45,7 +45,6 @@ $ npm start
 Login Authorization
 - Axios: /api 요청을 담당한다.
     headers에 JWT Token을 포함하여 모든 RESTAPI 요청에 토큰을 검증한다.
-
 - SocketIO
     headers.auth에 JWT Token을 포함하여 모든 SOCKET EMIT에 토큰을 검증한다.
 
