@@ -8,9 +8,16 @@
 
 ## :zap: YBR 실행
 
+### 1. 개발서버 
 ```
-$ npm run build
-$ npm start
+$ npm run dev   // FE Execute
+$ npm run start // BE Execute
+```
+### 2. 리얼서버
+```
+- 프론트엔드 빌드
+$ npm run build  // FE Build
+$ npm start      // BE Execute
 ```
     
 ## :hammer: 기술 스택
