@@ -14,6 +14,15 @@ const store = createStore({
         alarmListCount: 0,
         chatCount: 0,
 
+        menu_list: [
+            { icon: 'calendar-o', label: '홈', url: '/home', name: 'home', isCustom: false, inCouple: true, },
+            { icon: 'calendar-o', label: '캘린더', url: '/calendar/0', name: 'calendar', isCustom: false, inCouple: false, },
+            { icon: 'chat-o', label: '채팅', url: '/chat', name: 'chat', isCustom: true, inCouple: false, },
+            { icon: 'chat-o', label: '앨범', url: '/album', name: 'album', isCustom: false, inCouple: false, },
+            { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community', isCustom: false, inCouple: false, },
+            { icon: 'smile-o', label: '프로필', url: '/profile', name: 'profile', isCustom: true, inCouple: false, },
+        ],
+
         kakao_account: {
             kakaoId: '',
             nickname: '',
@@ -99,6 +108,7 @@ const store = createStore({
         getUser(state) { return state.user; },
         getKakaoAccount(state) { return state.kakao_account; },
         getAlarmList(state) { return state.alarmList; },
+        getMenuList(state) { return state.menu_list; },
     },
     mutations: {
         addChatCount(state, cnt) {
@@ -140,6 +150,12 @@ const store = createStore({
                 this.commit("pushAlarm", {
                     message: `${state.couple.userName}님이 로그아웃 하셨습니다.`,
                     dateView: `${state.formatDate(new Date())}`,
+                });
+            });
+
+            socket.on(`/client/router`, (data) => {
+                state.menu_list.map((x) => {
+                    x.inCouple = x.url === data.toPath ? true : false;
                 });
             });
             

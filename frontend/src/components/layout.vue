@@ -9,21 +9,46 @@
                         </div>
                         <div>
                             <q-tabs v-model="tab" class="text-black" >
-                                <template v-for="row,idx in item_list" :key="idx">
+                                <template v-for="(row, idx) in menu_list" :key="idx">
                                     <template v-if="row.name == 'chat'">
-                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
                                                 <q-badge floating color="negative" v-if="chatCount > 0"> 
                                                     {{ chatCount }} 
                                                 </q-badge>
+                                                <div style="display: flex;" v-if="$store.state.couple.socketId && row.inCouple">
+                                                    <div>
+                                                        <q-img style="width: 20px;" 
+                                                            :src="$store.state.host + $store.state.couple.image"></q-img>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </q-tab>
+                                    </template>
+                                    <template v-else-if="row.name == 'profile'">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
+                                            <template v-slot:default>
+                                                <p class="q-ma-none ft20">프로필</p>
+                                                <div style="display: flex;" v-if="$store.state.couple.socketId && row.inCouple">
+                                                    <div>
+                                                        <q-img style="width: 20px;" 
+                                                            :src="$store.state.host + $store.state.couple.image"></q-img>
+                                                    </div>
+                                                </div>
                                             </template>
                                         </q-tab>
                                     </template>
                                     <template v-else>
-                                        <q-tab :name="row.name" class="fkB" @click="$router.push(row.url)">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
+                                                <div style="display: flex;" v-if="$store.state.couple.socketId && row.inCouple">
+                                                    <div>
+                                                        <q-img style="width: 20px;" 
+                                                            :src="$store.state.host + $store.state.couple.image"></q-img>
+                                                    </div>
+                                                </div>
                                             </template>
                                         </q-tab>
                                     </template>
@@ -55,12 +80,19 @@
                 </div>
             </div>
             <slot name="footer">
-                <div 
-                    style="height: 70px; border-top: 1px solid #eaeaea;"  class="q-pa-md">
-                    <p class="fkR" style="font-size: 16px; color: grey;">
-                        @primero-pjh. All right reserved.
-                        <q-btn label="github" outline color="black" @click="goto_github"/>
-                    </p>
+                <div style="min-height: 70px; border-top: 1px solid #eaeaea; width: 100%;
+                        background-color: gray;"
+                        class="q-pa-md"
+                        v-if="!$router.currentRoute.value.path.includes('/login')">
+                    <div class="fkR" style="font-size: 20px; color: white;">
+                        © 2023. (PRITRAS)&nbsp; all rights reserved.
+                    </div>
+                    <q-chip style="cursor: pointer;">
+                        <q-avatar @click="goto_github">
+                            <img :src="$store.state.host + '/images/github_icon.png'">
+                        </q-avatar>
+                        <span class="fkR ft16" @click="goto_github">primero-pjh</span>
+                    </q-chip>
                 </div>
             </slot>
         </div>
@@ -134,13 +166,6 @@ export default {
                 waiting: true,
                 admin: true,
             },
-            item_list: [
-                { icon: 'calendar-o', label: '홈', url: '/home', name: 'home',  },
-                { icon: 'calendar-o', label: '캘린더', url: '/calendar/0', name: 'calendar',  },
-                { icon: 'chat-o', label: '채팅', url: '/chat', name: 'chat', isCustom: true,  },
-                { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community',  },
-                { icon: 'smile-o', label: '프로필', url: '/profile', name: 'profile',  },
-            ],
             active: 0,
         }
     },
@@ -153,6 +178,9 @@ export default {
         chatCount: function() { return this.$store.state.chatCount; },
         isAdmin: function() {
             return this.$store.state.user.isAdmin;
+        },
+        menu_list() {
+            return this.$store.getters.getMenuList;
         },
     },
     methods: {
@@ -183,16 +211,21 @@ export default {
             });
             vm.$router.push("/login");
         },
-        location_href(row) {
+        location_href(row, idx) {
             let vm = this;
+            let next = vm.menu_list[idx];
+            vm.$store.state.socket.emit(`/socket/router`, {
+                toPath: next.url,
+            });
             vm.$router.push(row.url);
         },
     },
     mounted() {
         let vm = this;
         let routeName = vm.$router.currentRoute.value.name;
-        let idx = vm.item_list.findIndex(x => x.name == routeName);
+        let idx = vm.menu_list.findIndex(x => x.name == routeName);
         vm.active = idx;
+
     },
     created() {
         let vm = this;

@@ -13,7 +13,7 @@
                     <div>
                         <q-btn icon="open_in_new" flat rounded @click="openTimeline">
                             <q-tooltip>
-                                <span class="fkR">전체보기</span>
+                                <span class="fkR ft16">타임라인</span>
                             </q-tooltip>
                         </q-btn>
                     </div>

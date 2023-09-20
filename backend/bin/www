@@ -114,7 +114,6 @@ io.on("connection", async (socket) => {
         console.log(chalk.yellow.bgRed.bold('disconnect:', socket.id));
 		let key = user.UID;
 		if(user_dict.hasOwnProperty(key)) {
-			
 			if( user_dict[key].hasOwnProperty('couple') ) {
 				let coupleUID = user_dict[key].couple.UID;
 				/* couple 이 있다면 logout(disconnect) 을 알림 */

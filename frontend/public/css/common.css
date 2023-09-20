@@ -105,3 +105,12 @@
 .fkR {
   font-family: KakaoRegular;
 }
+
+
+
+#app {
+  height: 100%;
+}
+html {
+  height: 100%;
+}

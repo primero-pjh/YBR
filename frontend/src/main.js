@@ -20,7 +20,7 @@ axios.interceptors.request.use(function (config) {
 });
 axios.interceptors.response.use((res) => {
   let data = res.data;
-  // console.log("axios.interceptors.response data:", data);
+  console.log("axios.interceptors.response data:", data);
   if(data.success == 0 && Object.prototype.hasOwnProperty.call(data, "isLogged")) {
     alert(data.message);
     window.location = "/#/login";
@@ -97,5 +97,6 @@ app.use(router);
 app.use(store);
 app.use(i18n);
 app.mount('#app');
+console.log("VUE_APP_HOST:", process.env.VUE_APP_HOST);
 
 

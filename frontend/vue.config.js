@@ -3,7 +3,7 @@ const path = require('path');
 console.log("VUE_APP_HOST:", process.env.VUE_APP_HOST);
 module.exports = defineConfig({
   transpileDependencies: true,
-  outputDir: path.resolve(__dirname, '../backend/wwwroot/public/'),
+  outputDir: path.resolve(__dirname, '../backend/public/'),
   devServer: {
     // 프록시 설정
     proxy: {
