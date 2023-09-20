@@ -2,11 +2,18 @@
     <h1> :couple: YBR - Couple Application</h1>
 </div>
 
-
-
 <div align="left">
     
-## :hammer: 프레임워크
+## :camera: 프로젝트 미리보기
+
+## YBR 실행
+
+```
+$ npm run build
+$ npm start
+```
+    
+## :hammer: 사용 프레임워크 및 라이브러리
     
 <img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">    
 <img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white"> 
@@ -26,8 +33,9 @@
 </div>
 
 ## :link: 링크
-- https://ybr.pritras.com
-- https://ybr.pritras.com/api-docs
+1️⃣ <a href="https://ybr.pritras.com">웹페이지 바로가기</a>
+<br>
+2️⃣ <a href="https://ybr.pritras.com/api-docs" >Swagger(RESTAPI 명세서)</a>
 # DEFAULT FONT
     > KakaoRegular || KakaoBold
 
