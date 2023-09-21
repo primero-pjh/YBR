@@ -1,10 +1,21 @@
 <template>
     <div id="homeVue" style="height: 100%;">
         <div class="row q-mt-md" style="justify-content: center;">
-            <div class="q-mr-md q-pa-md col-3" style="border: 1px solid #eee; border-radius: 10px;">
-                대충 이미지
-            </div>
-            <div class="shadow-4 q-pa-md col-7">
+            <template v-if="$store.state.couple.backgroundImage">
+                <div class="q-mr-md" v-html="$store.state.couple.backgroundImage"></div>
+            </template>
+            <template v-else>
+                <div class="q-mr-md shadow-2" style="width: 480px; height: 640px; position: relative;">
+                    <div style="position: absolute; top: 50%; left: 50%;
+                        transform: translate(-50%, -50%);" class="fkR ft16 text-center">
+                        커플 배경사진이 세팅되지 않았습니다.
+                        <q-btn outline @click="goto_profile">
+                            설정하러가기
+                        </q-btn>
+                    </div>
+                </div>
+            </template>
+            <div class="shadow-4 q-pa-md">
                 <div style="display: flex; justify-content: space-between; align-items: center;"
                     class="q-mb-sm">
                     <div class="text-h6 fkB text-primary">
@@ -12,9 +23,7 @@
                     </div>
                     <div>
                         <q-btn icon="open_in_new" flat rounded @click="openTimeline">
-                            <q-tooltip>
-                                <span class="fkR ft16">타임라인</span>
-                            </q-tooltip>
+                            <q-tooltip><span class="fkR ft16">타임라인</span></q-tooltip>
                         </q-btn>
                     </div>
                 </div>
@@ -92,6 +101,11 @@ export default {
         }
     },
     methods: {
+        goto_profile() {
+            let vm = this;
+            vm.$root.$refs.layout.tab = 'profile';
+            vm.$root.$refs.layout.location_href('/profile');
+        },
         goto_detail(args) {
             let vm = this;
             vm.$root.$refs.layout.tab = 'calendar';
@@ -131,6 +145,7 @@ export default {
     },
     mounted: function() {
         let vm = this;
+        console.log(vm.$store.state);
         vm.loadScheList();
     },
 }

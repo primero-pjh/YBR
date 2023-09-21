@@ -11,7 +11,7 @@
                             <q-tabs v-model="tab" class="text-black" >
                                 <template v-for="(row, idx) in menu_list" :key="idx">
                                     <template v-if="row.name == 'chat'">
-                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row.url)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
                                                 <q-badge floating color="negative" v-if="chatCount > 0"> 
@@ -27,7 +27,7 @@
                                         </q-tab>
                                     </template>
                                     <template v-else-if="row.name == 'profile'">
-                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row.url)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">프로필</p>
                                                 <div style="display: flex;" v-if="$store.state.couple.socketId && row.inCouple">
@@ -40,7 +40,7 @@
                                         </q-tab>
                                     </template>
                                     <template v-else>
-                                        <q-tab :name="row.name" class="fkB" @click="location_href(row, idx)">
+                                        <q-tab :name="row.name" class="fkB" @click="location_href(row.url)">
                                             <template v-slot:default>
                                                 <p class="q-ma-none ft20">{{ row.label }}</p>
                                                 <div style="display: flex;" v-if="$store.state.couple.socketId && row.inCouple">
@@ -211,13 +211,14 @@ export default {
             });
             vm.$router.push("/login");
         },
-        location_href(row, idx) {
+        location_href(url) {
             let vm = this;
+            let idx = vm.$store.state.menu_list.findIndex(x=>x.url == url);
             let next = vm.menu_list[idx];
             vm.$store.state.socket.emit(`/socket/router`, {
                 toPath: next.url,
             });
-            vm.$router.push(row.url);
+            vm.$router.push(url);
         },
     },
     mounted() {

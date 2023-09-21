@@ -10,6 +10,7 @@ const store = createStore({
         UID: null,
         isSigned: false,
         
+        catchErrorMessage: '예기치 못한 에러가 발생하였습니다. 관리자에게 문의하세요.',
         alarmList: [],
         alarmListCount: 0,
         chatCount: 0,
