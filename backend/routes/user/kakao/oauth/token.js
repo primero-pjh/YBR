@@ -95,8 +95,10 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                     let [couples,fields] = await db.query(`
                         select 
                             u.userId, u.UID, u.phoneNumber, u.image, u.userName, 
-                            u.isAdmin, u.coupleInfoId, u.coupleUID, u.password, u.code
+                            u.isAdmin, u.coupleInfoId, u.coupleUID, u.password, u.code,
+                            ci.backgroundImage
                         from appUsers as u
+                        join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
                         where u.UID=?
                     `, [user.coupleUID]);
                     let couple = couples[0];
