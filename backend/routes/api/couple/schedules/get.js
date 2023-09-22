@@ -30,6 +30,7 @@ router.get('/api/couple/:coupleInfoId/schedules', async (req, res, next) => {
         select s.*
         from schedules as s
         where s.coupleInfoId=? and status=?
+        order by s.start desc
     `, [coupleInfoId, 1]);
     
     return res.json({
