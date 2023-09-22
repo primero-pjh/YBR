@@ -52,7 +52,10 @@ $ npm start      // BE Execute
 <br>
 <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white">
 </div>
+
 
 ## ⚡ 시스템 아키텍
 
