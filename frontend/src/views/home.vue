@@ -145,7 +145,6 @@ export default {
     },
     mounted: function() {
         let vm = this;
-        console.log(vm.$store.state);
         vm.loadScheList();
     },
 }

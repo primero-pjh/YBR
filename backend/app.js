@@ -83,6 +83,8 @@ app.use('/', require('./routes/api/user/chat/get'));
 app.use('/', require('./routes/api/couple/chat'));
 app.use('/', require('./routes/api/couple/delete'));
 app.use('/', require('./routes/api/couple/backgroundImage/post'));
+app.use('/', require('./routes/api/couple/albums/get'));
+app.use('/', require('./routes/api/couple/albums/post'));
 
 app.use('/', require('./routes/api/waiting/get'));
 

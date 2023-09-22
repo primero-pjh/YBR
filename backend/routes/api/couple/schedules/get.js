@@ -5,9 +5,6 @@ const router = express.Router();
 const cfg = require(`${path}/config`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
-/*
-    schedule list를 읽어오는 controller
-*/
 router.get('/api/couple/:coupleInfoId/schedules', async (req, res, next) => {
     /*
         #swagger.description = '특정 커플의 모든 일정들을 들고오는 API'

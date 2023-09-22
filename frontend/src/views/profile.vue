@@ -1,3 +1,41 @@
+<style>
+    #ybrZone #ybrText {
+        font-family: 'KakaoRegular';
+        border: 1px solid #31CCEC;
+        color: black;
+        border-style: dashed;
+    }
+    #ybrZone .textActive {
+        border: 5px solid red !important;
+        border-style: dashed !important;
+        cursor: all-scroll !important;
+    }
+    #ybrZone #ybrText:hover {
+        border-width: 5px;
+        cursor: pointer;
+    }
+    #ybrZone #ybrText:active {
+        background-color: rgba(168, 218, 220, 1.00);
+    }
+
+    #ybrZone #ybrImage {
+        border: 3px solid gray;
+        border-radius: 25px;
+    }
+    #ybrZone #ybrImage:hover {
+        border-width: 5px;
+        cursor: pointer;
+    }
+    #ybrZone #ybrImage:active {
+        background-color: rgba(168, 218, 220, 1.00);
+    }
+    #ybrZone .ybrImageActive {
+        border: 5px solid red !important;
+        border-style: dashed !important;
+        cursor: all-scroll !important;
+    }
+</style>
+
 <template>
     <div id="profileVue" style="height: 100%;">
         <div style="display: flex; justify-content: center;" class="w100p q-pa-md">
@@ -153,43 +191,7 @@
     </div>
 </template>
 
-<style scoped>
-#ybrText {
-    font-family: 'KakaoRegular';
-    border: 1px solid #31CCEC;
-    color: black;
-    border-style: dashed;
-}
-.textActive {
-    border: 5px solid red !important;
-    border-style: dashed !important;
-    cursor: all-scroll !important;
-}
-#ybrText:hover {
-    border-width: 5px;
-    cursor: pointer;
-}
-#ybrText:active {
-    background-color: rgba(168, 218, 220, 1.00);
-}
 
-#ybrImage {
-    border: 3px solid gray;
-    border-radius: 25px;
-}
-#ybrImage:hover {
-    border-width: 5px;
-    cursor: pointer;
-}
-#ybrImage:active {
-    background-color: rgba(168, 218, 220, 1.00);
-}
-.ybrImageActive {
-    border: 5px solid red !important;
-    border-style: dashed !important;
-    cursor: all-scroll !important;
-}
-</style>
 
 <script>
 

@@ -20,7 +20,7 @@ const store = createStore({
             { icon: 'calendar-o', label: '캘린더', url: '/calendar/0', name: 'calendar', isCustom: false, inCouple: false, },
             { icon: 'chat-o', label: '채팅', url: '/chat', name: 'chat', isCustom: true, inCouple: false, },
             { icon: 'chat-o', label: '앨범', url: '/album', name: 'album', isCustom: false, inCouple: false, },
-            { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community', isCustom: false, inCouple: false, },
+            // { icon: 'friends-o', label: '커뮤니티', url: '/community', name: 'community', isCustom: false, inCouple: false, },
             { icon: 'smile-o', label: '프로필', url: '/profile', name: 'profile', isCustom: true, inCouple: false, },
         ],
 
