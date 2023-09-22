@@ -26,15 +26,17 @@ router.get('/api/couple/:coupleInfoId/albums/images', async (req, res, next) => 
             isLogged: false,
         });
     }
-    let [sche_list, fields] = await db.query(`
-        select s.*
-        from schedules as s
-        where s.coupleInfoId=? and status=?
-    `, [coupleInfoId, 1]);
+
+    let [image_list, fields] = await db.query(`
+        select img.*
+        from albumImages as img
+        join coupleAlbums as ca on img.coupleAlbumId=ca.coupleAlbumId
+        where ca.coupleInfoId=? and ca.status=? and img.status=?
+    `, [coupleInfoId, 1, 1]);
     
     return res.json({
         success: 1,
-        sche_list,
+        image_list,
     });
 });
 
