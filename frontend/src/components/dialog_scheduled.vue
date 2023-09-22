@@ -15,7 +15,8 @@
                     <q-checkbox  color="negative" checked-icon="flag" unchecked-icon="outlined_flag" 
                         label="중요도" dense @update:model-value="onChangeMileStone"
                         v-model="isMileStone" class="q-py-md fkR ft18"/>
-                    <q-select dense v-model="schedule.classification" :options="classification_list" 
+                    <q-select dense v-model="schedule.classification" :options="classification_list" filled
+                        :error="formError.classification?true:false" :error-message="formError.classification"
                         label="분류(필터)">
                         <template v-slot:option="scope">
                             <q-item v-bind="scope.itemProps" dense @click="onClickClassification(scope.opt)">
@@ -29,100 +30,125 @@
                         </template>
                     </q-select>
                     
-                    <q-input dense label="일정 제목 *" v-model="schedule.title" label-color="red" @keyup.enter="onSave" />
-                    <q-input v-if="isDetail" dense label="일정 내용" v-model="schedule.body" type="textarea" 
-                        placeholder="500자 내로 작성하세요." />
+                    <q-input filled dense label="일정 제목 *" v-model="schedule.title" label-color="red" @keyup.enter="onSave" 
+                        :error="formError.title?true:false" :error-message="formError.title" />
                     
-                    <q-input dense label="일정 장소" v-model="schedule.location" @keyup.enter="onSave" />
+                    
+                    <q-input filled dense label="일정 장소" v-model="schedule.location" 
+                        @click="onClickLocation" readonly style="cursor: pointer !important;"
+                        :error="formError.location?true:false" :error-message="formError.location" />
+                    <!-- 시간 -->
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex;">
                             <template v-if="schedule.isAllday == false">
-                                <q-input outline dense v-model="schedule.start" style="width: 200px;" class="q-mr-sm">
-                                    <template v-slot:prepend>
-                                        <q-icon name="event" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-date v-model="schedule.start" mask="YYYY-MM-DD HH:mm">
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-date>
-                                            </q-popup-proxy>
-                                        </q-icon>
+                                <q-field borderless dense outline 
+                                    :error="formError.dateTime?true:false" :error-message="formError.dateTime">
+                                    <template v-slot:control>
+                                        <q-input filled dense v-model="schedule.start" style="width: 200px;" class="q-mr-sm">
+                                            <template v-slot:prepend>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-date v-model="schedule.start" mask="YYYY-MM-DD HH:mm">
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-date>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                
+                                            <template v-slot:append>
+                                                <q-icon name="access_time" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-time v-model="schedule.start" mask="YYYY-MM-DD HH:mm" format24h>
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-time>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                                        </q-input>
+                                        <q-input filled dense v-model="schedule.end" style="width: 200px;">
+                                            <template v-slot:prepend>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-date v-model="schedule.end" mask="YYYY-MM-DD HH:mm">
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-date>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                
+                                            <template v-slot:append>
+                                                <q-icon name="access_time" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-time v-model="schedule.end" mask="YYYY-MM-DD HH:mm" format24h>
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-time>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                                        </q-input>
                                     </template>
-        
-                                    <template v-slot:append>
-                                        <q-icon name="access_time" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-time v-model="schedule.start" mask="YYYY-MM-DD HH:mm" format24h>
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-time>
-                                            </q-popup-proxy>
-                                        </q-icon>
-                                    </template>
-                                </q-input>
-                                <q-input outline dense v-model="schedule.end" style="width: 200px;">
-                                    <template v-slot:prepend>
-                                        <q-icon name="event" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-date v-model="schedule.end" mask="YYYY-MM-DD HH:mm">
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-date>
-                                            </q-popup-proxy>
-                                        </q-icon>
-                                    </template>
-        
-                                    <template v-slot:append>
-                                        <q-icon name="access_time" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-time v-model="schedule.end" mask="YYYY-MM-DD HH:mm" format24h>
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-time>
-                                            </q-popup-proxy>
-                                        </q-icon>
-                                    </template>
-                                </q-input>
+                                </q-field>
+                                
                             </template>
                             <template v-else>
-                                <q-input dense outline v-model="schedule.start" class="q-mr-sm">
-                                    <template v-slot:append>
-                                        <q-icon name="event" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-date v-model="schedule.start" mask="YYYY-MM-DD">
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-date>
-                                            </q-popup-proxy>
-                                        </q-icon>
+                                <q-field borderless dense outline 
+                                    :error="formError.dateTime?true:false" :error-message="formError.dateTime">
+                                    <template v-slot:control>
+                                        <q-input dense filled v-model="schedule.start" class="q-mr-sm">
+                                            <template v-slot:prepend>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-date v-model="schedule.start" mask="YYYY-MM-DD">
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-date>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                                        </q-input>
+                                        <q-input dense filled v-model="schedule.end">
+                                            <template v-slot:prepend>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                        <q-date v-model="schedule.end" mask="YYYY-MM-DD">
+                                                            <div class="row items-center justify-end">
+                                                                <q-btn v-close-popup label="닫기" color="primary" flat />
+                                                            </div>
+                                                        </q-date>
+                                                    </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                                        </q-input>
                                     </template>
-                                </q-input>
-                                <q-input dense outline v-model="schedule.end">
-                                    <template v-slot:append>
-                                        <q-icon name="event" class="cursor-pointer">
-                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                <q-date v-model="schedule.end" mask="YYYY-MM-DD">
-                                                    <div class="row items-center justify-end">
-                                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                                    </div>
-                                                </q-date>
-                                            </q-popup-proxy>
-                                        </q-icon>
-                                    </template>
-                                </q-input>
+                                </q-field>
                             </template>
                         </div>
                         <div>
-                            <q-checkbox v-model="schedule.isAllday" label="종일 여부" @update:model-value="onChangeAllDay" />
+                            <q-field :error="formError.isAllday?true:false" :error-message="formError.isAllday"
+                                dense borderless>
+                                <template v-slot:control>
+                                    <q-checkbox v-model="schedule.isAllday" label="종일 여부" @update:model-value="onChangeAllDay" /> 
+                                </template>
+                            </q-field>
                         </div>
                     </div>
                     <div v-if="isDetail">
-                        <q-input clearable  dense v-model="attend" label="참석자" @keyup.enter="onAddAttend" />
+                        <q-input dense filled label="일정 내용" v-model="schedule.body" type="textarea"
+                            :error="formError.body?true:false" :error-message="formError.body">
+                            <template v-slot:hint >
+                                <div>{{ '(' + schedule.body.length + '/500)자 이내로 작성하세요.' }}</div>
+                            </template>
+                        </q-input>
+                        <q-input clearable filled dense v-model="attend" label="참석자" @keyup.enter="onAddAttend" />
                         <q-list>
                             <q-item v-for="row,idx in schedule.attendees" :key="idx">
                                 <q-item-section>
@@ -141,14 +167,21 @@
                 <q-btn outline color="positive" label="추가" v-else @click="onAdd" />
             </q-card-section>
         </q-card>
+        
     </q-dialog>
 </template>
 
 <script>
 import axios from 'axios';
-
 export default {
     name: 'dialog_scheduled',
+    components: {
+    },
+    computed: {
+        classification_list() {
+            return this.$store.state.classification_list;
+        }
+    },
     data() {
         return {
             
@@ -182,13 +215,28 @@ export default {
                 borderColor: '#000',     	    // 일정 요소의 좌측 테두리 색상
                 // customStyle: {},	            // 일정 요소에 적용할 스타일. CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체이다.
             },
-            formError: {},
+            formError: {
+                classification: '',
+                title: '',
+                location: '',
+                dateTime: '',
+                isAllday: '',
+                body: '',
+            },
 
             classification: null,
-            classification_list: [],
         }
     },
     methods: {
+        onClickLocation() {
+            /*global someFunction, daum*/
+            let vm = this;
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    vm.schedule.location = data.address;
+                }
+            }).open();
+        },
         /* change */
         onChangeMileStone(args) {
             let vm = this;
@@ -232,8 +280,13 @@ export default {
             let vm = this;
             vm.schedule = schedule;
             vm.isMileStone = schedule.category == 'milestone' ? true : false;
-            vm.schedule.start = vm.$c.formatDate(schedule.start);
-            vm.schedule.end = vm.$c.formatDate(schedule.end);
+            if(vm.schedule.isAllday) {
+                vm.schedule.start = vm.$c.formatDate(schedule.start, "date");
+                vm.schedule.end = vm.$c.formatDate(schedule.end, "date");
+            } else {
+                vm.schedule.start = vm.$c.formatDate(schedule.start, "date_3");
+                vm.schedule.end = vm.$c.formatDate(schedule.end, "date_3");
+            }
         },
 
         /* classification */
@@ -274,9 +327,11 @@ export default {
             vm.isOpen = true;
         },
 
+        /* 일정을 추가하는 함수 */
         onAdd() {
             let vm = this;
-            vm.$q.loading.show();
+            // vm.$q.loading.show();
+            vm.$store.state.clearError(vm.formError);
             let coupleInfoId = vm.$store.state.user.coupleInfoId;
             if(!vm.schedule.title) {
                 vm.schedule.title = "(제목없음)";
@@ -294,7 +349,6 @@ export default {
                         message: data.message,
                     });
                     vm.schedule.id = data.id;
-                    console.log("schedule:", vm.schedule);
                     vm.callback(vm.schedule);
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
@@ -303,11 +357,19 @@ export default {
                 }
                 vm.$q.loading.hide();
                 vm.isOpen = false;
+            }).catch((err) => {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: vm.$store.state.catchErrorMessage,
+                });
+                vm.$q.loading.hide();
             });
         },
         onSave() {
             let vm = this;
             vm.$q.loading.show();
+            vm.$store.state.clearError(vm.formError);
             let scheduleId = vm.schedule.id;
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
@@ -322,9 +384,10 @@ export default {
                         color: 'positive',
                     });
                     vm.callback(vm.schedule, 'edit');
+                    vm.isOpen = false;
                 } else {
                     if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
-                        vm.$store.setError(vm.formError, data.error);
+                        vm.$store.state.setError(vm.formError, data.error);
                     }
                     if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
                         vm.$q.notify({
@@ -336,49 +399,64 @@ export default {
                     }
                 }
                 vm.$q.loading.hide();
-                vm.isOpen = false;
+            }).catch((err) => {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: vm.$store.state.catchErrorMessage,
+                });
+                vm.$q.loading.hide();
             });
         },
         onDelete() {
             let vm = this;
-            vm.$q.loading.show();
-            let scheduleId = vm.schedule.id;
-            axios.delete(`/api/schedules/${scheduleId}`, {}).then((res) => {
-                let data = res.data;
-                if(data.success) {
-                    vm.callback(vm.schedule, 'delete');
-                } else {
-                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
-                        vm.$store.setError(vm.formError, data.error);
-                    }
-                    if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
-                        alert(data.message);
-                    }
-                }
-                vm.$q.loading.hide();
-                vm.isOpen = false;
+            vm.$q.dialog({
+                title: '확인',
+                message: '삭제한 데이터는 복구할 수 없습니다. <br>그래도 진행하시겠어요?',
+                cancel: true,
+                html: true,
+                persistent: true
+            }).onOk(() => {
+                onAcceptDelete();
+            }).onCancel(() => {
+                
             });
-        },
-
-        /* load */
-        loadScheduleClassificationList() {
-            let vm = this;
-            let coupleInfoId = vm.$store.state.user.coupleInfoId;
-            axios.get(`/api/couple/${coupleInfoId}/schedules-classifications`, {}).then((res) => {
-                let data = res.data;
-                if(data.success) {
-                    let row = data.classification_list;
-                    row.map((x) => {
-                        x["isSelected"] = true;
+            function onAcceptDelete() {
+                vm.$q.loading.show();
+                let scheduleId = vm.schedule.id;
+                axios.delete(`/api/schedules/${scheduleId}`, {}).then((res) => {
+                    let data = res.data;
+                    if(data.success) {
+                        vm.$q.notify({
+                            icon: 'check',
+                            color: 'positive',
+                            message: data.message
+                        });
+                        vm.callback(vm.schedule, 'delete');
+                    } else {
+                        if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                            vm.$store.setError(vm.formError, data.error);
+                        }
+                        if(Object.prototype.hasOwnProperty.call(data, "message") == true) {
+                            alert(data.message);
+                        }
+                    }
+                    vm.$q.loading.hide();
+                    vm.isOpen = false;
+                }).catch((err) => {
+                    vm.$q.notify({
+                        icon: 'error',
+                        color: 'negative',
+                        message: vm.$store.state.catchErrorMessage,
                     });
-                    vm.classification_list = row;
-                }
-            });
+                    vm.$q.loading.hide();
+                });
+            }
         },
     },
     mounted() {
         let vm = this;
-        vm.loadScheduleClassificationList();
+        
     }
 }
 </script>

@@ -5,7 +5,7 @@ import store from "./store";
 import config from "../package.json";
 import { createI18n } from 'vue-i18n';
 import messages from './i18n';
-import { Quasar, Loading, Notify } from 'quasar'
+import { Quasar, Loading, Notify, Dialog } from 'quasar'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/dist/quasar.css'
 import axios from 'axios';
@@ -42,7 +42,7 @@ const i18n = createI18n({
 const app = createApp(App);
 import '../public/css/common.css';
 const $c = {
-  formatDate: function(date, type) {
+  formatDate: function(date, type, format) {
     date = new Date(date);
     let month = date.getMonth() + 1;
     month = month >= 10 ? month : `0${month}`;
@@ -61,6 +61,8 @@ const $c = {
       return `${date.getFullYear()}년 ${month}월 ${day}일`; 
     } else if (type == 'date_2') {
       return `${month}.${day}`; 
+    } else if (type == 'date_3') {
+      return `${date.getFullYear()}-${month}-${day} ${hours}:${min}`; 
     } else {
       return `${date.getFullYear()}-${month}-${day} ${hours}:${min}:${sec}`; 
     }
@@ -87,7 +89,7 @@ app.config.globalProperties.$axios = axios;
 console.error(`ybr version: ${config.version}`);
 app.use(Quasar, {
   plugins: {
-    Loading, Notify
+    Loading, Notify, Dialog
   },
   config: {
     loading: { /* look at QuasarConfOptions from the API card */ }

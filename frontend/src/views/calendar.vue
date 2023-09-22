@@ -321,7 +321,6 @@ export default {
         calendar.on('beforeUpdateEvent', ( { event, changes }) => {
             // vm.$q.loading.show();
             const { id, calendarId } = event;
-
             let end = vm.$c.formatDate(changes.end);
             let schedule = vm.$c.tempObj(event);
             let scheduleId = event.id;
@@ -331,7 +330,6 @@ export default {
                 let start = vm.$c.formatDate(event.start);
                 schedule.start = start;
                 schedule.end = end;
-                
             } else {
                 let start = vm.$c.formatDate(changes.start);
                 schedule.start = start;
@@ -369,10 +367,12 @@ export default {
         // 이벤트를 클릭할 때 발생
         calendar.on('clickEvent', ({ event }) => {
             const { id, calendarId } = event;
+            console.log("event:", event);
             let temp = vm.schedule_list.find(x=>x.id == id);
             if(temp && temp.classification) {
                 event["classification"] = temp.classification;
             }
+            event["prevCalendarId"] = event.calendarId;
             vm.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
                 if(schedule && schedule.classification) {
                     schedule["backgroundColor"] = vm.classification_dict[schedule.classification].color;

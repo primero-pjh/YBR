@@ -7,6 +7,33 @@ const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 
 router.post('/api/schedules/couple/:coupleInfoId', async (req, res, next) => {
+    /*
+        #swagger.description = '일정(캘린더)을 추가하는 API'
+        #swagger.tags = ['schedules']
+        #swagger.summary = 'token*'
+        #swagger.parameters['params'] = {
+            in: 'params',
+            schema: {
+                schedules: {
+                    calendarId: '',
+                    title: '',
+                    body: '',
+                    isAllday: '',
+                    start: '',
+                    end: '',
+                    location: '',
+                    attendees: '',
+                    category: '',
+                    dueDateClass: '',
+                    isVisible: 0,
+                    isPending: 0,
+                    isFocused: 0,
+                    isPrivate: 0,
+                    classification: '',
+                },
+            }
+        }
+    */
     const db = require(`${path}/mysql2`);
     let schedule = req.body.params.schedule;
     let user_dict = require(`${path}/app`)["user_dict"];

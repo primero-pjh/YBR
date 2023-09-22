@@ -999,7 +999,11 @@
     },
     "/api/schedules/couple/{coupleInfoId}": {
       "post": {
-        "description": "",
+        "tags": [
+          "schedules"
+        ],
+        "summary": "token*",
+        "description": "일정(캘린더)을 추가하는 API",
         "parameters": [
           {
             "name": "coupleInfoId",
@@ -1014,6 +1018,80 @@
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schedules": {
+                  "type": "object",
+                  "properties": {
+                    "calendarId": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "body": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isAllday": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "start": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "attendees": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "dueDateClass": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isVisible": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isPending": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isFocused": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isPrivate": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "classification": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              }
             }
           }
         ],
@@ -1040,7 +1118,11 @@
     },
     "/api/schedules/{scheduleId}": {
       "put": {
-        "description": "",
+        "tags": [
+          "schedules"
+        ],
+        "summary": "token*",
+        "description": "특정 일정을 수정하는 API",
         "parameters": [
           {
             "name": "scheduleId",
@@ -1055,6 +1137,80 @@
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "calendarId": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "body": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isAllday": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "start": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "end": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "attendees": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "dueDateClass": {
+                      "type": "string",
+                      "example": ""
+                    },
+                    "isVisible": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isPending": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isFocused": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "isPrivate": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "classification": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              }
             }
           }
         ],
@@ -1079,7 +1235,11 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "schedules"
+        ],
+        "summary": "token*",
+        "description": "특정 일정을 삭제하는 API",
         "parameters": [
           {
             "name": "scheduleId",
@@ -1094,6 +1254,19 @@
             "in": "header",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "scheduleId": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
             }
           }
         ],
