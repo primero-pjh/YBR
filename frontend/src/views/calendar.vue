@@ -110,12 +110,20 @@ export default {
     components: {
         dialog_scheduled,
     },
+    computed: {
+        classification_list() {
+            return this.$store.state.classification_list;
+        },
+        classification_dict() {
+            return this.$store.state.classification_dict;
+        },
+        classification_id_dict() {
+            return this.$store.state.classification_id_dict;
+        },
+    },
     data() {
         return {
             view_type: 'month', 
-            classification_list: [],
-            classification_dict: {},
-            classification_id_dict: {},
             standard_date: '',
             is_check: false,
             calendar: null,
@@ -255,27 +263,9 @@ export default {
                 }
             });
         },
-        loadScheduleClassificationList() {
-            let vm = this;
-            let coupleInfoId = vm.$store.state.user.coupleInfoId;
-            axios.get(`/api/couple/${coupleInfoId}/schedules-classifications`, {}).then((res) => {
-                let data = res.data;
-                if(data.success) {
-                    let row = data.classification_list;
-                    vm.classification_dict = new Object();
-                    row.map((x) => {
-                        x["isSelected"] = true;
-                        vm.classification_dict[x.title] = x;
-                        vm.classification_id_dict[x.coupleScheduleClassificationId] = x;
-                    });
-                    vm.classification_list = row;
-                }
-            });
-        },
     },
     created() {
         let vm = this;
-        vm.loadScheduleClassificationList();
     },  
     mounted: function() {
         let vm = this;
@@ -347,7 +337,6 @@ export default {
                 schedule.start = start;
                 schedule.end = end;
             }
-            console.log("schedule:", schedule);
             axios.put(`/api/schedules/${scheduleId}`, {
                 params: {
                     schedule,

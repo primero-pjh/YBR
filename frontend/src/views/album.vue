@@ -168,7 +168,6 @@ export default {
                     vm.$nextTick(() => {
                         vm.dictDateImageKey = !vm.dictDateImageKey;
                     });
-                    // console.log('dictDateImage', dictDateImage);
                 }
                 vm.$q.loading.hide();
             })).catch((err) => {

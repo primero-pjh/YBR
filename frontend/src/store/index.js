@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import axios from "axios";
 
 // state, getters, mutations, actions, modules
 const store = createStore({
@@ -57,6 +58,10 @@ const store = createStore({
             memo: '',
         },
 
+        classification_list: [],
+        classification_dict: {},
+        classification_id_dict: {},
+
         /* useful function */
         getCookie: function (name) {
             //APP_ACC_TKN
@@ -112,6 +117,7 @@ const store = createStore({
         getMenuList(state) { return state.menu_list; },
     },
     mutations: {
+        
         addChatCount(state, cnt) {
             if(cnt == 0) {
                 state.chatCount = 0;
@@ -282,6 +288,25 @@ const store = createStore({
             
             window.location.reload();
         },
+
+        /* load */
+        onLoadScheduleClassificationList(state, coupleInfoId) {
+            let vm = this;
+            axios.get(`/api/couple/${coupleInfoId}/schedules-classifications`, {}).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    let row = data.classification_list;
+                    vm.classification_dict = new Object();
+                    row.map((x) => {
+                        x["isSelected"] = true;
+                        state.classification_dict[x.title] = x;
+                        state.classification_id_dict[x.coupleScheduleClassificationId] = x;
+                    });
+                    state.classification_list = row;
+                }
+            });
+        },
+
     },
 });
 

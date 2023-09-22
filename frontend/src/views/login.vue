@@ -107,6 +107,7 @@ export default {
                     if(data.couple) {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setCouple", data.couple);
+                        vm.$store.commit("onLoadScheduleClassificationList", data.user.coupleInfoId);
                         vm.$store.commit("setUserUID", data.user.UID);
                         vm.$router.push("/home");
                         return;
@@ -157,6 +158,7 @@ export default {
                         vm.$store.commit("setUser", data.user);
                         vm.$store.commit("setCouple", data.couple);
                         vm.$store.commit("setUserUID", data.user.UID);
+                        vm.$store.commit("onLoadScheduleClassificationList", data.user.coupleInfoId);
                         vm.$router.push("/home");
                         return;
                     } else {
