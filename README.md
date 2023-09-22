@@ -17,20 +17,19 @@
 
 ### 1. 개발서버 
 ```
-$ npm run dev   // FE Execute
-$ npm run start // BE Execute
+$ npm run build-dev // Frontend 데이터를 Backend로 build 합니다.
+$ npm run start     // Backend 실행
 ```
 ### 2. 리얼서버
 ```
-$ npm run build  // FE Build
-$ npm start      // BE Execute
+$ npm run build     // Frontend 데이터를 Backend로 build 합니다.
+$ npm start         // Backend 실행
 ```
 
 <details>
     <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
     - crontab list
     - code
-
 </details>
     
 ## :hammer: 기술 스택
