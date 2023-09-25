@@ -105,6 +105,7 @@ app.use('/', require('./routes/api/schedules/delete'));
 
 app.use('/', require('./routes/api/couple/schedules/get'));
 app.use('/', require('./routes/api/couple/schedules/classifications/get'));
+app.use('/', require('./routes/api/couple/upload/backgroundImage'));
 app.use('/', require('./routes/api/couple/schedules/classifications/post'));
 app.use('/', require('./routes/api/couple/schedules/classifications/delete'));
 
