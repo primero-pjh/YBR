@@ -12,38 +12,41 @@
                 <div class="column" style="height: 100%;">   
                     <div>
                         <q-tabs v-model="tab" dense no-caps style="width: 100%;"
-                            inline-label class="bg-primary text-white shadow-2 fkR">
+                            inline-label class="bg-indigo text-white shadow-2 fkR">
                             <q-tab name="album" icon="photo_library" label="앨범뷰" />
                             <q-tab name="image" icon="image" label="이미지뷰" />
                         </q-tabs>
                     </div>
                     <div>
-                        <q-tab-panels v-model="tab" keep-alive
-                            animated class="shadow-2 rounded-borders">
-                            <q-tab-panel name="album">
-                                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                                    <template v-if="isLoadAlbum">
-                                        <div class="row text-center" style="display: flex; justify-content: center;">
-                                            <div v-for="i in 3" :key="i" class="q-mr-md">
-                                                <q-skeleton height="170px" square animation="fade" />
-                                                <div class="row items-start no-wrap q-mt-sm">
-                                                    <div class="col">
-                                                        <q-skeleton type="text" square width="30%" animation="fade" />
-                                                        <q-skeleton type="text" square height="12px" animation="fade" />
-                                                        <q-skeleton type="text" square height="12px" width="75%" animation="fade" />
+                        <q-tab-panels v-model="tab" keep-alive animated class="shadow-2 rounded-borders q-pa-none">
+                            <q-tab-panel name="album" class="q-pa-none">
+                                <q-scroll-area style="width: 100%;" :style="{height: $store.state.height - 300 + 'px'}">
+                                    <div style="display: flex; justify-content: start; flex-wrap: wrap; width: 100%;">
+                                        <template v-if="isLoadAlbum">
+                                            <div class="row text-center" style="width:100%; display: flex; justify-content: center;">
+                                                <div v-for="i in 3" :key="i" class="q-mr-md" style="width: 30%;">
+                                                    <q-skeleton height="170px" square animation="fade" />
+                                                    <div class="row items-start no-wrap q-mt-sm">
+                                                        <div class="col">
+                                                            <q-skeleton type="text" square width="30%" animation="fade" />
+                                                            <q-skeleton type="text" square height="12px" animation="fade" />
+                                                            <q-skeleton type="text" square height="12px" width="75%" animation="fade" />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </template>
-                                    <template v-else v-for="(row, idx) in album_list" :key="idx">
-                                        <q-card style="width: 33%; cursor: pointer;" class="q-mr-md q-mb-md col" @click="onClickCover(row)">
-                                            <q-img :src="$store.state.host + row.coverImageUrl">
-                                                <div class="absolute-bottom fkR ft16">{{ row.title }}</div>
-                                            </q-img>
-                                        </q-card>
-                                    </template>
-                                </div>
+                                        </template>
+                                        <template v-else v-for="(row, idx) in album_list" :key="idx">
+                                            <q-card style="cursor: pointer; width: 100%;" class="q-mr-md q-mb-md"
+                                                @click="onClickCover(row)">
+                                                <q-img :src="$store.state.host + row.coverImageUrl" fit="cover" 
+                                                    style="width: 100%; height: 150px;">
+                                                    <div class="absolute-bottom fkR ft16">{{ row.title }}</div>
+                                                </q-img>
+                                            </q-card>
+                                        </template>
+                                    </div>
+                                </q-scroll-area>
                             </q-tab-panel>
                             <q-tab-panel name="image">
                                 <div v-if="dictDateImage" :key="dictDateImageKey">
@@ -69,16 +72,44 @@
                 </div>
             </div>
             <div style="width: 50%;" class="q-pa-md shadow-2">
-                <q-scroll-area style="max-width: 100%;" :style="{height: $store.state.height - 237 + 'px'}">
-                    <div v-if="selectAlbum">
-                        <q-carousel swipeable animated vertical padding
-                            v-model="slide" thumbnails infinite >
-                            <template v-for="row, idx in selectAlbum" :key="idx">
-                                <q-carousel-slide class="q-pa-lg"
-                                    :name="idx"  :img-src="$store.state.host + row.imageUrl"/>
-                            </template>
-                        </q-carousel>
-                    </div>
+                <q-scroll-area style="width: 100%;" :style="{height: $store.state.height - 300 + 'px'}">
+                    <template v-if="selectAlbum">
+                        <div>
+                            <div class="fkB text-primary ft20">이미지리스트</div>
+                            <q-carousel swipeable animated padding style="border: 1px solid black; border-radius: 5px;"
+                                v-model="slide" thumbnails infinite 
+                                v-model:fullscreen="fullscreen">
+                                <template v-for="row, idx in selectAlbum.imageList" :key="idx">
+                                    <q-carousel-slide :name="idx" :img-src="$store.state.host + row.imageUrl" />
+                                </template>
+                                <template v-slot:control>
+                                <q-carousel-control
+                                    position="bottom-right"
+                                    :offset="[18, 18]"
+                                    >
+                                    <q-btn
+                                        push round dense color="white" text-color="primary"
+                                        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                                        @click="fullscreen = !fullscreen"
+                                    />
+                                    </q-carousel-control>
+                                </template>
+                            </q-carousel>
+                            <q-field filled stack-label dense label="앨범명" class="q-mt-md">
+                                <template #control>
+                                    <div>{{ selectAlbum.title }}</div>
+                                </template>
+                            </q-field>
+                            <q-field filled stack-label dense label="설명" class="q-mt-md" type="textarea">
+                                <template #control>
+                                    <div>{{ selectAlbum.body }}</div>
+                                </template>
+                            </q-field>
+                            <div class="w100p text-center q-mt-md">
+                                <q-btn outline label="수정" color="positive" />
+                            </div>
+                        </div>
+                    </template>
                 </q-scroll-area>
             </div>
         </div>
@@ -98,9 +129,10 @@ export default {
     },
     data() {
         return {
-            tab: 'image',
-            slide: 1,
+            tab: 'album',
+            slide: 0,
 
+            fullscreen: false,
             isLoadAlbum: true,
             album_list: [],
 
@@ -114,9 +146,7 @@ export default {
     methods: {
         onClickCover(cover) {
             let vm = this;
-            if(Object.prototype.hasOwnProperty.call(vm.image_dict, cover.coupleAlbumId)) {
-                vm.selectAlbum = vm.image_dict[cover.coupleAlbumId];
-            }
+            vm.selectAlbum = cover;
         },
         openAddAlbum() {
             let vm = this;
@@ -130,47 +160,43 @@ export default {
             vm.$q.loading.show();
             let coupleInfoId = vm.$store.state.user.coupleInfoId;
             axios.all([
-                axios.get(`/api/couple/${coupleInfoId}/albums`),
                 axios.get(`/api/couple/${coupleInfoId}/albums/images`),
+                axios.get(`/api/couple/${coupleInfoId}/albums`),
             ]).then(axios.spread((res1, res2, res3, res4) => {
                 let data1 = res1.data;
+                let dict = new Object();
                 if(data1.success) {
-                    let row = data1.album_list;
-                    vm.isLoadAlbum = false;
-                    vm.album_list = row;
+                    let row = data1.image_list;
+                    console.log("row:", row);
+                    let dictDateImage = new Object();
+                    row.map((x) => {
+                        if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == false) {
+                            dict[x.coupleAlbumId] = new Array();
+                        }
+                        if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == true) {
+                            dict[x.coupleAlbumId].push(x);
+                        }
+                    })
+                    vm.image_list = row;
                 }
 
                 let data2 = res2.data;
                 if(data2.success) {
-                    let row = data2.image_list;
-                    let dict = new Object();
-                    let dictDateImage = new Object();
-                    row.map((x) => {    
-                        x["dateView"] = vm.$c.formatDate(x.dateAdded, "date");
-                        let key = x.coupleAlbumId;
-                        if(!Object.prototype.hasOwnProperty.call(dict, key)) {
-                            dict[key] = new Array();
-                        } 
-                        if(Object.prototype.hasOwnProperty.call(dict, key)) {
-                            dict[key].push(x);
-                        } 
-                        key = x.dateView;
-                        if(!Object.prototype.hasOwnProperty.call(dictDateImage, key)) {
-                            dictDateImage[key] = new Array();
-                        } 
-                        if(Object.prototype.hasOwnProperty.call(dictDateImage, key)) {
-                            dictDateImage[key].push(x);
-                        } 
+                    let row = data2.album_list;
+                    row.map((x) => {
+                        if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == true) {
+                            x["imageList"] = dict[x.coupleAlbumId];
+                        } else {
+                            x["imageList"] = new Array();
+                        }
                     });
-                    vm.image_list = row;
-                    vm.image_dict = dict; 
-                    vm.dictDateImage = dictDateImage;
-                    vm.$nextTick(() => {
-                        vm.dictDateImageKey = !vm.dictDateImageKey;
-                    });
+                    vm.isLoadAlbum = false;
+                    vm.album_list = row;
+                    console.log("album_list:", vm.album_list);
                 }
                 vm.$q.loading.hide();
             })).catch((err) => {
+                console.log("err:", err);
                 vm.$q.loading.hide();
                 vm.$q.notify({
                     icon: 'close',

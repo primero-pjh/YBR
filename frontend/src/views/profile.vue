@@ -92,7 +92,7 @@
                                         <q-tab-panel name="backgroundImage">
                                             <q-uploader
                                                 label="배경 이미지를 선택해주세요." color="primary" :multiple="false"
-                                                @added="onAddBackgroundImage" accept="image/*"
+                                                @added="onAddBackgroundImage" accept="image/*" style="width: 100%;"
                                                 @removed="onRemoveBackgroundImage" @rejected="onReject">
                                                 <template v-slot:header="scope">
                                                     <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
@@ -133,7 +133,8 @@
                                                                 type="number" outlined @update:model-value="moveItem" />
                                                         </div>
                                                         <div style="display: flex;" class="q-mt-sm">
-                                                            <q-input dense label="폰트 크기" v-model.number="selectText.fontSize" 
+                                                            <q-input dense label="폰트 크기" v-model.number="selectText.fontSize"
+                                                                min="14" 
                                                                 class="w100p" type="number" outlined 
                                                                 @update:model-value="updateTextFontSize" />
                                                         </div>
@@ -174,6 +175,14 @@
 
                             </q-splitter>
                         </div>
+                        <div class="q-pa-md">
+                            <div>currentX: {{ currentX }}</div>
+                            <div>currentY: {{ currentY }}</div>
+                            <div>initialX: {{ initialX }}</div>
+                            <div>initialY: {{ initialY }}</div>
+                            <div>xOffset: {{ xOffset }}</div>
+                            <div>yOffset: {{ yOffset }}</div>
+                        </div>
                     </q-scroll-area>
                 </q-drawer>
 
@@ -186,7 +195,6 @@
                     </q-page>
                 </q-page-container>
             </q-layout>
-            
         </div>
     </div>
 </template>
@@ -194,11 +202,12 @@
 
 
 <script>
-
 import axios from 'axios';
 
 export default {
     name: 'profileVue',
+    computed: {
+    },
     components: {
     },
     data() {
@@ -210,7 +219,7 @@ export default {
             drawerLeft: false,
 
             form_data: {
-                file: null,
+                backgroundImageFile: null,
             },
             user_list: [],
 
@@ -280,7 +289,7 @@ export default {
         onAddBackgroundImage(info) {
             let vm = this;
             let image = info[0];
-            vm.form_data.file = image;
+            vm.form_data.backgroundImageFile = image;
             let blob = new Blob([image], { type: image.type });
             const url = window.URL.createObjectURL(blob);
             document.getElementById('coupleBackgroundBox').style.backgroundImage = `url(${url})`;
@@ -289,7 +298,7 @@ export default {
         },
         onRemoveBackgroundImage() {
             let vm = this;
-            vm.form_data.file = null;
+            vm.form_data.backgroundImageFile = null;
             document.getElementById('coupleBackgroundBox').style.backgroundImage = ``;
         },
 
@@ -312,8 +321,9 @@ export default {
                 y: matrix.y,
                 fontSize: parseInt(element.style.fontSize),
                 color: element.style.color,
-            }
+            };
         },
+        
         onCreateText() {
             let vm = this;
             vm.tab = 'text';
@@ -329,22 +339,10 @@ export default {
             span.style.position = 'absolute';
             span.style.fontSize = '18px';
             span.style.color = '#000000';
+            
             span.addEventListener("click", (e) => {
-                vm.dragText = null;
-                if(vm.selectItem) {
-                    vm.selectItem.classList = "";
-                }
-                if(vm.selectImage) {
-                    vm.selectImage.classList = "";
-                }
-                vm.selectItem = e.target;
-                vm.setSelectText(e.target);
-                vm.xOffset = e.clientX - vm.initialX;
-                vm.yOffset = e.clientY - vm.initialY;
-                // console.log(vm.xOffset, vm.yOffset);
-                vm.selectItem.classList.add("textActive");
+                vm.ybrTextEventListener(e);
             });
-            // console.log("span: ", span);
             vm.selectItem = span;
             vm.selectText = {
                 label: '텍스트',
@@ -362,32 +360,63 @@ export default {
 
         onSave() {
             let vm = this;
-            let text = (document.getElementById('coupleBackgroundBox').outerHTML);
-            let coupleInfoId = vm.$store.state.user.coupleInfoId;
             vm.$q.loading.show();
-            axios.put(`/api/couple/${coupleInfoId}/backgroundImage`, {
-                backgroundImage: text,
-            }).then((res) => {
-                let data = res.data;
-                console.log(data);
-                if(data.success) {
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            if(vm.form_data.backgroundImageFile) {
+                const file = vm.form_data.backgroundImageFile;
+                let formData = new FormData();
+                formData.append("file", file);
+                axios({
+                    method: "POST",
+                    url: `/api/couple/${coupleInfoId}/upload/backgroundImage`,
+                    data: formData,
+                }).then((res) => {
+                    let data = res.data;
+                    if(data.success) {
+                        let filename = data.filename;
+                        let url = `${vm.$store.state.host}/images/${coupleInfoId}/backgroundImages/${filename}`;
+                        step2(url);
+                    }
+                    vm.$q.loading.hide();
+                }).catch((err) => {
+                    vm.$q.loading.hide();
                     vm.$q.notify({
-                        icon: 'check',
-                        color: 'positive',
-                        message: data.message
+                        icon: 'error',
+                        color: 'negative',
+                        message: vm.$store.state.catchErrorMessage
                     });
-                }
-                vm.$q.loading.hide();
-
-            }).catch((err) => {
-                vm.$q.loading.hide();
-                vm.$q.notify({
-                    icon: 'error',
-                    color: 'negative',
-                    message: vm.$store.state.catchErrorMessage
                 });
-            });
-            console.log("text:", text);
+            } else {
+                step2();
+            }
+
+            function step2(url) {
+                if(url) { document.getElementById('coupleBackgroundBox').style.backgroundImage = `url(${url})`; }
+                if(vm.selectItem) { vm.selectItem.classList = ""; }
+                if(vm.selectImage) { vm.selectImage.classList = ""; }
+                let text = (document.getElementById('coupleBackgroundBox').outerHTML);
+
+                axios.put(`/api/couple/${coupleInfoId}/backgroundImage`, {
+                    backgroundImage: text,
+                }).then((res) => {
+                    let data = res.data;
+                    if(data.success) {
+                        vm.$q.notify({
+                            icon: 'check',
+                            color: 'positive',
+                            message: data.message
+                        });
+                    }
+                    vm.$q.loading.hide();
+                }).catch((err) => {
+                    vm.$q.loading.hide();
+                    vm.$q.notify({
+                        icon: 'error',
+                        color: 'negative',
+                        message: vm.$store.state.catchErrorMessage
+                    });
+                });
+            }
         },
 
         setTranslate(xPos, yPos, el) {
@@ -410,6 +439,48 @@ export default {
                 if(vm.selectImage.y > 640) { vm.selectImage.y = 640; }
                 vm.setTranslate(vm.selectImage.x, vm.selectImage.y, vm.selectImage);
             }
+        },
+
+        ybrTextEventListener(e) {
+            let vm = this;
+            vm.dragText = null;
+            if(vm.selectItem) {
+                vm.selectItem.classList = "";
+            }
+            if(vm.selectImage) {
+                vm.selectImage.classList = "";
+            }
+            vm.selectItem = e.target;
+            let matrix = vm.getElementMatrix(e.target);
+            vm.setSelectText(e.target);
+            vm.currentX = matrix.x;
+            vm.currentY = matrix.y;
+            vm.initialX = matrix.x;
+            vm.initialY = matrix.y;
+            vm.xOffset = matrix.x;
+            vm.yOffset = matrix.y;
+            vm.selectItem.classList.add("textActive");
+        },
+        ybrImageEventListener(e) {
+            let vm = this;
+            vm.dragImage = null;
+            vm.tab = 'couple';
+            if(vm.selectImage) {
+                vm.selectImage.classList = "";
+            }
+            if(vm.selectItem) {
+                vm.selectItem.classList = "";
+            }
+            vm.selectImage = e.target;
+            let matrix = vm.getElementMatrix(e.target);
+            // vm.setSelectText(e.target);
+            vm.currentX = matrix.x;
+            vm.currentY = matrix.y;
+            vm.initialX = matrix.x;
+            vm.initialY = matrix.y;
+            vm.xOffset = matrix.x;
+            vm.yOffset = matrix.y;
+            vm.selectImage.classList.add("ybrImageActive");
         },
     },
     mounted: function() {
@@ -434,18 +505,7 @@ export default {
             imageDivMe.style.height = "100px";
             imageDivMe.style.position = 'absolute';
             imageDivMe.addEventListener("click", (e) => {
-                vm.dragImage = null;
-                vm.tab = 'couple';
-                if(vm.selectImage) {
-                    vm.selectImage.classList = "";
-                }
-                if(vm.selectItem) {
-                    vm.selectItem.classList = "";
-                }
-                vm.selectImage = e.target;
-                vm.xOffset = e.clientX - vm.initialX;
-                vm.yOffset = e.clientY - vm.initialY;
-                vm.selectImage.classList.add("ybrImageActive");
+                vm.ybrImageEventListener(e);
             });
             div.appendChild(imageDivMe);
 
@@ -458,21 +518,25 @@ export default {
             imageDivCouple.style.height = "100px";
             imageDivCouple.style.position = 'absolute';
             imageDivCouple.addEventListener("click", (e) => {
-                vm.dragImage = null;
-                vm.tab = 'couple';
-                if(vm.selectImage) {
-                    vm.selectImage.classList = "";
-                }
-                if(vm.selectItem) {
-                    vm.selectItem.classList = "";
-                }
-                vm.selectImage = e.target;
-                vm.xOffset = e.clientX - vm.initialX;
-                vm.yOffset = e.clientY - vm.initialY;
-                vm.selectImage.classList.add("ybrImageActive");
+                vm.ybrImageEventListener(e);
             });
             div.appendChild(imageDivCouple);
             document.getElementById('ybrZone').appendChild(div);
+        } else {
+            let ybrZone = document.getElementById('ybrZone');
+            ybrZone.innerHTML = vm.$store.state.couple.backgroundImage.trim();
+            let coupleBackgroundBox = document.getElementById("coupleBackgroundBox");    
+            for (const child of coupleBackgroundBox.children) {
+                if(child.id == 'ybrText') {
+                    child.addEventListener('click', (e) => {
+                        vm.ybrTextEventListener(e);
+                    });
+                } else if (child.id == 'ybrImage') {
+                    child.addEventListener('click', (e) => {
+                        vm.ybrImageEventListener(e);
+                    });
+                }
+            }
         }
 
         let container = document.getElementById("coupleBackgroundBox");    
@@ -498,9 +562,6 @@ export default {
                     vm.initialX = e.clientX - vm.xOffset;
                     vm.initialY = e.clientY - vm.yOffset;
                 }
-                // console.log("clientX, Y:", e.clientX, e.clientY);
-                // console.log("offsetX, Y:", vm.xOffset, vm.yOffset);
-                // console.log("initialX, Y:", vm.initialX, vm.initialY);
             } 
             else if(e.target.id === 'ybrImage' && vm.selectImage == e.target) {
                 vm.dragText = null;
@@ -513,17 +574,13 @@ export default {
                     vm.initialX = e.clientX - vm.xOffset;
                     vm.initialY = e.clientY - vm.yOffset;
                 }
-                // console.log("clientX, Y:", e.clientX, e.clientY);
-                // console.log("offsetX, Y:", vm.xOffset, vm.yOffset);
-                // console.log("initialX, Y:", vm.initialX, vm.initialY);
             }
         }
 
         function dragEnd(e) {
             // console.log("dragEnd");
-            // vm.initialX = vm.currentX;
-            // vm.initialY = vm.currentY;
-            // console.log("initialX, Y:", vm.initialX, vm.initialY);
+            vm.initialX = vm.currentX;
+            vm.initialY = vm.currentY;
             vm.dragText = null;
             vm.dragImage = null;
         }
@@ -553,7 +610,6 @@ export default {
                     vm.currentX = e.clientX - vm.initialX;
                     vm.currentY = e.clientY - vm.initialY;
                 }
-
                 vm.xOffset = vm.currentX;
                 vm.yOffset = vm.currentY;
                 vm.selectImage.x = vm.currentX;
@@ -561,8 +617,6 @@ export default {
                 vm.moveItem('image');
             }
         }
-
-       
     },
 }
 </script>
