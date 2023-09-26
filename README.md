@@ -7,11 +7,23 @@
 ## ✨ 프로젝트 설명
 ```
 보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션입니다.
-'캘린더', '채팅', '앨범' 기능이 있으며 기존의 앱과의 차별성으로 'Live Shared' 라는 기능을 추가하여
+'캘린더', '채팅', '앨범', '프로필' 기능이 있으며 기존의 앱과의 차별성으로 'Live Shared' 라는 기능을 추가하여
 자신과 상대방의 동시 작업이 가능한 웹 애플리케이션 입니다.
 ```
 
 ## 🔍 미리보기
+### Login Page
+![image](https://github.com/primero-pjh/ybr/assets/58695375/e6015ccf-0f91-40c1-8833-48ab77101078)
+
+### Home Page
+
+### Calendar Page
+
+### Chat Page
+
+### Album Page
+
+### Profile Page
 
 ## :zap: YBR 실행
 
@@ -36,10 +48,10 @@ $ npm start         // Backend 실행
     
 <img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">    
 <img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white"> 
+<img src="https://img.shields.io/badge/nodejs-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"> 
 <br>
 <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white">
 <img src="https://img.shields.io/badge/SocketIO-010101?style=for-the-badge&logo=socketdotio&logoColor=white"> 
-<img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"> 
 <br>
 <img src="https://img.shields.io/badge/AXIOS-5A29E4?style=for-the-badge&logo=axios&logoColor=white">    
 <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=&logoColor=white">    
