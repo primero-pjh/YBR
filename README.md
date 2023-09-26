@@ -12,7 +12,17 @@
 ```
 
 ## 🔍 미리보기
-![image](https://github.com/primero-pjh/ybr/assets/58695375/1864f38d-de3b-4fdf-8475-0467a33ac9b9)
+### Login Page
+
+### Home Page
+
+### Calendar Page
+
+### Chat Page
+
+### Album Page
+
+### Profile Page
 
 ## :zap: YBR 실행
 
