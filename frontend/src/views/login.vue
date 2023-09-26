@@ -1,6 +1,6 @@
 <template>
     <div id="loginVue" class="center">
-        <div class="text-h4 text-center">YBR</div>
+        <div class="text-center fkB ft24" style="font-size: 42px;">YBR</div>
         <div style="width: 580px; height: 100%;" class="shadow-2 q-pa-md q-mt-md">
             <div style="padding: 55px 69px;">
                 <div>

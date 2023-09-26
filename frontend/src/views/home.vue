@@ -29,55 +29,43 @@
                 </div>
                 
                 <div style="min-width: 400px; max-width: 400px;">
-                    <q-table class="my-sticky-header-table fkR" style="height: 380px;"
-                        flat bordered
-                        virtual-scroll
-                        :rows="sche_list"
-                        :columns="sche_columns"
-                        row-key="name">
-                        <template v-slot:no-data>
-                            <div class="fkR ft16">
-                                일정이 없습니다.
-                            </div>
-                        </template>
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
-                                <q-td key="classification" :props="props">
-                                    <span class="ft16">
-                                        <div>
-                                            {{ props.row.classification }}
+                    <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle"
+                        style="height: 200px; max-width: 400px; padding: 12px; border: 1px solid gray;">
+                        <div>
+                            <template  v-for="row, idx in sche_list" :key="idx">
+                                <div style="display: flex; background-color: #eee; align-items: center;
+                                    border-radius: 5px; border: 1px solid gray;" 
+                                    class="q-mb-sm q-px-sm fkR ft16">
+                                    <div style="max-width: 150px; max-height: 24px; text-overflow: ellipsis; overflow: hidden;">
+                                        {{ row.title }}
+                                        <q-tooltip class="fkR ft16" v-if="row.body">
+                                            {{ row.body }}
+                                        </q-tooltip>
+                                    </div>
+                                    <q-space></q-space>
+                                    <div>
+                                        <div :style="{backgroundColor: row.classificationColor}" 
+                                            style="border-radius: 5px; font-size: 14px; border: 1px solid gray;"
+                                            class="q-px-sm text-white text-bold">
+                                            {{ row.classification }}
                                         </div>
-                                    </span>
-                                </q-td>
-                                <q-td key="title" :props="props">
-                                    <span class="ft16">
-                                        {{ props.row.title }}
-                                    </span>
-                                </q-td>
-                                <q-td key="Dday" :props="props">
-                                    <q-badge color="green" v-if="props.row.Dday <= 0">
-                                        D-{{ Math.abs(props.row.Dday) }}
-                                        <q-tooltip>
-                                            <span class="fkR">
-                                                {{ props.row.start }} ~ {{ props.row.end }}
-                                            </span>
-                                        </q-tooltip>
-                                    </q-badge>
-                                    <q-badge color="red" v-else>
-                                        D+{{ Math.abs(props.row.Dday) }}
-                                        <q-tooltip>
-                                            <span class="fkR">
-                                                {{ props.row.start }} ~ {{ props.row.end }}
-                                            </span>
-                                        </q-tooltip>
-                                    </q-badge>
-                                </q-td>
-                                <q-td key="details" :props="props">
-                                    <q-btn icon="input" dense flat @click="goto_detail(props.row)"/>
-                                </q-td>
-                            </q-tr>
-                        </template>
-                    </q-table>
+                                    </div>
+                                    <div>
+                                        <q-btn icon="place" flat dense></q-btn>
+                                    </div>
+                                    <div>
+                                        <q-badge v-if="row.Dday > 0" color="negative">
+                                            D+{{ row.Dday }}
+                                        </q-badge>
+                                        <q-badge v-else color="positive">
+                                            D{{ row.Dday }}
+                                        </q-badge>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </q-scroll-area>
+                    
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;"
@@ -139,6 +127,21 @@ export default {
     },
     data() {
         return {
+            thumbStyle: {
+                right: '4px',
+                borderRadius: '5px',
+                backgroundColor: '#027be3',
+                width: '5px',
+                opacity: 0.75
+            },
+
+            barStyle: {
+                right: '2px',
+                borderRadius: '9px',
+                backgroundColor: '#027be3',
+                width: '9px',
+                opacity: 0.2
+            },
             slide: 0,
             fullscreen: false, 
 

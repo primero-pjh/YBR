@@ -55,7 +55,8 @@
                                         <div class="row q-mb-md ">
                                             <div class="col">
                                                 <template v-for="row, idx2 in value" :key="idx2">
-                                                    <q-img :src="$store.state.host + row.imageUrl" fit="cover" class="q-mr-sm" @click="onClickImage(row)"
+                                                    <q-img :src="$store.state.host + row.imageUrl" fit="cover" 
+                                                        class="q-mr-sm q-mb-sm" @click="onClickImage(row)"
                                                         style="width: 180px; height: 180px; max-width: 180px; max-height: 180px;
                                                             border: 1px solid #eee; cursor: pointer;" />
                                                 </template>
@@ -195,20 +196,8 @@ export default {
         openDialogAlbum: async function() {
             let vm = this;
             vm.$root.$refs.dialog_modify_album.openEditMode(vm.selectAlbum, function() {
-                console.log("callback");
+                vm.onLoadAlbum();
             });
-            // vm.$nextTick(async () => {
-            //     let coupleAlbumId = vm.selectAlbum.coupleAlbumId;
-            //     let album = vm.albumDict[coupleAlbumId];
-            //     let url = `${album.coverImageUrl}`;
-            //     const response = await fetch(url);
-            //     const data = await response.blob();
-            //     const ext = url.split(".").pop();
-            //     const filename = url.split("/").pop();
-            //     const metadata = { type: `image/${ext}` };
-            //     let file = new File([data], filename, metadata);
-            //     vm.$refs.refBackgroundImage.addFiles([file]);
-            // });
         },
         openAddAlbum() {
             let vm = this;
