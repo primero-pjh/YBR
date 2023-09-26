@@ -32,6 +32,7 @@ router.get('/api/couple/:coupleInfoId/albums/images', async (req, res, next) => 
         from albumImages as img
         join coupleAlbums as ca on img.coupleAlbumId=ca.coupleAlbumId
         where ca.coupleInfoId=? and ca.status=? and img.status=?
+        order by img.sortOrder asc
     `, [coupleInfoId, 1, 1]);
     
     return res.json({

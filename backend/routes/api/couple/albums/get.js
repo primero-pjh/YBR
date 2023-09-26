@@ -30,6 +30,7 @@ router.get('/api/couple/:coupleInfoId/albums', async (req, res, next) => {
         select ca.*
         from coupleAlbums as ca
         where ca.coupleInfoId=? and status=?
+        order by ca.coupleAlbumId desc
     `, [coupleInfoId, 1]);
     
     return res.json({

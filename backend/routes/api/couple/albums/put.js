@@ -6,37 +6,10 @@ const cfg = require(`${path}/config`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 const { v4 } = require('uuid');
 const fs = require('fs');
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let coupleInfoId = req.params.coupleInfoId;
-        let albumId = req.params.albumId;
-        let dir = `${path}/wwwroot/images/${coupleInfoId}`;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        dir += '/albums';
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        dir += `/${albumId}`;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        cb(null, dir);
-    },
-    filename: function (req, file, cb) {
-        let ext = file.originalname.split(".")[1];
-        let uuid = v4();
-        cb(null, `${uuid}.${ext}`);
-    },
-});
-  
-const upload = multer({ storage: storage });
 
-router.post('/api/couple/:coupleInfoId/albums', async (req, res, next) => {
+router.put('/api/couple/:coupleInfoId/albums/:coupleAlbumId', async (req, res, next) => {
     /*
-        #swagger.description = '특정 커플의 앨범을 추가하는 API'
+        #swagger.description = '특정 커플의 앨범을 저장하는 API'
         #swagger.tags = ['/couple']
         #swagger.summary = 'token*'
         #swagger.parameters['params'] = {
@@ -51,6 +24,7 @@ router.post('/api/couple/:coupleInfoId/albums', async (req, res, next) => {
     let user_dict = require(`${path}/app`)["user_dict"];
 
     let coupleInfoId = req.params.coupleInfoId;
+    let coupleAlbumId = req.params.coupleAlbumId;
     let title = req.body.title;
     let body = req.body.body;
     let imageCount = parseInt(req.body.imageCount);
@@ -74,16 +48,14 @@ router.post('/api/couple/:coupleInfoId/albums', async (req, res, next) => {
     }
 
     let [results] = await db.query(`
-        insert into coupleAlbums 
-        (coupleInfoId, coverImageUrl, title, body, status, dateAdded)
-        values (?, ?, ?, ?, ?, ?)
-    `, [coupleInfoId, '', title, body, 1, new Date()]);
-    let albumId = results.insertId;
+        update coupleAlbums 
+        set title=?, body=?
+        where coupleAlbumId=?
+    `, [title, body, coupleAlbumId]);
     
     return res.json({
         success: 1,
-        message: '앨범 추가 완료!',
-        albumId,
+        message: '앨범 수정 완료!',
     });
 });
 

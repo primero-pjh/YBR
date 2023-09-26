@@ -53,11 +53,11 @@
                                     <template v-for="(value, key, idx) in dictDateImage" :key="idx">
                                         <div class="fkB ft18">{{ key }}</div>
                                         <div class="row q-mb-md ">
-                                            <div class="col ">
+                                            <div class="col">
                                                 <template v-for="row, idx2 in value" :key="idx2">
-                                                    <q-img :src="$store.state.host + row.imageUrl" fit="cover" class="q-mr-sm"
+                                                    <q-img :src="$store.state.host + row.imageUrl" fit="cover" class="q-mr-sm" @click="onClickImage(row)"
                                                         style="width: 180px; height: 180px; max-width: 180px; max-height: 180px;
-                                                            border: 1px solid #eee;" />
+                                                            border: 1px solid #eee; cursor: pointer;" />
                                                 </template>
                                             </div>
                                         </div>
@@ -66,16 +66,16 @@
                             </q-tab-panel>
                         </q-tab-panels>
                     </div>
-                    <div>
-                        
-                    </div>
                 </div>
             </div>
             <div style="width: 50%;" class="q-pa-md shadow-2">
-                <q-scroll-area style="width: 100%;" :style="{height: $store.state.height - 300 + 'px'}">
+                <q-scroll-area style="width: 100%;" :style="{height: $store.state.height - 300 + 'px'}" class="q-px-md">
                     <template v-if="selectAlbum">
-                        <div>
-                            <div class="fkB text-primary ft20">이미지리스트</div>
+                        <div v-if="!isEdit">
+                            <div class="fkB text-primary ft20">커버 이미지</div>
+                            <q-img :src="$store.state.host + selectAlbum.coverImageUrl" style="width: 150px; height: 150px; border: 1px solid #eee;"
+                                fit="contain" />
+                            <div class="fkB text-primary ft20 q-mt-md">이미지리스트</div>
                             <q-carousel swipeable animated padding style="border: 1px solid black; border-radius: 5px;"
                                 v-model="slide" thumbnails infinite 
                                 v-model:fullscreen="fullscreen">
@@ -83,10 +83,7 @@
                                     <q-carousel-slide :name="idx" :img-src="$store.state.host + row.imageUrl" />
                                 </template>
                                 <template v-slot:control>
-                                <q-carousel-control
-                                    position="bottom-right"
-                                    :offset="[18, 18]"
-                                    >
+                                <q-carousel-control position="bottom-right" :offset="[18, 18]">
                                     <q-btn
                                         push round dense color="white" text-color="primary"
                                         :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -106,8 +103,14 @@
                                 </template>
                             </q-field>
                             <div class="w100p text-center q-mt-md">
-                                <q-btn outline label="수정" color="positive" />
+                                <q-btn outline label="수정" color="positive" @click="openDialogAlbum" />
                             </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div style="width: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" 
+                            class="text-center fkR ft20">
+                            선택된 앨범이 없습니다!
                         </div>
                     </template>
                 </q-scroll-area>
@@ -134,6 +137,14 @@ export default {
 
             fullscreen: false,
             isLoadAlbum: true,
+            isEdit: false,
+
+            form_data: {
+                backgroundImageFile: null,
+                imageFiles: [],
+            },
+
+            albumDict: {},
             album_list: [],
 
             dictDateImageKey: false,
@@ -144,17 +155,69 @@ export default {
         }
     },
     methods: {
+        onReject(entry) {
+            let vm = this;
+            entry.map((x) => {
+                if(x.failedPropValidation === 'accept') {
+                    vm.$q.notify({
+                        icon: 'close',
+                        color: 'negative',
+                        message: '이미지 파일만 가능합니다.',
+                    });
+                }
+            });
+        },
+        onAddBackgroundImage(info) {
+            let vm = this;
+            let image = info[0];
+            vm.form_data.backgroundImageFile = image;
+            let blob = new Blob([image], { type: image.type });
+            const url = window.URL.createObjectURL(blob);
+            // document.getElementById('coupleBackgroundBox').style.backgroundImage = `url(${url})`;
+            // document.getElementById('coupleBackgroundBox').style.backgroundRepeat = 'no-repeat';
+            // document.getElementById('coupleBackgroundBox').style.backgroundSize = '100%';
+        },
+        onRemoveBackgroundImage() {
+            let vm = this;
+            vm.form_data.backgroundImageFile = null;
+        },
+
+        onClickImage: async function (image) {
+            let vm = this;
+            let coupleAlbumId = image.coupleAlbumId;
+            vm.onClickCover(vm.albumDict[coupleAlbumId]);
+        },
         onClickCover(cover) {
             let vm = this;
+            vm.isEdit = false;
             vm.selectAlbum = cover;
+        },
+        openDialogAlbum: async function() {
+            let vm = this;
+            vm.$root.$refs.dialog_modify_album.openEditMode(vm.selectAlbum, function() {
+                console.log("callback");
+            });
+            // vm.$nextTick(async () => {
+            //     let coupleAlbumId = vm.selectAlbum.coupleAlbumId;
+            //     let album = vm.albumDict[coupleAlbumId];
+            //     let url = `${album.coverImageUrl}`;
+            //     const response = await fetch(url);
+            //     const data = await response.blob();
+            //     const ext = url.split(".").pop();
+            //     const filename = url.split("/").pop();
+            //     const metadata = { type: `image/${ext}` };
+            //     let file = new File([data], filename, metadata);
+            //     vm.$refs.refBackgroundImage.addFiles([file]);
+            // });
         },
         openAddAlbum() {
             let vm = this;
-            vm.$root.$refs.dialog_add_album.open(() => {
+            vm.$root.$refs.dialog_modify_album.openAddMode(() => {
                 vm.onLoadAlbum();
             });
         },
 
+        
         onLoadAlbum() {
             let vm = this;
             vm.$q.loading.show();
@@ -162,12 +225,11 @@ export default {
             axios.all([
                 axios.get(`/api/couple/${coupleInfoId}/albums/images`),
                 axios.get(`/api/couple/${coupleInfoId}/albums`),
-            ]).then(axios.spread((res1, res2, res3, res4) => {
+            ]).then(axios.spread((res1, res2) => {
                 let data1 = res1.data;
                 let dict = new Object();
                 if(data1.success) {
                     let row = data1.image_list;
-                    console.log("row:", row);
                     let dictDateImage = new Object();
                     row.map((x) => {
                         if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == false) {
@@ -176,6 +238,16 @@ export default {
                         if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == true) {
                             dict[x.coupleAlbumId].push(x);
                         }
+
+                        x["dateAddedView"] = vm.$c.formatDate(x.dateAdded, "date");
+                        let key = x.dateAddedView;
+                        if(Object.prototype.hasOwnProperty.call(dictDateImage, key) == false) {
+                            dictDateImage[key] = new Array();
+                        }
+                        if(Object.prototype.hasOwnProperty.call(dictDateImage, key) == true) {
+                            dictDateImage[key].push(x);
+                        }
+                        vm.dictDateImage = dictDateImage;
                     })
                     vm.image_list = row;
                 }
@@ -183,16 +255,19 @@ export default {
                 let data2 = res2.data;
                 if(data2.success) {
                     let row = data2.album_list;
+                    let albumDict = new Object();
                     row.map((x) => {
                         if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == true) {
                             x["imageList"] = dict[x.coupleAlbumId];
                         } else {
                             x["imageList"] = new Array();
                         }
+                        albumDict[x.coupleAlbumId] = x;
                     });
                     vm.isLoadAlbum = false;
+
                     vm.album_list = row;
-                    console.log("album_list:", vm.album_list);
+                    vm.albumDict = albumDict;
                 }
                 vm.$q.loading.hide();
             })).catch((err) => {

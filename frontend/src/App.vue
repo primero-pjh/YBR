@@ -14,14 +14,14 @@
                 </template>
             </layout>
         </template>
-        <dialog_add_album ref="dialog_add_album" />
+        <dialog_modify_album ref="dialog_modify_album" />
     </div>
 </template>
 
 <script>
 import layout from "@/components/layout.vue";
 import adminLayout from "@/components/adminLayout.vue";
-import dialog_add_album from "@/components/dialog_add_album.vue";
+import dialog_modify_album from "@/components/dialog_modify_album.vue";
 
 export default {
     name: 'App',
@@ -36,7 +36,7 @@ export default {
     components: {
         layout,
         adminLayout,
-        dialog_add_album,
+        dialog_modify_album,
     },
     data() {
         return {

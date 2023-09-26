@@ -641,10 +641,86 @@
           "/couple"
         ],
         "summary": "token*",
+        "description": "특정 커플의 앨범을 추가하는 API",
+        "parameters": [
+          {
+            "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coupleInfoId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "backgroundImage": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "any"
+                  },
+                  "body": {
+                    "example": "any"
+                  },
+                  "imageCount": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/couple/{coupleInfoId}/albums/{coupleAlbumId}": {
+      "put": {
+        "tags": [
+          "/couple"
+        ],
+        "summary": "token*",
         "description": "특정 커플의 앨범을 저장하는 API",
         "parameters": [
           {
             "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coupleAlbumId",
             "in": "path",
             "required": true,
             "schema": {
@@ -765,6 +841,62 @@
           },
           {
             "name": "albumId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coupleInfoId": {
+                  "type": "number",
+                  "example": 0
+                },
+                "backgroundImage": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/couple/{coupleInfoId}/albums/{coupleAlbumId}/images": {
+      "put": {
+        "tags": [
+          "/couple"
+        ],
+        "summary": "token*",
+        "description": "특정 커플의 앨범을 저장하는 API",
+        "parameters": [
+          {
+            "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coupleAlbumId",
             "in": "path",
             "required": true,
             "schema": {

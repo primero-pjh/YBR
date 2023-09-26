@@ -35,7 +35,7 @@ const io = require("socket.io")(server, {
 			"http://localhost:8080",
 			"https://localhost:8080",
 			"http://localhost:3000",
-            "https://localhost:3000",
+			"https://localhost:3000",
 			"https://admin.pritras.com",
 			"https://ybr.pritras.com"
 		],

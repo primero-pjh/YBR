@@ -92,23 +92,34 @@
                     </div>
                 </div>
                 <div>
-                    <q-virtual-scroll
-                        :items="albumList"
-                        virtual-scroll-horizontal
-                        style="max-width: 400px;"
-                        v-slot="{ item, index }">
-                        <div :key="index">
-                            <q-card flat bordered class="q-ma-sm" style="width: 150px;">
-                                <q-img :src="$store.state.host + item.coverImageUrl" 
-                                    style="width: 150px; height: 150px;"
-                                    fit="cover" />
-                                <q-separator></q-separator>
-                                <q-card-section>
-                                    <div class="text-subtitle2 fkR ft16">{{ item.title }}</div>
-                                </q-card-section>
-                            </q-card>
+                    <template v-if="albumList.length > 0">
+                        <q-virtual-scroll
+                            :items="albumList"
+                            virtual-scroll-horizontal
+                            style="max-width: 400px;"
+                            v-slot="{ item, index }">
+                            <div :key="index">
+                                <q-card flat bordered class="q-ma-sm" style="width: 150px;">
+                                    <q-img :src="$store.state.host + item.coverImageUrl" 
+                                        style="width: 150px; height: 150px;"
+                                        fit="cover" />
+                                    <q-separator></q-separator>
+                                    <q-card-section>
+                                        <div class="text-subtitle2 fkR ft16">{{ item.title }}</div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                        </q-virtual-scroll>
+                    </template>
+                    <template v-else>
+                        <div class="shadow-2" style="height: 150px; position: relative;">
+                            <div class="fkR ft18"
+                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                앨범이 존재하지 않습니다.
+                            </div>
+                            
                         </div>
-                    </q-virtual-scroll>
+                    </template>
                 </div>
             </div>
         </div>

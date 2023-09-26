@@ -4,14 +4,14 @@
             <q-card-section>
                 <div style="display: flex; justify-content: space-between;">
                     <q-btn dense icon="close" flat v-close-popup />
-                    <div class="text-h6 text-center">앨범 생성</div>
+                    <div class="text-h6 text-center">앨범</div>
                     <div></div>
                 </div>
             </q-card-section>
             <q-separator />
             <q-card-section class="col">
                 <div style="width: 100%; height: 100%;">
-                    <q-scroll-area style="width: 100%; height: 100%;">
+                    <q-scroll-area style="width: 100%; height: 100%;" class="q-px-md">
                         <div>
                             <q-field stack-label :error="formError.coverFile?true:false" :error-message="formError.coverFile">
                                 <template v-slot:hint>
@@ -23,7 +23,8 @@
                                     <q-uploader filled
                                         color="primary" :multiple="false" style="width: 100%;"
                                         @added="onAddCoverImage" accept="image/*"
-                                        @removed="onRemoveBackgroundImage" @rejected="onReject">
+                                        @removed="onRemoveCoverImage" @rejected="onReject"
+                                        ref="refBackgroundImage">
                                         <template v-slot:header="scope">
                                             <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
                                                 <q-btn v-if="scope.uploadedFiles.length > 0" icon="done_all"
@@ -33,10 +34,15 @@
                                                 </q-btn>
                                                 <q-spinner v-if="scope.isUploading" class="q-uploader__spinner" />
                                                 <div class="col">
-                                                    <div class="q-uploader__title fkR ft16">커버 이미지를 업로드해주세요.</div>
-                                                    <div class="q-uploader__subtitle">({{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }})</div>
+                                                    <div class="q-uploader__title fkR ft16">
+                                                        커버 이미지를 업로드해주세요.
+                                                    </div>
+                                                    <div class="q-uploader__subtitle">
+                                                        ({{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }})
+                                                    </div>
                                                 </div>
-                                                <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" @click="scope.pickFiles" round dense flat>
+                                                <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" 
+                                                    @click="scope.pickFiles" round dense flat>
                                                     <q-uploader-add-trigger />
                                                     <q-tooltip>파일 선택</q-tooltip>
                                                 </q-btn>
@@ -69,7 +75,8 @@
                                 <template v-slot:control>
                                     <q-uploader multiple accept="image/*" style="width: 100%;"
                                         @added="onAddImages" 
-                                        @removed="onRemoveImage" @rejected="onReject">
+                                        @removed="onRemoveImage" @rejected="onReject"
+                                        ref="refImageList">
                                         <template v-slot:header="scope">
                                             <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
                                                 <!-- <q-btn v-if="form.imageList.length > 0" icon="close" 
@@ -102,8 +109,9 @@
                                                         </q-item-label>
                                                     </q-item-section>
                                                     <q-item-section v-if="file.__img"
-                                                        thumbnail class="gt-xs" >
-                                                        <img :src="file.__img.src">
+                                                        thumbnail class="gt-xs">
+                                                        <q-img :src="file.__img.src" style="width: 80px; height: 50px; border: 1px solid #eee;" 
+                                                            fit="cover" />
                                                     </q-item-section>
                                                     <q-item-section top side>
                                                         <q-btn class="gt-xs" size="12px" flat dense round
@@ -122,7 +130,9 @@
             <q-separator></q-separator>
             <q-card-section align="right">
                 <q-btn outline label="닫기" class="q-mr-sm" v-close-popup />
-                <q-btn outline label="저장" @click="onSave" color="positive" />
+                <q-btn outline label="추가" @click="onAdd" color="positive" v-if="form.coupleAlbumId == 0" />
+                <q-btn outline label="저장" @click="onSave" color="positive" v-else />
+
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -132,7 +142,7 @@
 import axios from 'axios';
 
 export default {
-    name: 'dialog_add_album',
+    name: 'dialog_modify_album',
     data() {
         return {
             position: 'right',
@@ -142,12 +152,14 @@ export default {
             maxImageCount: 10,
 
             form: {
+                coupleAlbumId: 0,
                 coverFile: null,
                 title: '',
                 body: '',
                 imageList: [],
             },
             formError: {
+                coupleAlbumId: 0,
                 coverFile: '',
                 title: '',
                 body: '',
@@ -178,18 +190,23 @@ export default {
             let vm = this;
             let image = info[0];
             vm.form.coverFile = image;
-            // let blob = new Blob([image], { type: image.type });
-            // const url = window.URL.createObjectURL(blob);
         },
-        onRemoveBackgroundImage() {
+        onRemoveCoverImage() {
             let vm = this;
-            vm.form_data.file = null;
-            document.getElementById('coupleBackgroundBox').style.backgroundImage = ``;
+            vm.form.coverFile = null;
         },
 
         onAddImages(file_list) {
             let vm = this;
             if(file_list.length > vm.maxImageCount) {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: `이미지는 최대 ${vm.maxImageCount}개까지 업로드가 가능합니다.`,
+                });
+                return;
+            }
+            if(vm.form.imageList.length >= vm.maxImageCount) {
                 vm.$q.notify({
                     icon: 'error',
                     color: 'negative',
@@ -209,20 +226,64 @@ export default {
             });
         },
 
-        open(callback) {
+        setImage(album) {
+            let vm = this;
+            vm.$nextTick(async () => {
+                let url = `${album.coverImageUrl}`;
+                let response = await fetch(url);
+                let data = await response.blob();
+                let ext = url.split(".").pop();
+                let filename = url.split("/").pop();
+                let metadata = { type: `image/${ext}` };
+                let file = new File([data], filename, metadata);
+                vm.$refs.refBackgroundImage.addFiles([file]);
+
+                album.imageList.map(async (x) => {
+                    let url = `${x.imageUrl}`;
+                    let response = await fetch(url);
+                    let data = await response.blob();
+                    let ext = url.split(".").pop();
+                    let filename = url.split("/").pop();
+                    let metadata = { type: `image/${ext}` };
+                    let file = new File([data], filename, metadata);
+                    vm.$refs.refImageList.addFiles([file]);
+                });
+            });
+        },
+
+        openEditMode(album, callback) {
+            let vm = this;
+            vm.clearForm();
+            vm.$store.state.clearError(vm.formError);
+            vm.isOpen = true;
+            if(callback) { vm.callback = callback; }
+            vm.form.coupleAlbumId = album.coupleAlbumId;
+            vm.form.title = album.title;
+            vm.form.body = album.body;
+            vm.setImage(album);
+        },
+        openAddMode(callback) {
             let vm = this;
             vm.clearForm();
             vm.$store.state.clearError(vm.formError);
             vm.isOpen = true;
             if(callback) { vm.callback = callback; }
         },
-        onSave() {
+
+        onAdd() {
             let vm = this;
             let coupleInfoId = vm.$store.state.user.coupleInfoId;
             let form_data = new FormData();
 
             if(vm.form.coverFile) {
                 form_data.append("files", vm.form.coverFile);
+            } else {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: '커버 이미지를 등록해주세요.'
+                });
+                return;
             }
             vm.form.imageList.map((x) => {
                 form_data.append("files", x);
@@ -280,6 +341,77 @@ export default {
             })
 
             
+        },
+        onSave() {
+            let vm = this;
+            let coupleInfoId = vm.$store.state.user.coupleInfoId;
+            let form_data = new FormData();
+
+            if(vm.form.coverFile) {
+                form_data.append("files", vm.form.coverFile);
+            } else {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: '커버 이미지를 등록해주세요.'
+                });
+                return;
+            }
+            vm.form.imageList.map((x) => {
+                form_data.append("files", x);
+            });
+            let count = vm.form.imageList.length + (vm.form.coverFile ? 1 : 0);
+            let coupleAlbumId = vm.form.coupleAlbumId;
+            axios({
+                method: "PUT",
+                url: `/api/couple/${coupleInfoId}/albums/${coupleAlbumId}`,
+                data: {
+                    title: vm.form.title,
+                    body: vm.form.body,
+                    imageCount: count
+                },
+            }).then((res) => {
+                let data = res.data;
+                if(data.success) {
+                    axios({
+                        method: "PUT",
+                        url: `/api/couple/${coupleInfoId}/albums/${coupleAlbumId}/images`,
+                        data: form_data,
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    }).then((res2) => {
+                        let data2 = res2.data;
+                        vm.$q.notify({
+                            icon: 'check',
+                            color: 'positive',
+                            message: data2.message,
+                        });
+                        vm.isOpen = false;
+                        if(vm.callback) { vm.callback(); }
+                        vm.$q.loading.hide();
+                    }).catch((err) => {
+                        vm.$q.loading.hide();
+                        vm.$q.notify({
+                            icon: 'close',
+                            color: 'negative',
+                            message: vm.$store.state.catchErrorMessage,
+                        });
+                    });
+                } else {
+                    if(Object.prototype.hasOwnProperty.call(data, "error") == true) {
+                        vm.$store.state.setError(vm.formError, data.error);
+                    }
+                    vm.$q.loading.hide();
+                }
+            }).catch((err) => {
+                vm.$q.loading.hide();
+                vm.$q.notify({
+                    icon: 'close',
+                    color: 'negative',
+                    message: vm.$store.state.catchErrorMessage,
+                });
+            });
         },
     },
     mounted() {

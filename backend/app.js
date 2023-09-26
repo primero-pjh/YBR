@@ -50,7 +50,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'wwwroot')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors(
+    {
+        origin: '*'
+    }
+));
 
 /* router */
 app.use('/', require('./routes/index'));
@@ -84,7 +88,11 @@ app.use('/', require('./routes/api/couple/chat'));
 app.use('/', require('./routes/api/couple/delete'));
 app.use('/', require('./routes/api/couple/backgroundImage/post'));
 app.use('/', require('./routes/api/couple/albums/get'));
+app.use('/', require('./routes/api/couple/albums/post'));
+app.use('/', require('./routes/api/couple/albums/put'));
 app.use('/', require('./routes/api/couple/albums/images/get'));
+app.use('/', require('./routes/api/couple/albums/images/post'));
+app.use('/', require('./routes/api/couple/albums/images/put'));
 app.use('/', require('./routes/api/couple/albums/post'));
 
 app.use('/', require('./routes/api/waiting/get'));
