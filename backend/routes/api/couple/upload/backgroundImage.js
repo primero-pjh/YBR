@@ -45,9 +45,17 @@ router.post('/api/couple/:coupleInfoId/upload/backgroundImage', upload.single('f
         }
     */
     let user_dict = require(`${path}/app`)["user_dict"];
+    const db = require(`${path}/mysql2`);
     let io = require(`${path}/bin/www`)["io"];
-    
+    let coupleInfoId = req.params.coupleInfoId;
     let file = req.file;
+
+    let url = `/images/${coupleInfoId}/backgroundImages/${file.filename}`;
+    await db.query(`
+        update coupleInfos
+        set backgroundImageUrl=?
+        where coupleInfoId=?
+    `, [url, coupleInfoId]);
 
     return res.json({
         success: 1,

@@ -94,7 +94,7 @@ router.post('/user/login', async function(req, res, next) {
         let [rows, fields] = await db.query(`
             select 
                 u.userId, u.UID, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
-                ci.backgroundImage
+                ci.backgroundImageElement, ci.backgroundImageUrl
             from appUsers as u 
             join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
             where ci.status=1 and u.UID != ?

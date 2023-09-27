@@ -69,61 +69,61 @@
                     </div>
                 </div>
             </div>
-            <div style="width: 50%;" class="q-pa-md shadow-2">
-                <q-scroll-area style="width: 100%;" :style="{height: $store.state.height - 300 + 'px'}" class="q-px-md">
-                    <template v-if="selectAlbum">
-                        <div v-if="!isEdit">
-                            <div class="fkB text-primary ft20">커버 이미지</div>
-                            <q-img :src="$store.state.host + selectAlbum.coverImageUrl" style="width: 150px; height: 150px; border: 1px solid #eee;"
-                                fit="contain" />
-                            <div class="fkB text-primary ft20 q-mt-md">이미지리스트</div>
-                            <q-carousel swipeable animated padding style="border: 1px solid black; border-radius: 5px;"
-                                v-model="slide" thumbnails infinite 
-                                v-model:fullscreen="fullscreen">
-                                <template v-for="row, idx in selectAlbum.imageList" :key="idx">
-                                    <q-carousel-slide :name="idx" :img-src="$store.state.host + row.imageUrl" />
-                                </template>
-                                <template v-slot:control>
-                                <q-carousel-control position="bottom-right" :offset="[18, 18]">
-                                    <q-btn
-                                        push round dense color="white" text-color="primary"
-                                        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                                        @click="fullscreen = !fullscreen"
-                                    />
-                                    </q-carousel-control>
-                                </template>
-                            </q-carousel>
-                            <q-field filled stack-label dense label="앨범명" class="q-mt-md">
-                                <template #control>
-                                    <div>{{ selectAlbum.title }}</div>
-                                </template>
-                            </q-field>
-                            <q-field filled stack-label dense label="설명" class="q-mt-md" type="textarea">
-                                <template #control>
-                                    <div>{{ selectAlbum.body }}</div>
-                                </template>
-                            </q-field>
-                            <div class="w100p text-center q-mt-md">
-                                <q-btn outline label="수정" color="positive" @click="openDialogAlbum" />
-                            </div>
+            <div style="width: 50%; position: relative;" class="q-pa-md shadow-2">
+                <template v-if="selectAlbum">
+                    <div v-if="!isEdit">
+                        <div class="fkB text-primary ft20">커버 이미지</div>
+                        <q-img :src="$store.state.host + selectAlbum.coverImageUrl" style="width: 150px; height: 150px; border: 1px solid #eee;"
+                            fit="contain" />
+                        <div class="fkB text-primary ft20 q-mt-md">이미지리스트</div>
+                        <q-carousel swipeable animated padding style="border: 1px solid black; border-radius: 5px;"
+                            v-model="slide" thumbnails infinite 
+                            v-model:fullscreen="fullscreen">
+                            <template v-for="row, idx in selectAlbum.imageList" :key="idx">
+                                <q-carousel-slide :name="idx" :img-src="$store.state.host + row.imageUrl" />
+                            </template>
+                            <template v-slot:control>
+                            <q-carousel-control position="bottom-right" :offset="[18, 18]">
+                                <q-btn
+                                    push round dense color="white" text-color="primary"
+                                    :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                                    @click="fullscreen = !fullscreen"
+                                />
+                                </q-carousel-control>
+                            </template>
+                        </q-carousel>
+                        <q-field filled stack-label dense label="앨범명" class="q-mt-md">
+                            <template #control>
+                                <div>{{ selectAlbum.title }}</div>
+                            </template>
+                        </q-field>
+                        <q-field filled stack-label dense label="설명" class="q-mt-md" type="textarea">
+                            <template #control>
+                                <div>{{ selectAlbum.body }}</div>
+                            </template>
+                        </q-field>
+                        <q-field filled stack-label dense label="작성일" class="q-mt-md">
+                            <template #control>
+                                <div>{{ selectAlbum.dateAddedView }}</div>
+                            </template>
+                        </q-field>
+                        <div class="w100p text-center q-mt-md">
+                            <q-btn outline label="수정" color="positive" @click="openDialogAlbum" />
                         </div>
-                    </template>
-                    <template v-else>
-                        <div style="width: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" 
-                            class="text-center fkR ft20">
-                            선택된 앨범이 없습니다!
-                        </div>
-                    </template>
-                </q-scroll-area>
+                    </div>
+                </template>
+                <template v-else>
+                    <div style="width: 100%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" 
+                        class="text-center fkR ft20">
+                        선택된 앨범이 없습니다!
+                    </div>
+                </template>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
-import PhotoSwipeLightbox from 'photoswipe/lightbox';
-import 'photoswipe/style.css';
 import axios from 'axios';
 
 
@@ -246,6 +246,7 @@ export default {
                     let row = data2.album_list;
                     let albumDict = new Object();
                     row.map((x) => {
+                        x["dateAddedView"] = vm.$c.formatDate(x.dateAdded, "date");
                         if(Object.prototype.hasOwnProperty.call(dict, x.coupleAlbumId) == true) {
                             x["imageList"] = dict[x.coupleAlbumId];
                         } else {
@@ -272,13 +273,6 @@ export default {
     },
     mounted: function() {
         let vm = this;
-        const lightbox = new PhotoSwipeLightbox({
-            gallery: '#my-gallery',
-            children: 'a',
-            pswpModule: () => import('photoswipe')
-        });
-        lightbox.init();
-
         vm.onLoadAlbum();
     },
 }

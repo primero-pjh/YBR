@@ -20,7 +20,7 @@
 
     #ybrZone #ybrImage {
         border: 3px solid gray;
-        border-radius: 25px;
+        
     }
     #ybrZone #ybrImage:hover {
         border-width: 5px;
@@ -33,6 +33,7 @@
         border: 5px solid red !important;
         border-style: dashed !important;
         cursor: all-scroll !important;
+        border-radius: 25px !important;
     }
 </style>
 
@@ -71,106 +72,171 @@
                 </q-drawer>
 
                 <q-drawer side="right" v-model="drawerRight"
-                    bordered :width="500" :breakpoint="500" >
+                    bordered :width="640" :breakpoint="640" >
                     <q-scroll-area class="fit">
                         <div class="q-pa-md">
                             <q-splitter v-model="splitterModel"
                                     style="height: 100%" class="shadow-2">
                                 <template v-slot:before>
-                                    <q-tabs v-model="tab" vertical class="text-gray fkR" >
-                                        <q-tab name="backgroundImage" icon="image" label="배경이미지" />
-                                        <q-tab name="text" icon="text_fields" label="텍스트" />
-                                        <q-tab name="couple" icon="people" label="커플" />
-                                        <q-tab name="image" icon="image" label="이미지" />
-                                    </q-tabs>
+                                    <div >
+                                        <q-tabs v-model="tab" vertical class="text-gray fkR"
+                                            @update:model-value="onClickTab">
+                                            <q-tab name="backgroundImage" icon="image" label="배경이미지" />
+                                            <q-tab name="text" icon="text_fields" label="텍스트" />
+                                            <q-tab name="couple" icon="people" label="커플" />
+                                            <!-- <q-tab name="image" icon="image" label="이미지" /> -->
+                                            <q-tab name="preview" icon="preview" label="미리보기" />
+                                        </q-tabs>
+                                    </div>
                                 </template>
 
                                 <template v-slot:after>
-                                    <q-tab-panels keep-alive
-                                        v-model="tab" animated swipeable vertical
-                                        transition-prev="jump-up" transition-next="jump-up" >
-                                        <q-tab-panel name="backgroundImage">
-                                            <q-uploader
-                                                label="배경 이미지를 선택해주세요." color="primary" :multiple="false"
-                                                @added="onAddBackgroundImage" accept="image/*" style="width: 100%;"
-                                                @removed="onRemoveBackgroundImage" @rejected="onReject">
-                                                <template v-slot:header="scope">
-                                                    <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
-                                                        <q-btn v-if="scope.uploadedFiles.length > 0" icon="done_all"
-                                                            @click="scope.removeUploadedFiles" 
-                                                            round dense flat >
-                                                            <q-tooltip>Remove Uploaded Files</q-tooltip>
-                                                        </q-btn>
-                                                        <q-spinner v-if="scope.isUploading" class="q-uploader__spinner" />
-                                                        <div class="col">
-                                                            <div class="q-uploader__title fkR ft16">배경 이미지를 선택해주세요.</div>
-                                                            <div class="q-uploader__subtitle">({{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }})</div>
+                                    <div>
+                                        <q-tab-panels keep-alive
+                                            v-model="tab" animated swipeable vertical
+                                            transition-prev="jump-up" transition-next="jump-up" >
+                                            <q-tab-panel name="backgroundImage">
+                                                <q-uploader
+                                                    color="primary" :multiple="false"
+                                                    @added="onAddBackgroundImage" accept="image/*" style="width: 100%;"
+                                                    @removed="onRemoveBackgroundImage" @rejected="onReject"
+                                                    ref="refBackgroundImage">
+                                                    <template v-slot:header="scope">
+                                                        <div class="row no-wrap items-center q-pa-sm q-gutter-xs">
+                                                            <q-btn v-if="scope.uploadedFiles.length > 0" icon="done_all"
+                                                                @click="scope.removeUploadedFiles" 
+                                                                round dense flat >
+                                                                <q-tooltip>Remove Uploaded Files</q-tooltip>
+                                                            </q-btn>
+                                                            <q-spinner v-if="scope.isUploading" class="q-uploader__spinner" />
+                                                            <div class="col">
+                                                                <div class="q-uploader__title fkR ft16">배경 이미지를 업로드해주세요.</div>
+                                                                <div class="q-uploader__subtitle">({{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }})</div>
+                                                            </div>
+                                                            <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" @click="scope.pickFiles" round dense flat>
+                                                                <q-uploader-add-trigger />
+                                                                <q-tooltip>파일 선택</q-tooltip>
+                                                            </q-btn>
                                                         </div>
-                                                        <q-btn v-if="scope.canAddFiles" type="a" icon="add_box" @click="scope.pickFiles" round dense flat>
-                                                            <q-uploader-add-trigger />
-                                                            <q-tooltip>파일 선택</q-tooltip>
-                                                        </q-btn>
-                                                    </div>
-                                                </template>
-                                            </q-uploader>
-                                        </q-tab-panel>
+                                                    </template>
+                                                </q-uploader>
+                                            </q-tab-panel>
 
-                                        <q-tab-panel name="text">
-                                            <q-btn class="w100p" outline @click="onCreateText">
-                                                <div class="text-center fkR ft18">텍스트 추가</div>
-                                            </q-btn>
-                                            <div class="q-mt-md">
-                                                <q-card v-if="selectItem">
-                                                    <q-card-section class="fkR ft18">
-                                                        <div>
-                                                            <q-input label="라벨" v-model="selectText.label" outlined dense
-                                                                @blur="blurTextLabel" @keyup.enter="enterTextLabel" />
+                                            <q-tab-panel name="text">
+                                                <q-btn class="w100p" outline @click="onCreateText" color="positive">
+                                                    <div class="text-center fkR ft18">텍스트 추가</div>
+                                                </q-btn>
+                                                <div class="q-mt-md">
+                                                    <q-card v-if="selectText">
+                                                        <q-card-section class="fkR ft18">
+                                                            <div>
+                                                                <q-input label="라벨" v-model="selectTextObj.label" outlined dense
+                                                                    @blur="blurTextLabel" @keyup.enter="enterTextLabel" />
+                                                            </div>
+                                                            <div style="display: flex;" class="q-mt-sm">
+                                                                <q-input dense label="x축" v-model.number="selectTextObj.x" class="q-mr-sm"
+                                                                    type="number" outlined @update:model-value="moveItem('text')" />
+                                                                <q-input dense label="y축" v-model.number="selectTextObj.y"
+                                                                    type="number" outlined @update:model-value="moveItem('text')" />
+                                                            </div>
+                                                            <div style="display: flex;" class="q-mt-sm">
+                                                                <q-input dense label="폰트 크기" v-model.number="selectTextObj.fontSize"
+                                                                    min="14" 
+                                                                    class="w100p" type="number" outlined 
+                                                                    @update:model-value="updateTextFontSize" />
+                                                            </div>
+                                                            <div class="q-mt-sm">
+                                                                <q-input label="텍스트 색상" outlined dense @update:model-value="updateTextColor" 
+                                                                    v-model="selectTextObj.color" class="my-input" >
+                                                                    <template v-slot:append>
+                                                                        <q-icon name="colorize" class="cursor-pointer">
+                                                                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                                                <q-color v-model="selectTextObj.color" 
+                                                                                @update:model-value="updateTextColor" />
+                                                                            </q-popup-proxy>
+                                                                        </q-icon>
+                                                                    </template>
+                                                                </q-input>
+                                                            </div>
+                                                            <q-separator class="q-my-md"></q-separator>
+                                                            <div class="q-mt-sm" style="display: flex; justify-content: end;">
+                                                                <q-btn color="negative" outline @click="removeItem">삭제</q-btn>
+                                                            </div>
+                                                        </q-card-section>
+                                                    </q-card>    
+                                                    <q-card v-else>
+                                                        <div class="fkR ft18 text-center q-pa-md">
+                                                            선택된 텍스트가 없습니다.
                                                         </div>
-                                                        <div style="display: flex;" class="q-mt-sm">
-                                                            <q-input dense label="x축" v-model.number="selectText.x" class="q-mr-sm"
-                                                                type="number" outlined @update:model-value="moveItem" />
-                                                            <q-input dense label="y축" v-model.number="selectText.y"
-                                                                type="number" outlined @update:model-value="moveItem" />
-                                                        </div>
-                                                        <div style="display: flex;" class="q-mt-sm">
-                                                            <q-input dense label="폰트 크기" v-model.number="selectText.fontSize"
-                                                                min="14" 
-                                                                class="w100p" type="number" outlined 
-                                                                @update:model-value="updateTextFontSize" />
-                                                        </div>
-                                                        <div class="q-mt-sm">
-                                                            <q-input label="텍스트 색상" outlined dense @update:model-value="updateTextColor" 
-                                                                v-model="selectText.color" class="my-input" >
-                                                                <template v-slot:append>
-                                                                    <q-icon name="colorize" class="cursor-pointer">
-                                                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                                                                            <q-color v-model="selectText.color" 
-                                                                            @update:model-value="updateTextColor" />
-                                                                        </q-popup-proxy>
-                                                                    </q-icon>
-                                                                </template>
-                                                            </q-input>
-                                                        </div>
-                                                        <div class="q-mt-sm" style="display: flex; justify-content: end;">
-                                                            <q-btn color="negative" outline @click="removeItem">삭제</q-btn>
-                                                        </div>
-                                                    </q-card-section>
-                                                </q-card>    
-                                                <q-card v-else>
-                                                    <div class="fkR ft18 text-center q-pa-md">
-                                                        선택된 텍스트가 없습니다.
-                                                    </div>
-                                                </q-card>
-                                            </div>
-                                        </q-tab-panel>
+                                                    </q-card>
+                                                </div>
+                                            </q-tab-panel>
 
-                                        <q-tab-panel name="image">
-                                            <div class="text-h4 q-mb-md">Movies</div>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-                                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-                                        </q-tab-panel>
-                                    </q-tab-panels>
+                                            <q-tab-panel name="image">
+                                                <div class="text-h4 q-mb-md">임히지</div>
+                                            </q-tab-panel>
+
+                                            <q-tab-panel name="couple">
+                                                <div class="q-mt-md">
+                                                    <q-card v-if="selectCoupleImage">
+                                                        <q-card-section class="fkR ft18">
+                                                            <div style="display: flex;" class="q-mt-sm">
+                                                                <q-input dense label="x축" v-model.number="selectCoupleImageObj.x" class="q-mr-sm"
+                                                                    type="number" outlined @update:model-value="moveItem('image')" />
+                                                                <q-input dense label="y축" v-model.number="selectCoupleImageObj.y"
+                                                                    type="number" outlined @update:model-value="moveItem('image')" />
+                                                            </div>
+                                                            <div style="display: flex;" class="q-mt-sm">
+                                                                <q-checkbox dense label="테두리" v-model="selectCoupleImageObj.isBorder"
+                                                                    @update:model-value="updateCoupleImageBorder" />
+                                                            </div>
+                                                            <div v-if="selectCoupleImageObj.isBorder">
+                                                                <div style="display: flex;" class="q-mt-sm">
+                                                                    <q-input dense label="테두리 사이즈" 
+                                                                        v-model.number="selectCoupleImageObj.borderWidth"
+                                                                        min="1" class="w100p" type="number" outlined 
+                                                                        @update:model-value="updateCoupleImageBorderWidth" />
+                                                                </div>
+                                                                <div class="q-mt-sm">
+                                                                    <q-input label="테두리 색상" outlined dense 
+                                                                        @update:model-value="updateCoupleImageBorderColor" 
+                                                                        v-model="selectCoupleImageObj.borderColor" class="my-input" >
+                                                                        <template v-slot:append>
+                                                                            <q-icon name="colorize" class="cursor-pointer">
+                                                                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                                                                    <q-color v-model="selectCoupleImageObj.borderColor" 
+                                                                                    @update:model-value="updateCoupleImageBorderColor" />
+                                                                                </q-popup-proxy>
+                                                                            </q-icon>
+                                                                        </template>
+                                                                    </q-input>
+                                                                </div>
+                                                                <div style="display: flex;" class="q-mt-sm">
+                                                                    <q-input dense label="테두리 Radius" 
+                                                                        v-model.number="selectCoupleImageObj.borderRadius"
+                                                                        min="1" class="w100p" type="number" outlined 
+                                                                        @update:model-value="updateCoupleImageBorderRadius" />
+                                                                </div>
+                                                            </div>
+                                                            <q-separator class="q-my-md"></q-separator>
+                                                            <div class="q-mt-sm" style="display: flex; justify-content: end;">
+                                                                <q-btn color="negative" outline @click="removeItem">삭제</q-btn>
+                                                            </div>
+                                                        </q-card-section>
+                                                    </q-card>    
+                                                    <q-card v-else>
+                                                        <div class="fkR ft18 text-center q-pa-md">
+                                                            선택된 커플 이미지가 없습니다.
+                                                        </div>
+                                                    </q-card>
+                                                </div>
+                                            </q-tab-panel>
+
+                                            <q-tab-panel name="preview">
+                                                <div id="ybrPreview"></div>
+                                            </q-tab-panel>
+                                        </q-tab-panels>
+                                    </div>
                                 </template>
 
                             </q-splitter>
@@ -212,8 +278,8 @@ export default {
     },
     data() {
         return {
-            tab: 'text',
-            splitterModel: 18,
+            tab: 'backgroundImage',
+            splitterModel: 15,
 
             drawerRight: true,
             drawerLeft: false,
@@ -223,8 +289,8 @@ export default {
             },
             user_list: [],
 
-            selectItem: null,
-            selectText: {
+            selectText: null,
+            selectTextObj: {
                 label: '텍스트',
                 x: 0,
                 y: 0,
@@ -234,7 +300,15 @@ export default {
             dragText: null,
             text_list: [],
 
-            selectImage: null,
+            selectCoupleImage: null,
+            selectCoupleImageObj: {
+                x: 0,
+                y: 0,
+                borderWidth: 0,
+                borderRadius: 0,
+                borderColor: '#000000',
+                isBorder: false,
+            },
             dragImage: null,
 
             currentX: 0,
@@ -246,34 +320,136 @@ export default {
         }
     },
     methods: {
+        /* tab */
+        onClickTab(args) {
+            let vm = this;
+            vm.$nextTick(() => {
+                if(args == 'preview') {
+                    const ybrPreview = document.getElementById('ybrPreview');
+                    const coupleBackgroundBox = document.getElementById("ybrZone").innerHTML;
+                    ybrPreview.innerHTML = coupleBackgroundBox.trim();
+                }
+            });
+        },
+        /* text */
         enterTextLabel() {
             let vm = this;
             vm.$nextTick(() => {
-                vm.selectItem.innerText = vm.selectText.label;
+                vm.selectText.innerText = vm.selectTextObj.label;
             });
         },
         blurTextLabel(label) {
             let vm = this;
-            vm.selectItem.innerText = vm.selectText.label;
+            vm.selectText.innerText = vm.selectTextObj.label;
         },
-        
         updateTextFontSize(args) {
             let vm = this;
-            vm.selectItem.style.fontSize = args + 'px';
+            vm.selectText.style.fontSize = args + 'px';
         },
         updateTextColor(args) {
             let vm = this;
-            vm.selectItem.style.color = args;
+            vm.selectText.style.color = args;
         },
+        onCreateText() {
+            let vm = this;
+            vm.tab = 'text';
+            let span = document.createElement("div");
+            let input = document.createElement("input");
+            span.appendChild(input);
+            span.id = "ybrText";
+            span.innerText = "텍스트";
+            if(vm.selectText) {
+                vm.selectText.classList = "";
+            }
+            span.classList.add("textActive");
+            span.style.position = 'absolute';
+            span.style.fontSize = '18px';
+            span.style.color = '#000000';
+            
+            span.addEventListener("click", (e) => {
+                vm.ybrTextEventListener(e);
+            });
+            vm.selectText = span;
+            vm.selectTextObj = {
+                label: '텍스트',
+                x: 0,
+                y: 0,
+                fontSize: 18,
+                color: '#000000',
+            };
+            vm.xOffset = 0;
+            vm.yOffset = 0;
+            vm.text_list.push(span);
+
+            document.getElementById('coupleBackgroundBox').appendChild(span);
+        },
+        setSelectText(element) {
+            let vm = this;
+            let matrix = vm.getElementMatrix(element);
+            vm.tab = 'text';
+            vm.selectTextObj = {
+                label: element.innerText,
+                x: matrix.x,
+                y: matrix.y,
+                fontSize: parseInt(element.style.fontSize),
+                color: element.style.color,
+            };
+        },
+
+        /* couple-image */
+        updateCoupleImageBorder(args) {
+            let vm = this;
+            vm.$nextTick(() => {
+                if(args) {
+                    vm.selectCoupleImage.style.borderStyle = 'solid';
+                } else {
+                    vm.selectCoupleImage.style.borderStyle = 'none';
+                }
+            });
+        },
+        updateCoupleImageBorderColor(args) {
+            let vm = this;
+            vm.$nextTick(() => {
+                vm.selectCoupleImage.style.borderColor = args;
+            });
+        },
+        updateCoupleImageBorderWidth(args) {
+            let vm = this;
+            vm.$nextTick(() => {
+                vm.selectCoupleImage.style.borderWidth = args + 'px';
+            });
+        },
+        updateCoupleImageBorderRadius(args) {
+            let vm = this;
+            vm.$nextTick(() => {
+                vm.selectCoupleImage.style.borderRadius = args + 'px';
+            });
+        },
+        setSelectCoupleImage(element) {
+            let vm = this;
+            let matrix = vm.getElementMatrix(element);
+            vm.tab = 'couple';
+            vm.selectCoupleImageObj = {
+                x: matrix.x,
+                y: matrix.y,
+                isBorder: element.style.borderStyle?true:false,
+                borderWidth: element.style.borderWidth?parseInt(element.style.borderWidth):1,
+                borderColor: element.style.borderColor?element.style.borderColor:'#000000',
+                borderRadius: element.style.borderRadius?parseInt(element.style.borderRadius):1,
+            };
+        },
+
+        /* item */
         removeItem() {
             let vm = this;
-            document.getElementById('coupleBackgroundBox').removeChild(vm.selectItem);
+            document.getElementById('coupleBackgroundBox').removeChild(vm.selectText);
             vm.$nextTick(() => {
                 vm.dragText = null;
-                vm.selectItem = null;
+                vm.selectText = null;
             });
         },
 
+        /* background Image Uploader */
         onReject(entry) {
             let vm = this;
             entry.map((x) => {
@@ -302,6 +478,7 @@ export default {
             document.getElementById('coupleBackgroundBox').style.backgroundImage = ``;
         },
 
+        /* function */
         getElementMatrix(element) {
             let style = window.getComputedStyle(element);
             let matrix = new DOMMatrixReadOnly(style.transform);
@@ -311,53 +488,67 @@ export default {
                 x, y
             };
         },
-
-        setSelectText(element) {
-            let vm = this;
-            let matrix = vm.getElementMatrix(element);
-            vm.selectText = {
-                label: element.innerText,
-                x: matrix.x,
-                y: matrix.y,
-                fontSize: parseInt(element.style.fontSize),
-                color: element.style.color,
-            };
+        setTranslate(xPos, yPos, el) {
+            //"translate3d(" + xPos + "px, " + yPos + "px, 0)";
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
         },
-        
-        onCreateText() {
+        moveItem(type) {
             let vm = this;
-            vm.tab = 'text';
-            let span = document.createElement("div");
-            let input = document.createElement("input");
-            span.appendChild(input);
-            span.id = "ybrText";
-            span.innerText = "텍스트";
-            if(vm.selectItem) {
-                vm.selectItem.classList = "";
+            if(type == 'text') {
+                if(vm.selectTextObj.x < 0) { vm.selectTextObj.x = 0; }
+                if(vm.selectTextObj.y < 0) { vm.selectTextObj.y = 0; }
+                if(vm.selectTextObj.x > 480) { vm.selectTextObj.x = 480; }
+                if(vm.selectTextObj.y > 640) { vm.selectTextObj.y = 640; }
+                vm.setTranslate(vm.selectTextObj.x, vm.selectTextObj.y, vm.selectText);
+            } else if (type == 'image') {
+                if(vm.selectCoupleImageObj.x < 0) { vm.selectCoupleImageObj.x = 0; }
+                if(vm.selectCoupleImageObj.y < 0) { vm.selectCoupleImageObj.y = 0; }
+                if(vm.selectCoupleImageObj.x > 480) { vm.selectCoupleImageObj.x = 480; }
+                if(vm.selectCoupleImageObj.y > 640) { vm.selectCoupleImageObj.y = 640; }
+                vm.setTranslate(vm.selectCoupleImageObj.x, vm.selectCoupleImageObj.y, vm.selectCoupleImage);
             }
-            span.classList.add("textActive");
-            span.style.position = 'absolute';
-            span.style.fontSize = '18px';
-            span.style.color = '#000000';
-            
-            span.addEventListener("click", (e) => {
-                vm.ybrTextEventListener(e);
-            });
-            vm.selectItem = span;
-            vm.selectText = {
-                label: '텍스트',
-                x: 0,
-                y: 0,
-                fontSize: 18,
-                color: '#000000',
-            };
-            vm.xOffset = 0;
-            vm.yOffset = 0;
-            vm.text_list.push(span);
-
-            document.getElementById('coupleBackgroundBox').appendChild(span);
         },
 
+       
+
+        /* eventlistener */
+        ybrTextEventListener(e) {
+            let vm = this;
+            vm.dragText = null;
+            vm.tab = 'text';
+            if(vm.selectText) { vm.selectText.classList = ""; }
+            if(vm.selectCoupleImage) { vm.selectCoupleImage.classList = ""; }
+            vm.selectText = e.target;
+            let matrix = vm.getElementMatrix(e.target);
+            vm.setSelectText(e.target);
+            vm.currentX = matrix.x;
+            vm.currentY = matrix.y;
+            vm.initialX = matrix.x;
+            vm.initialY = matrix.y;
+            vm.xOffset = matrix.x;
+            vm.yOffset = matrix.y;
+            vm.selectText.classList.add("textActive");
+        },
+        ybrImageEventListener(e) {
+            let vm = this;
+            vm.dragImage = null;
+            vm.tab = 'couple';
+            if(vm.selectText) { vm.selectText.classList = ""; }
+            if(vm.selectCoupleImage) { vm.selectCoupleImage.classList = ""; }
+            vm.selectCoupleImage = e.target;
+            let matrix = vm.getElementMatrix(e.target);
+            vm.setSelectCoupleImage(e.target);
+            vm.currentX = matrix.x;
+            vm.currentY = matrix.y;
+            vm.initialX = matrix.x;
+            vm.initialY = matrix.y;
+            vm.xOffset = matrix.x;
+            vm.yOffset = matrix.y;
+            vm.selectCoupleImage.classList.add("ybrImageActive");
+        },
+
+
+        /* save */
         onSave() {
             let vm = this;
             vm.$q.loading.show();
@@ -379,12 +570,12 @@ export default {
                     }
                     vm.$q.loading.hide();
                 }).catch((err) => {
-                    vm.$q.loading.hide();
                     vm.$q.notify({
                         icon: 'error',
                         color: 'negative',
                         message: vm.$store.state.catchErrorMessage
                     });
+                    vm.$q.loading.hide();
                 });
             } else {
                 step2();
@@ -392,12 +583,12 @@ export default {
 
             function step2(url) {
                 if(url) { document.getElementById('coupleBackgroundBox').style.backgroundImage = `url(${url})`; }
-                if(vm.selectItem) { vm.selectItem.classList = ""; }
-                if(vm.selectImage) { vm.selectImage.classList = ""; }
+                if(vm.selectText) { vm.selectText.classList = ""; }
+                if(vm.selectCoupleImage) { vm.selectCoupleImage.classList = ""; }
                 let text = (document.getElementById('coupleBackgroundBox').outerHTML);
 
-                axios.put(`/api/couple/${coupleInfoId}/backgroundImage`, {
-                    backgroundImage: text,
+                axios.put(`/api/couple/${coupleInfoId}/backgroundImageElement`, {
+                    backgroundImageElement: text,
                 }).then((res) => {
                     let data = res.data;
                     if(data.success) {
@@ -407,6 +598,7 @@ export default {
                             message: data.message
                         });
                     }
+                    vm.$store.commit("onReloadCoupleInfo", coupleInfoId);
                     vm.$q.loading.hide();
                 }).catch((err) => {
                     vm.$q.loading.hide();
@@ -418,74 +610,10 @@ export default {
                 });
             }
         },
-
-        setTranslate(xPos, yPos, el) {
-            //"translate3d(" + xPos + "px, " + yPos + "px, 0)";
-            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-        },
-
-        moveItem(type) {
-            let vm = this;
-            if(type == 'text') {
-                if(vm.selectText.x < 0) { vm.selectText.x = 0; }
-                if(vm.selectText.y < 0) { vm.selectText.y = 0; }
-                if(vm.selectText.x > 480) { vm.selectText.x = 480; }
-                if(vm.selectText.y > 640) { vm.selectText.y = 640; }
-                vm.setTranslate(vm.selectText.x, vm.selectText.y, vm.selectItem);
-            } else if (type == 'image') {
-                if(vm.selectImage.x < 0) { vm.selectImage.x = 0; }
-                if(vm.selectImage.y < 0) { vm.selectImage.y = 0; }
-                if(vm.selectImage.x > 480) { vm.selectImage.x = 480; }
-                if(vm.selectImage.y > 640) { vm.selectImage.y = 640; }
-                vm.setTranslate(vm.selectImage.x, vm.selectImage.y, vm.selectImage);
-            }
-        },
-
-        ybrTextEventListener(e) {
-            let vm = this;
-            vm.dragText = null;
-            if(vm.selectItem) {
-                vm.selectItem.classList = "";
-            }
-            if(vm.selectImage) {
-                vm.selectImage.classList = "";
-            }
-            vm.selectItem = e.target;
-            let matrix = vm.getElementMatrix(e.target);
-            vm.setSelectText(e.target);
-            vm.currentX = matrix.x;
-            vm.currentY = matrix.y;
-            vm.initialX = matrix.x;
-            vm.initialY = matrix.y;
-            vm.xOffset = matrix.x;
-            vm.yOffset = matrix.y;
-            vm.selectItem.classList.add("textActive");
-        },
-        ybrImageEventListener(e) {
-            let vm = this;
-            vm.dragImage = null;
-            vm.tab = 'couple';
-            if(vm.selectImage) {
-                vm.selectImage.classList = "";
-            }
-            if(vm.selectItem) {
-                vm.selectItem.classList = "";
-            }
-            vm.selectImage = e.target;
-            let matrix = vm.getElementMatrix(e.target);
-            // vm.setSelectText(e.target);
-            vm.currentX = matrix.x;
-            vm.currentY = matrix.y;
-            vm.initialX = matrix.x;
-            vm.initialY = matrix.y;
-            vm.xOffset = matrix.x;
-            vm.yOffset = matrix.y;
-            vm.selectImage.classList.add("ybrImageActive");
-        },
     },
-    mounted: function() {
+    mounted: async function() {
         let vm = this;
-        if(!vm.$store.state.couple.backgroundImage) {
+        if(!vm.$store.state.couple.backgroundImageElement) {
             let div = document.createElement("div");
             div.id = "coupleBackgroundBox";
             div.className = "shadow-2";
@@ -524,7 +652,7 @@ export default {
             document.getElementById('ybrZone').appendChild(div);
         } else {
             let ybrZone = document.getElementById('ybrZone');
-            ybrZone.innerHTML = vm.$store.state.couple.backgroundImage.trim();
+            ybrZone.innerHTML = vm.$store.state.couple.backgroundImageElement.trim();
             let coupleBackgroundBox = document.getElementById("coupleBackgroundBox");    
             for (const child of coupleBackgroundBox.children) {
                 if(child.id == 'ybrText') {
@@ -536,6 +664,17 @@ export default {
                         vm.ybrImageEventListener(e);
                     });
                 }
+            }
+
+            let url = `${vm.$store.state.couple.backgroundImageUrl}`;
+            if(url) {
+                let response = await fetch(url);
+                let data = await response.blob();
+                let ext = url.split(".").pop();
+                let filename = url.split("/").pop();
+                let metadata = { type: `image/${ext}` };
+                let file = new File([data], filename, metadata);
+                vm.$refs.refBackgroundImage.addFiles([file]);
             }
         }
 
@@ -551,7 +690,7 @@ export default {
         container.addEventListener("mousemove", drag, false);
 
         function dragStart(e) {
-            if(e.target.id === 'ybrText' && vm.selectItem == e.target) {
+            if(e.target.id === 'ybrText' && vm.selectText == e.target) {
                 vm.dragImage = null;
                 vm.dragText = e.target;
                 vm.tab = 'text';
@@ -563,7 +702,7 @@ export default {
                     vm.initialY = e.clientY - vm.yOffset;
                 }
             } 
-            else if(e.target.id === 'ybrImage' && vm.selectImage == e.target) {
+            else if(e.target.id === 'ybrImage' && vm.selectCoupleImage == e.target) {
                 vm.dragText = null;
                 vm.dragImage = e.target;
                 vm.tab = 'couple';
@@ -578,7 +717,6 @@ export default {
         }
 
         function dragEnd(e) {
-            // console.log("dragEnd");
             vm.initialX = vm.currentX;
             vm.initialY = vm.currentY;
             vm.dragText = null;
@@ -597,8 +735,8 @@ export default {
 
                 vm.xOffset = vm.currentX;
                 vm.yOffset = vm.currentY;
-                vm.selectText.x = vm.currentX;
-                vm.selectText.y = vm.currentY;
+                vm.selectTextObj.x = vm.currentX;
+                vm.selectTextObj.y = vm.currentY;
                 vm.moveItem('text');
                 // vm.setTranslate(currentX, currentY, vm.dragText);
             }
@@ -612,8 +750,8 @@ export default {
                 }
                 vm.xOffset = vm.currentX;
                 vm.yOffset = vm.currentY;
-                vm.selectImage.x = vm.currentX;
-                vm.selectImage.y = vm.currentY;
+                vm.selectCoupleImage.x = vm.currentX;
+                vm.selectCoupleImage.y = vm.currentY;
                 vm.moveItem('image');
             }
         }

@@ -1,8 +1,8 @@
 <template>
     <div id="homeVue" style="height: 100%;">
         <div class="row q-mt-md q-mb-md" style="justify-content: center;">
-            <template v-if="$store.state.couple.backgroundImage">
-                <div class="q-mr-md" v-html="$store.state.couple.backgroundImage"></div>
+            <template v-if="$store.state.couple.backgroundImageElement">
+                <div class="q-mr-md" v-html="$store.state.couple.backgroundImageElement"></div>
             </template>
             <template v-else>
                 <div class="q-mr-md shadow-2" style="width: 480px; height: 640px; position: relative;">
@@ -82,7 +82,8 @@
                 <div>
                     <template v-if="albumList.length > 0">
                         <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle"
-                            style="max-width: 400px; border: 1px solid gray; height: 240px; max-height: 240px;">
+                            style="max-width: 400px; border: 1px solid gray; 
+                                height: 250px; max-height: 250px;">
                             <div style="display: flex;">
                                 <template v-for="item, idx in albumList" :key="idx">
                                     <q-card flat bordered class="q-ma-sm" style="width: 150px;">

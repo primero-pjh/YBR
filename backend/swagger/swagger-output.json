@@ -529,15 +529,57 @@
             "description": "OK"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "couple"
+        ],
+        "summary": "token*",
+        "description": "커플의 정보를 불러오는 API",
+        "parameters": [
+          {
+            "name": "coupleInfoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "coupleInfoId": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
-    "/api/couple/{coupleInfoId}/backgroundImage": {
+    "/api/couple/{coupleInfoId}/backgroundImageElement": {
       "put": {
         "tags": [
           "/couple"
         ],
         "summary": "token*",
-        "description": "특정 커플의 BackgroundImage를 저장하는 API",
+        "description": "특정 커플의 BackgroundImageElement를 저장하는 API",
         "parameters": [
           {
             "name": "coupleInfoId",
@@ -564,7 +606,7 @@
                   "type": "number",
                   "example": 0
                 },
-                "backgroundImage": {
+                "backgroundImageElement": {
                   "type": "number",
                   "example": 0
                 }
@@ -583,7 +625,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "backgroundImage": {
+                  "backgroundImageElement": {
                     "example": "any"
                   }
                 }

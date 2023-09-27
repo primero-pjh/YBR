@@ -53,6 +53,8 @@ const store = createStore({
             userId: '',
             userName: '',
             phoneNumber: '',
+            backgroundImageElement: '',
+            backgroundImageUrl: '',
             image: '',
             socketId: '',
             memo: '',
@@ -235,7 +237,8 @@ const store = createStore({
                 state.couple.image = "";
                 state.couple.phoneNumber = "";
                 state.couple.socketId = "";
-                state.couple.backgroundImage = "";
+                state.couple.backgroundImageElement = "";
+                state.couple.backgroundImageUrl = "";
                 state.couple.memo = "";
                 state.couple.UID = "";
             } else {
@@ -245,7 +248,8 @@ const store = createStore({
                 state.couple.image = couple.image;
                 state.couple.phoneNumber = couple.phoneNumber;
                 state.couple.socketId = couple.socketId;
-                state.couple.backgroundImage = couple.backgroundImage;
+                state.couple.backgroundImageElement = couple.backgroundImageElement;
+                state.couple.backgroundImageUrl = couple.backgroundImageUrl;
                 state.couple.memo = couple.memo;
                 state.couple.UID = couple.UID;
             }
@@ -306,7 +310,15 @@ const store = createStore({
                 }
             });
         },
-
+        onReloadCoupleInfo(state, coupleInfoId) {
+            axios.get(`/api/couple/${coupleInfoId}`, {}).then((res) => {
+                let data = res.data;
+                state.couple.backgroundImageElement = data.couple.backgroundImageElement;
+                state.couple.backgroundImageUrl = data.couple.backgroundImageUrl;
+            }).catch((err) => {
+                console.error("err:", err);
+            });
+        }
     },
 });
 

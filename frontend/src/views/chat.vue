@@ -213,8 +213,30 @@ export default {
             return time;
         },
 
-        /* msg log load */
-        onLoadMessage(chatInfoId) {
+       
+
+        pushMessage(message, isSent) {
+            let vm = this;
+            message["isSent"] = isSent;
+            message["timeView"] = vm.setTimeView(message.dateAdded);
+            message["dateView"] = vm.setDateView(message.dateAdded);
+            let last_msg = vm.msg_list[vm.msg_list.length-1];
+            let prev_key = `${last_msg.dateView}/${last_msg.isSent}`;
+            let key = `${message.dateView}/${isSent}`;
+            if(prev_key == key) {
+                vm.msg_list[vm.msg_list.length-1].content.push(message.content);
+            } else {
+                vm.msg_list.push({
+                    isSent,
+                    timeView: message.timeView,
+                    dateView: message.dateView,
+                    content: [message.content],
+                })
+            }
+        },
+
+         /* msg log load */
+         onLoadMessage(chatInfoId) {
             let vm = this;
             vm.$q.loading.show();
             axios.get(`/api/user/chat/${chatInfoId}`, {}).then((res) => {
@@ -259,26 +281,6 @@ export default {
                 vm.$q.loading.hide();
             });
         },
-
-        pushMessage(message, isSent) {
-            let vm = this;
-            message["isSent"] = isSent;
-            message["timeView"] = vm.setTimeView(message.dateAdded);
-            message["dateView"] = vm.setDateView(message.dateAdded);
-            let last_msg = vm.msg_list[vm.msg_list.length-1];
-            let prev_key = `${last_msg.dateView}/${last_msg.isSent}`;
-            let key = `${message.dateView}/${isSent}`;
-            if(prev_key == key) {
-                vm.msg_list[vm.msg_list.length-1].content.push(message.content);
-            } else {
-                vm.msg_list.push({
-                    isSent,
-                    timeView: message.timeView,
-                    dateView: message.dateView,
-                    content: [message.content],
-                })
-            }
-        }
     },
     mounted: function() {
         let vm = this;

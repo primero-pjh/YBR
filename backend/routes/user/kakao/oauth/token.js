@@ -96,7 +96,7 @@ router.post('/user/kakao/oauth/token', async function(req, res, next) {
                         select 
                             u.userId, u.UID, u.phoneNumber, u.image, u.userName, 
                             u.isAdmin, u.coupleInfoId, u.coupleUID, u.password, u.code,
-                            ci.backgroundImage
+                            ci.backgroundImageElement, ci.backgroundImageUrl
                         from appUsers as u
                         join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
                         where u.UID=?
