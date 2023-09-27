@@ -15,6 +15,7 @@
             </layout>
         </template>
         <dialog_modify_album ref="dialog_modify_album" />
+        <dialog_scheduled ref="dialog_scheduled" />
     </div>
 </template>
 
@@ -22,6 +23,7 @@
 import layout from "@/components/layout.vue";
 import adminLayout from "@/components/adminLayout.vue";
 import dialog_modify_album from "@/components/dialog_modify_album.vue";
+import dialog_scheduled from '@/components/dialog_scheduled.vue';
 
 export default {
     name: 'App',
@@ -37,6 +39,7 @@ export default {
         layout,
         adminLayout,
         dialog_modify_album,
+        dialog_scheduled,
     },
     data() {
         return {

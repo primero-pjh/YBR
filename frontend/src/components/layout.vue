@@ -199,7 +199,9 @@ export default {
             vm.$router.push(args.url);
         },
         goto_setting() {
-            this.$router.push("/setting");
+            let vm = this;
+            vm.tab = 'setting';
+            vm.$router.push("/setting");
         },
         goto_github() {
             window.open('https://github.com/primero-pjh/ybr');

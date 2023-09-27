@@ -35,7 +35,7 @@
                             <template  v-for="row, idx in sche_list" :key="idx">
                                 <div style="display: flex; background-color: #eee; align-items: center;
                                     border-radius: 5px; border: 1px solid gray;" 
-                                    class="q-mb-sm q-px-sm fkR ft16">
+                                    class="q-mb-sm q-px-sm fkR ft16" @click="onClickSche(row)">
                                     <div style="max-width: 150px; max-height: 24px; text-overflow: ellipsis; overflow: hidden;">
                                         {{ row.title }}
                                         <q-tooltip class="fkR ft16" v-if="row.body">
@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <q-btn icon="place" flat dense></q-btn>
+                                        <q-btn icon="place" flat dense @click="openMap($event, row)"></q-btn>
                                     </div>
                                     <div>
                                         <q-badge v-if="row.Dday > 0" color="negative">
@@ -186,6 +186,20 @@ export default {
 
             });
         },
+        openMap(e, row) {
+            let vm = this;
+            e.preventDefault();
+            console.log("row;", row);
+        },
+
+        onClickSche(row) {
+            let vm = this;
+            row.isAllday = row.isAllday == 1 ? true : false;
+            vm.$root.$refs.dialog_scheduled.open('edit', row, (schedule, type) => {
+                vm.loadScheList();
+            });
+        },
+
         loadScheList() {
             let vm = this;
             let coupleInfoId = vm.$store.state.user.coupleInfoId;

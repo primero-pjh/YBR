@@ -94,7 +94,6 @@
                 </div>
             </div>
         </div>
-        <dialog_scheduled ref="dialog_scheduled" />
     </div>
 </template>
 
@@ -103,12 +102,11 @@
 import axios from "axios";
 import Calendar from '@toast-ui/calendar';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
-import dialog_scheduled from '@/components/dialog_scheduled.vue';
+
 
 export default {
     name: 'calendarVue',
     components: {
-        dialog_scheduled,
     },
     computed: {
         classification_list() {
@@ -253,7 +251,7 @@ export default {
                 if(data.success) {
                     let schedule = data.schedule;
                     schedule.isAllday = schedule.isAllday ? true : false;
-                    vm.$refs.dialog_scheduled.open('edit', schedule, (schedule, type) => {
+                    vm.$root.$refs.dialog_scheduled.open('edit', schedule, (schedule, type) => {
                         if(type == 'edit') {
                             vm.calendar.updateEvent(schedule.id, schedule.calendarId, schedule);
                         } else if (type == 'delete') {
@@ -307,7 +305,7 @@ export default {
                 // customStyle:	{},	            // 일정 요소에 적용할 스타일. CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체이다.
                 // raw:	null,	                // 실제 일정 데이터
             };
-            vm.$refs.dialog_scheduled.open('add', schedule, (scheduleData) => {
+            vm.$root.$refs.dialog_scheduled.open('add', schedule, (scheduleData) => {
                 if(scheduleData) {
                     vm.schedule_list.push(scheduleData);
                     vm.calendar.createEvents([scheduleData]);  // 한개 이상의 캘린더 이벤트를 생성한다.
@@ -373,7 +371,7 @@ export default {
                 event["classification"] = temp.classification;
             }
             event["prevCalendarId"] = event.calendarId;
-            vm.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
+            vm.$root.$refs.dialog_scheduled.open('edit', event, (schedule, type) => {
                 if(schedule && schedule.classification) {
                     schedule["backgroundColor"] = vm.classification_dict[schedule.classification].color;
                     schedule["dragBackgroundColor"] = vm.classification_dict[schedule.classification].color;
