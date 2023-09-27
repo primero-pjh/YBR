@@ -3,6 +3,7 @@ import homeVue from "../views/home.vue";
 import loginVue from "../views/login.vue";
 import waitingVue from "../views/login/waiting.vue";
 import signupVue from "../views/login/signup.vue";
+import ka_signupVue from "../views/login/kakao/signup.vue";
 import chatVue from "../views/chat.vue";
 import calendarVue from "../views/calendar.vue";
 import communityVue from "../views/community.vue";
@@ -27,6 +28,7 @@ const routes = [
     { path: "/login", name: "login", component: loginVue, label: "로그인", },
     { path: "/login/waiting", name: "waiting", component: waitingVue, label: "대기", },
     { path: "/login/signup", name: "signup", component: signupVue, label: "회원가입", },
+    { path: "/login/kakao/signup", name: "ka_signup", component: ka_signupVue, label: "회원가입", },
     { path: "/chat", name: "chat", component: chatVue, label: "채팅", },
     // { path: "/calendar", name: "calendar", component: calendarVue, label: "캘린더", },
     { path: "/calendar/:id", name: "calendar", component: calendarVue, label: "캘린더", },

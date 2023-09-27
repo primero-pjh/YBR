@@ -11,7 +11,7 @@
                         @keyup.enter="onLogin" 
                         :error="formError.password?true:false" :error-message="formError.password" />
 
-                    <q-toggle label="자동 로그인" v-model="appUser.rememberMe" disable />
+                    <q-toggle label="자동 로그인" v-model="appUser.rememberMe" disable class="fkR ft18" />
 
                     <q-btn class="q-mt-md" style="width: 100%;" label="로그인" color="primary" 
                         size="lg" @click="onLogin" 
@@ -19,13 +19,13 @@
                     <q-separator class="q-my-md"></q-separator>
                     <q-img src="/images/kakao_login_medium_wide.png" @click="onLoginKakao"
                         style="height: 51px; cursor: pointer;" />
-                    <div style="display: flex; justify-content: space-between; height: 20px;" class="q-mt-md">
-                        <div>
-                            <p style="cursor: pointer;">회원가입</p>
+                    <div style="display: flex; justify-content: space-between; height: 20px;" class="q-mt-md fkR ft16">
+                        <div @click="goto_signup">
+                            <p style="cursor: pointer;" class="fkR" >회원가입</p>
                         </div>
                         <div style="display: flex;">
-                            <p style="cursor: pointer;" class="q-mr-sm">계정찾기</p>
-                            <q-separator vertical class="q-mr-sm" />
+                            <!-- <p style="cursor: pointer;" class="q-mr-sm">계정찾기</p> -->
+                            <!-- <q-separator vertical class="q-mr-sm" /> -->
                             <p style="cursor: pointer;">비밀번호찾기</p>
                         </div>
                     </div>
@@ -59,6 +59,11 @@ export default {
         }
     },
     methods: {
+        goto_signup() {
+            let vm = this;
+            vm.$store.state.isSigned = true;
+            vm.$router.push('/login/signup');
+        },
         /* YBR에서 제공하는 LOGIN */
         onLogin() {
             let vm = this;
@@ -126,6 +131,14 @@ export default {
                     vm.$c.setError(vm.formError, data.error);
                 }
                 vm.isLoading = !vm.isLoading;
+            }).catch((err) => {
+                vm.isLoading = false;
+                vm.$q.loading.hide();
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: vm.$store.state.catchErrorMessage,
+                });
             });
         },
 

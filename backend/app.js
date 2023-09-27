@@ -118,7 +118,10 @@ app.use('/', require('./routes/api/couple/schedules/classifications/post'));
 app.use('/', require('./routes/api/couple/schedules/classifications/delete'));
 
 app.use('/', require('./routes/user/login.js'));
+app.use('/', require('./routes/user/upload/profile_image'));
 app.use('/', require('./routes/user/upload/temp/image'));
+app.use('/', require('./routes/user/signup'));
+
 app.use('/', require('./routes/user/kakao/oauth/token'));
 app.use('/', require('./routes/user/kakao/signup'));
 

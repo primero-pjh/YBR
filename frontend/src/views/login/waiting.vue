@@ -9,17 +9,18 @@
                             <div style="display: flex; width: 100%;" v-if="user">
                                 <div style="position: relative; width: 150px;" class="q-mr-md">
                                     <template v-if="user.image">
-                                        <q-img :src="$store.state.host + user.image" 
-                                            style="border: 1px solid #eee; border-radius: 15px; width: 150px;" />
+                                        <q-img :src="$store.state.host + user.image" fit="cover"
+                                            style="border: 1px solid #eee; border-radius: 15px; width: 150px; height: 150px;" />
                                     </template>
                                     <template v-else>
-                                        <q-img src="/images/default_avatar_image.png" 
-                                            style="border: 1px solid #eee; border-radius: 15px; width: 150px;" />
+                                        <q-img src="/images/default_avatar_image.png" fit="cover"
+                                            style="border: 1px solid #eee; border-radius: 15px; width: 150px; height: 150px;" />
                                     </template>
-                                    
                                     <div style="position: absolute; top: -5px; right: -5px;">
-                                        <q-btn icon="upload" color="primary" dense round @click="onUpload" />
+                                        <q-btn icon="upload" color="primary" dense round @click="onUploadImage" />
                                     </div>
+                                    <q-file @update:model-value="onChangeImage"
+                                        v-model="file" ref="profile_image" style="visibility: hidden;" />
                                 </div>
                                 <div class="q-pa-md" style="background-color: #eee; width: 100%;" >
                                     <q-toggle v-model="form.isEdit" :label="form.isEdit?'ON':'OFF'" color="green"></q-toggle>
@@ -135,6 +136,7 @@ export default {
         return {
             user: null,
             search_user: null,
+            file: null,
             form: {
                 targetCode: '',
                 userName: '',
@@ -186,11 +188,33 @@ export default {
             });
         },
         
-        
-        /* image */
-        onUpload() {
+        onChangeImage(file) {
             let vm = this;
-            console.log("onUpload");
+            let UID = vm.$store.state.user.UID;
+            let formData = new FormData();
+            formData.append("file", file);
+            vm.$q.loading.show();
+            axios({
+                method: "POST",
+                url: `${vm.$store.state.host}/user/${UID}/upload/profile_image`,
+                data: formData,
+            }).then((res) => {
+                let data = res.data;
+                vm.$q.loading.hide();
+            }).catch((err) => {
+                vm.$q.notify({
+                    icon: 'error',
+                    color: 'negative',
+                    message: vm.$store.state.catchErrorMessage
+                });
+                vm.$q.loading.hide();
+            });
+        },
+        /* image */
+        onUploadImage() {
+            let vm = this;
+            vm.$refs.profile_image.pickFiles();
+            
         },
 
         /* 요청 대기열의 수락 */

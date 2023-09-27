@@ -55,7 +55,13 @@ router.post('/user/login', async function(req, res, next) {
         where u.userId=?
     `, [userId]);
     let user = rows[0];
-
+    if(!user) {
+        error["userId"] = "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다.";
+        return res.json({
+            success: 0,
+            error,
+        });
+    }
     /* 로그인이 존재하는 경우 기존 로그인까지도 해제 */
     if(user_dict.hasOwnProperty(user.UID)) {
         io.to(user_dict[user.UID].socketId).emit('/client/user/duplication/login');
@@ -67,13 +73,7 @@ router.post('/user/login', async function(req, res, next) {
 
     user_dict[user.UID] = new Object();
     /* user null check */
-    if(!user) {
-        error["userId"] = "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다.";
-        return res.json({
-            success: 0,
-            error,
-        });
-    }
+    
     password = hashTest(user.salt, password);
     if(password != user.password) {
         error["userId"] = "존재하지 않는 아이디거나, 비밀번호가 일치하지 않습니다.";

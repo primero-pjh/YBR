@@ -1770,6 +1770,51 @@
         }
       }
     },
+    "/user/{UID}/upload/profile_image": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "description": "해당 파일을 저장하는 API",
+        "parameters": [
+          {
+            "name": "UID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "file": {}
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/user/upload/temp/image": {
       "post": {
         "description": "",
@@ -1797,6 +1842,39 @@
                     "example": "any"
                   },
                   "coupleInfoId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signup": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
                     "example": "any"
                   }
                 }
