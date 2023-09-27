@@ -81,23 +81,22 @@
                 </div>
                 <div>
                     <template v-if="albumList.length > 0">
-                        <q-virtual-scroll
-                            :items="albumList"
-                            virtual-scroll-horizontal
-                            style="max-width: 400px;"
-                            v-slot="{ item, index }">
-                            <div :key="index">
-                                <q-card flat bordered class="q-ma-sm" style="width: 150px;">
-                                    <q-img :src="$store.state.host + item.coverImageUrl" 
-                                        style="width: 150px; height: 150px;"
-                                        fit="cover" />
-                                    <q-separator></q-separator>
-                                    <q-card-section>
-                                        <div class="text-subtitle2 fkR ft16">{{ item.title }}</div>
-                                    </q-card-section>
-                                </q-card>
+                        <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle"
+                            style="max-width: 400px; border: 1px solid gray; height: 240px; max-height: 240px;">
+                            <div style="display: flex;">
+                                <template v-for="item, idx in albumList" :key="idx">
+                                    <q-card flat bordered class="q-ma-sm" style="width: 150px;">
+                                        <q-img :src="$store.state.host + item.coverImageUrl" 
+                                            style="width: 150px; height: 150px;"
+                                            fit="cover" />
+                                        <q-separator></q-separator>
+                                        <q-card-section>
+                                            <div class="text-subtitle2 fkR ft16">{{ item.title }}</div>
+                                        </q-card-section>
+                                    </q-card>
+                                </template>
                             </div>
-                        </q-virtual-scroll>
+                        </q-scroll-area>
                     </template>
                     <template v-else>
                         <div class="shadow-2" style="height: 150px; position: relative;">
