@@ -14,23 +14,37 @@
 
 ## 🔍 미리보기
 
-### 로그인 페이지
-![image](https://github.com/primero-pjh/ybr/assets/58695375/42e8f19d-7df2-4b1d-8cf6-37684bd40c19)
+<details>
+<summary><h3>로그인 페이지</h3></summary>
 
-### 홈 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7)
+</details>
+<details>
+<summary><h3>홈 페이지</h3></summary>
+
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/39999459-1de2-4e34-8f98-9535b5c7fd84)
+</details>
+<details>
+<summary><h3>캘린더 페이지</h3></summary>
 
-### 캘린더 페이지
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/dc7d1d16-50d2-4728-a63a-ff753420217f)
+</details>
+<details>
+<summary><h3>채팅 페이지</h3></summary>
 
-### 채팅 페이지
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/caf433c0-c592-4492-96f6-f1e821e94068)
+</details>
+<details>
+<summary><h3>앨범 페이지</h3></summary>
 
-### 앨범 페이지
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/3a66e4a3-f3b8-4803-ade9-159d2127a7d0)
+</details>
+<details>
+<summary><h3>프로필 페이지</h3></summary>
 
-### 프로필 페이지
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d)
+</details>
+
 
 ## :zap: YBR 실행
 
