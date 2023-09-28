@@ -21,9 +21,10 @@
 ## **✨ 프로젝트 설명**
 ```
 보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션.
-
-'캘린더', '채팅', '앨범' 기능이 있으며, 프로필 사진을 직접 꾸밀 수 있는 기능을 제공하는
-웹 애플리케이션 입니다. 
+커플 간의 관계를 향상시키고 일상 생활을 더욱 즐겁게 만들어주는 웹 애플리케이션입니다.
+이 서비스의 주요 기능으로 캘린더, 채팅, 앨범 그리고 프로필을 통해
+각 커플들의 개성을 살려 자신의 배경 사진을 꾸밀 수 있는 기능을 제공하여 커플들이
+간편하게 소통하고 협력할 수 있도록 도와줍니다.
 ```
 
 ## **🔍 미리보기**
@@ -80,6 +81,7 @@
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 <br>
 <img src="https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white">
+<img src="https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=NaverlogoColor=white">
 </div>
 
 
