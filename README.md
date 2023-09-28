@@ -11,6 +11,10 @@
 '캘린더', '채팅', '앨범' 기능이 있으며, 프로필 사진을 직접 꾸밀 수 있는 기능을 제공하는
 웹 애플리케이션 입니다. 
 ```
+## :link: 링크
+1️⃣ &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
+<br>
+2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
 
 ## 🔍 미리보기
 
@@ -91,12 +95,7 @@ $ npm start         // Backend 실행
 
 ## ⚡ 시스템 아키텍
 
-## :link: 링크
-:one: &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
-<br>
-2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
-<br>
-3️⃣ &nbsp; <a href="https://ybr.pritras.com/admin" target="_blank">관리자 페이지</a>
+
 # DEFAULT FONT
     > KakaoRegular || KakaoBold
 
