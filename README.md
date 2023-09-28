@@ -4,6 +4,20 @@
 
 <div align="left">
 
+## :bookmark_tabs: 목차
+- [:link:링크](##-:link:-링크)
+- :couplekiss: 프로젝트 설명
+- :scroll: 미리보기
+- :zap: 서버 실행
+- :file_folder: ERD
+- :rotating_light: 비즈니스 로직
+- :ballot_box_with_check: 기능 소개
+
+## :link: 링크
+1️⃣ &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
+<br>
+2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
+
 ## ✨ 프로젝트 설명
 ```
 보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션.
@@ -11,10 +25,9 @@
 '캘린더', '채팅', '앨범' 기능이 있으며, 프로필 사진을 직접 꾸밀 수 있는 기능을 제공하는
 웹 애플리케이션 입니다. 
 ```
-## :link: 링크
-1️⃣ &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
-<br>
-2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
+
+
+
 
 ## 🔍 미리보기
 
