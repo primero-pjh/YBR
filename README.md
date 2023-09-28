@@ -100,21 +100,12 @@ $ npm run build     // Frontend 데이터를 Backend로 build 합니다.
 $ npm start         // Backend 실행
 ```
 
-<details>
-    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
-    - crontab list
-    - code
-</details>
     
-## ** 📦 ERD **
+## **📦 ERD**
+![image](https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939)
 
-## ⚡ 시스템 아키텍
-
-
-# DEFAULT FONT
-    > KakaoRegular || KakaoBold
-
-# RESTAPI Organization
+## **⚡ 비즈니스 로직**
+### RESTAPI Organization
 Login Authorization
 - Axios: /api 요청을 담당한다.
     headers에 JWT Token을 포함하여 모든 RESTAPI 요청에 토큰을 검증한다.
@@ -164,5 +155,11 @@ Login Authorization
 chat logs 저장 방식
     @ crontab 사용
     1. 매일 밤 1시에 table[Chats]의 행 중 전날의 message들을 가져다 /logs/chats/:chatId/month에 저장한다.
-    
+
+### CronTab
+<details>
+    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
+    - crontab list
+    - code
+</details>
 
