@@ -1,5 +1,5 @@
 <div align="center">
-    <h1> :couple: YBR - Couple Application</h1>
+    <h1> :couple: YBR - Couple Application #Prototype</h1>
 </div>
 
 <div align="left">
@@ -7,16 +7,16 @@
 ## :bookmark_tabs: 목차
 - 🔗 [링크](#-링크)
 - 💏 [프로젝트설명](#-프로젝트-설명)
-- :scroll: 미리보기
-- :zap: 서버 실행
-- :file_folder: ERD
-- :rotating_light: 비즈니스 로직
-- :ballot_box_with_check: 기능 소개
+- 🛠 [기술 및 도구](#-기술-스택)
+- 📜 [미리보기](#-미리보기)
+- ⚡ [서버 실행](#-서버-실행)
+- 📁 [ERD](#-erd)
+- :rotating_light: [비즈니스 로직](#-비즈니스-로직)
+- :ballot_box_with_check: [기능 소개](#-기능-소개)
 
 ## **🔗 링크**
-1️⃣ &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
-<br>
-2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
+### 1️⃣ &nbsp; 사용자 페이지 - <a href="https://ybr.pritras.com" target="_blank">바로가기</a>
+### 2️⃣ &nbsp; Swagger - <a href="https://ybr.pritras.com/api-docs" target="_blank">바로가기</a>
 
 ## **✨ 프로젝트 설명**
 ```
@@ -26,10 +26,7 @@
 웹 애플리케이션 입니다. 
 ```
 
-
-
-
-## 🔍 미리보기
+## **🔍 미리보기**
 
 <details>
 <summary><h3>로그인 페이지</h3></summary>
@@ -62,27 +59,7 @@
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d)
 </details>
 
-
-## :zap: YBR 실행
-
-### 1. 개발서버 
-```
-$ npm run build-dev // Frontend 데이터를 Backend로 build 합니다.
-$ npm run start     // Backend 실행
-```
-### 2. 리얼서버
-```
-$ npm run build     // Frontend 데이터를 Backend로 build 합니다.
-$ npm start         // Backend 실행
-```
-
-<details>
-    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
-    - crontab list
-    - code
-</details>
-    
-## :hammer: 기술 스택
+## **🛠 기술 스택**
     
 <img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">    
 <img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white"> 
@@ -105,6 +82,27 @@ $ npm start         // Backend 실행
 <img src="https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white">
 </div>
 
+
+## **⚡ 서버 실행**
+
+### 1. 개발서버 
+```
+$ npm run build-dev // Frontend 데이터를 Backend로 build 합니다.
+$ npm run start     // Backend 실행
+```
+### 2. 리얼서버
+```
+$ npm run build     // Frontend 데이터를 Backend로 build 합니다.
+$ npm start         // Backend 실행
+```
+
+<details>
+    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
+    - crontab list
+    - code
+</details>
+    
+## ** 📦 ERD **
 
 ## ⚡ 시스템 아키텍
 
