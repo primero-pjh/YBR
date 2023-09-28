@@ -65,6 +65,7 @@ router.post('/user/login', async function(req, res, next) {
     /* 로그인이 존재하는 경우 기존 로그인까지도 해제 */
     if(user_dict.hasOwnProperty(user.UID)) {
         io.to(user_dict[user.UID].socketId).emit('/client/user/duplication/login');
+        console.log(io);
         return res.json({
             success: 0,
             isDuplicationLogin: true
