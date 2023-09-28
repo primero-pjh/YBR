@@ -35,23 +35,24 @@
                             <template  v-for="row, idx in sche_list" :key="idx">
                                 <div style="display: flex; background-color: #eee; align-items: center;
                                     border-radius: 5px; border: 1px solid gray;" 
-                                    class="q-mb-sm q-px-sm fkR ft16" @click="onClickSche(row)">
-                                    <div style="max-width: 150px; max-height: 24px; text-overflow: ellipsis; overflow: hidden;">
+                                    class="q-mb-sm q-px-sm fkR ft16" >
+                                    <div style="max-width: 150px; max-height: 24px; text-overflow: ellipsis; overflow: hidden;
+                                        cursor: pointer;" @click="onClickSche(row)">
                                         {{ row.title }}
                                         <q-tooltip class="fkR ft16" v-if="row.body">
                                             {{ row.body }}
                                         </q-tooltip>
                                     </div>
                                     <q-space></q-space>
-                                    <div>
+                                    <div v-if="row.location">
+                                        <q-btn icon="place" flat dense @click="openMap(row)" />
+                                    </div>
+                                    <div class="q-mr-sm">
                                         <div :style="{backgroundColor: row.classificationColor}" 
-                                            style="border-radius: 5px; font-size: 14px; border: 1px solid gray;"
+                                            style="border-radius: 5px; font-size: 11px; border: 1px solid gray;"
                                             class="q-px-sm text-white text-bold">
                                             {{ row.classification }}
                                         </div>
-                                    </div>
-                                    <div>
-                                        <q-btn icon="place" flat dense @click="openMap($event, row)"></q-btn>
                                     </div>
                                     <div>
                                         <q-badge v-if="row.Dday > 0" color="negative">
@@ -111,6 +112,7 @@
                 </div>
             </div>
         </div>
+        
         <dialog_schedule_timeline ref="dialog_schedule_timeline" />
     </div>
 </template>
@@ -127,6 +129,12 @@ export default {
     },
     data() {
         return {
+            map: null,
+            marker: {
+                x: 0,
+                y: 0,
+            },
+
             thumbStyle: {
                 right: '4px',
                 borderRadius: '5px',
@@ -186,10 +194,11 @@ export default {
 
             });
         },
-        openMap(e, row) {
-            let vm = this;
-            e.preventDefault();
-            console.log("row;", row);
+        openMap(row) {
+            let vm = this;        
+            vm.$root.$refs.dialog_naver_map.open(row, function() {
+
+            });
         },
 
         onClickSche(row) {
@@ -252,6 +261,39 @@ export default {
         let vm = this;
         vm.loadScheList();
         vm.loadAlbumList();
+
+        
+    },
+    created() {
+        let vm = this;
+
+        // let marker = new naver.maps.Marker({
+        //     position: new naver.maps.LatLng(35.2001115,129.0640855),
+        //     map: map
+        // });
+        
+        // naver.maps.Event.addListener(map, 'click', function(e) {
+        //     marker.setPosition(e.latlng);
+        //     vm.marker.x = e.latlng.x;
+        //     vm.marker.y = e.latlng.y;
+        // });
+        // console.log(navigator.geolocation);
+        // if (navigator.geolocation) { // GPS를 지원하면
+        // navigator.geolocation.getCurrentPosition(function(position) {
+        //     vm.user_geolocation.x = position.coords.latitude;
+        //     vm.user_geolocation.y = position.coords.longitude;
+        //     console.log("user_geolocation:" ,vm.user_geolocation);
+        //     vm.newmaker(position.coords.longitude, position.coords.latitude);
+        // }, function(error) {
+        //     console.error(error);
+        // }, {
+        //     enableHighAccuracy: false,
+        //     maximumAge: 0,
+        //     timeout: Infinity
+        // });
+        // } else {
+        //     alert('GPS를 지원하지 않습니다');
+        // }
     },
 }
 </script>

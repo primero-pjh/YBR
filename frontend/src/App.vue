@@ -16,6 +16,7 @@
         </template>
         <dialog_modify_album ref="dialog_modify_album" />
         <dialog_scheduled ref="dialog_scheduled" />
+        <dialog_naver_map ref="dialog_naver_map" />
     </div>
 </template>
 
@@ -24,6 +25,7 @@ import layout from "@/components/layout.vue";
 import adminLayout from "@/components/adminLayout.vue";
 import dialog_modify_album from "@/components/dialog_modify_album.vue";
 import dialog_scheduled from '@/components/dialog_scheduled.vue';
+import dialog_naver_map from '@/components/dialog_naver_map.vue';
 
 export default {
     name: 'App',
@@ -40,6 +42,7 @@ export default {
         adminLayout,
         dialog_modify_album,
         dialog_scheduled,
+        dialog_naver_map,
     },
     data() {
         return {

@@ -20,15 +20,15 @@
                                 <template v-slot:title>
                                     <div style="display: flex; align-items: center;">
                                         <div>
-                                            <span class="fkB" :style="{color: row.classificationColor}">
-                                                {{ row.title }}
-                                                <q-tooltip class="fkR ft16">
-                                                    {{ row.classification }}
-                                                </q-tooltip>
-                                            </span>
+                                            <span class="fkR">{{ row.title }}</span>
+                                            <q-tooltip class="fkR ft16">
+                                                {{ row.classification }}
+                                            </q-tooltip>
+                                        </div>
+                                        <div v-if="row.location">
+                                            <q-btn icon="place" dense flat @click="openMap(row)" />
                                         </div>
                                     </div>
-                                    
                                 </template>
                                 <template v-slot:subtitle>
                                     <span>{{ row.startDateView }}</span>
@@ -63,6 +63,13 @@ export default {
         }
     },
     methods: {
+        openMap(row) {
+            let vm = this;        
+            vm.$root.$refs.dialog_naver_map.open(row, function() {
+
+            });
+        },
+        
         open(schedule_list, callback) {
             let vm = this;
             let list = vm.$c.tempObj(schedule_list);

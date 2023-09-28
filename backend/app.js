@@ -84,6 +84,8 @@ app.use('/', require('./routes/api/user/code'));
 app.use('/', require('./routes/api/user/chat/rooms'));
 app.use('/', require('./routes/api/user/chat/get'));
 
+app.use('/', require('./routes/api/naver/geocode/geocodeRouter'));
+
 app.use('/', require('./routes/api/couple/chat'));
 app.use('/', require('./routes/api/couple/delete'));
 app.use('/', require('./routes/api/couple/backgroundImage/post'));
