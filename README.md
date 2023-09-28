@@ -4,26 +4,64 @@
 
 <div align="left">
 
-## ✨ 프로젝트 설명
+## :bookmark_tabs: 목차
+- 🔗 [링크](#-링크)
+- 💏 [프로젝트설명](#-프로젝트-설명)
+- :scroll: 미리보기
+- :zap: 서버 실행
+- :file_folder: ERD
+- :rotating_light: 비즈니스 로직
+- :ballot_box_with_check: 기능 소개
+
+## **🔗 링크**
+1️⃣ &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
+<br>
+2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
+
+## **✨ 프로젝트 설명**
 ```
-보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션입니다.
-'캘린더', '채팅', '앨범', '프로필' 기능이 있으며 기존의 앱과의 차별성으로 'Live Shared' 라는 기능을 추가하여
-자신과 상대방의 동시 작업이 가능한 웹 애플리케이션 입니다.
+보편적으로 사용되는 커플앱들의 기능을 구현한 웹 애플리케이션.
+
+'캘린더', '채팅', '앨범' 기능이 있으며, 프로필 사진을 직접 꾸밀 수 있는 기능을 제공하는
+웹 애플리케이션 입니다. 
 ```
+
+
+
 
 ## 🔍 미리보기
-### Login Page
-![image](https://github.com/primero-pjh/ybr/assets/58695375/e6015ccf-0f91-40c1-8833-48ab77101078)
 
-### Home Page
+<details>
+<summary><h3>로그인 페이지</h3></summary>
 
-### Calendar Page
+![image](https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7)
+</details>
+<details>
+<summary><h3>홈 페이지</h3></summary>
 
-### Chat Page
+![image](https://github.com/primero-pjh/ybr/assets/58695375/39999459-1de2-4e34-8f98-9535b5c7fd84)
+</details>
+<details>
+<summary><h3>캘린더 페이지</h3></summary>
 
-### Album Page
+![image](https://github.com/primero-pjh/ybr/assets/58695375/dc7d1d16-50d2-4728-a63a-ff753420217f)
+</details>
+<details>
+<summary><h3>채팅 페이지</h3></summary>
 
-### Profile Page
+![image](https://github.com/primero-pjh/ybr/assets/58695375/caf433c0-c592-4492-96f6-f1e821e94068)
+</details>
+<details>
+<summary><h3>앨범 페이지</h3></summary>
+
+![image](https://github.com/primero-pjh/ybr/assets/58695375/3a66e4a3-f3b8-4803-ade9-159d2127a7d0)
+</details>
+<details>
+<summary><h3>프로필 페이지</h3></summary>
+
+![image](https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d)
+</details>
+
 
 ## :zap: YBR 실행
 
@@ -70,12 +108,7 @@ $ npm start         // Backend 실행
 
 ## ⚡ 시스템 아키텍
 
-## :link: 링크
-:one: &nbsp; <a href="https://ybr.pritras.com" target="_blank">사용자 페이지</a>
-<br>
-2️⃣ &nbsp; <a href="https://ybr.pritras.com/api-docs" target="_blank">Swagger</a>
-<br>
-3️⃣ &nbsp; <a href="https://ybr.pritras.com/admin" target="_blank">관리자 페이지</a>
+
 # DEFAULT FONT
     > KakaoRegular || KakaoBold
 
