@@ -13,18 +13,24 @@
 ```
 
 ## 🔍 미리보기
-### Login Page
-![image](https://github.com/primero-pjh/ybr/assets/58695375/e6015ccf-0f91-40c1-8833-48ab77101078)
 
-### Home Page
+### 로그인 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/42e8f19d-7df2-4b1d-8cf6-37684bd40c19)
 
-### Calendar Page
+### 홈 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/39999459-1de2-4e34-8f98-9535b5c7fd84)
 
-### Chat Page
+### 캘린더 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/dc7d1d16-50d2-4728-a63a-ff753420217f)
 
-### Album Page
+### 채팅 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/caf433c0-c592-4492-96f6-f1e821e94068)
 
-### Profile Page
+### 앨범 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/3a66e4a3-f3b8-4803-ade9-159d2127a7d0)
+
+### 프로필 페이지
+![image](https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d)
 
 ## :zap: YBR 실행
 
