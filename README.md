@@ -104,8 +104,13 @@ $ npm start         // Backend 실행
 ## **📦 ERD**
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939)
 
+## **⚡ 시스템 아키텍쳐**
+
+
 ## **⚡ 비즈니스 로직**
-### RESTAPI Organization
+### MVC 패턴
+
+### SocketIO와 Axios 사용
 Login Authorization
 - Axios: /api 요청을 담당한다.
     headers에 JWT Token을 포함하여 모든 RESTAPI 요청에 토큰을 검증한다.
