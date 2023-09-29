@@ -260,16 +260,22 @@ $ npm start         // Backend 실행
 
 ## ⭐ 비즈니스 로직
 
-### MVC 패턴
+### **:one: MVC 패턴과 디렉토리 구조**
+<kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/0b865988-f9ad-44eb-b689-7f1aaa036a20" width="30%" /><img src="https://github.com/primero-pjh/ybr/assets/58695375/7a28f15a-b882-4979-bdeb-6d851c59d202" /></kbd>
 
-### SocketIO와 Axios 사용
-Login Authorization
-- Axios: /api 요청을 담당한다.
-    headers에 JWT Token을 포함하여 모든 RESTAPI 요청에 토큰을 검증한다.
-- SocketIO
-    headers.auth에 JWT Token을 포함하여 모든 SOCKET EMIT에 토큰을 검증한다.
+ <b>YBR 프로젝트는 MVC 패턴을 따라 디렉토리 구조를 설계하였습니다.</b><br>    
+<b>M</b>odel - NodeJs 특성상 자료형이 자유롭기 때문에 생략하였습니다.<br>
+<b>V</b>iew - /ybr/backend/public/index.html<br>
+- /ybr/frontend의 파일들이 build가 되며 /ybr/backend/public으로 들어오게 됩니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/frontend/vue.config.js)
+- YBR의 Client에게 제공되는 UI/UX입니다.
+<b>C</b>ontroller - /ybr/backend/routes<br>
 
-검증되지 않은 TOKEN은 CODE 401을 반환하며, 로그인 페이지로 이동한다.
+
+### **:two: 통신 규약**
+
+### **AXIOS**
+
+### **SocketIO**
 
 # AXIOS MIDDLEWARE
 
