@@ -242,7 +242,7 @@ $ npm start         // Backend 실행
 ## **🔀 시스템 흐름도**
 
 <kbd>
-    <img src="https://github.com/primero-pjh/ybr/assets/58695375/0aafc683-f8f6-4138-9eae-8649bca5e877" />
+    <img src="https://github.com/primero-pjh/ybr/assets/58695375/6e8569f9-f1ff-4f47-96e0-7495e6342767" />
 </kbd>
 
 <details>
