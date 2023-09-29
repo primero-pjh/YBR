@@ -12,8 +12,7 @@
 - ⚡ [서버 실행](#-서버-실행)
 - 📁 [ERD](#-erd)
 - 🔀 [시스템 흐름도](#-시스템-흐름도)
-- ⭐ [비즈니스 로직](#-비즈니스-로직)
-- ☑️ [기능 소개](#-기능-소개)
+- ⭐ [기능 소개](#-기능-소개)
 
 ## **🔗 링크**
 ### 1️⃣ &nbsp; 사용자 페이지 - <a href="https://ybr.pritras.com" target="_blank">바로가기</a>
@@ -217,9 +216,6 @@
 <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
 </div>
 
-
-
-
 ## **⚡ 서버 실행**
 
 ### 1. 개발서버 
@@ -232,7 +228,6 @@ $ npm run start     // Backend 실행
 $ npm run build     // Frontend 데이터를 Backend로 build 합니다.
 $ npm start         // Backend 실행
 ```
-
     
 ## **📦 ERD**
 <kbd>
@@ -240,7 +235,6 @@ $ npm start         // Backend 실행
 </kbd>
 
 ## **🔀 시스템 흐름도**
-
 <kbd>
     <img src="https://github.com/primero-pjh/ybr/assets/58695375/6e8569f9-f1ff-4f47-96e0-7495e6342767" />
 </kbd>
@@ -253,10 +247,9 @@ $ npm start         // Backend 실행
     3. 올바른 사용자 검증을 위해 모든 Rest-API 요청에 JWT Token을 포함하여 전송합니다.
     4. 서버는 모든 요청의 JWT Token을 검증합니다. 
     5. 올바른 요청에서의 데이터를 조회하고 저장하며 사용자의 요청을 성공, 실패를 반환합니다.
-        
 </details>
 
-## ⭐ 비즈니스 로직
+## ⭐ 기능 소개
 
 ### **:one: MVC 패턴과 디렉토리 구조**
 <kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/0b865988-f9ad-44eb-b689-7f1aaa036a20" width="30%" /><img src="https://github.com/primero-pjh/ybr/assets/58695375/7a28f15a-b882-4979-bdeb-6d851c59d202" /></kbd>
@@ -364,6 +357,20 @@ let token = socket.handshake.auth.token;
 });
 ```
 
+### **:three: 배포 자동화**
+### **🔎 Crontab을 이용한 배포 자동화 서비스**
+1. 매일 새벽 1시에 sh 파일을 실행
+```sh
+0 1 * * * /var/www/html/cron/running_ybr.sh
+```
+2. running_ybr.sh code
+```sh
+cd /var/www/html/ybr/backend      # director로 이동
+git pull origin master            # git에 올려진 파일을 다운로드 받음
+npm install                       # library 설치
+sudo forever stopall              # 동작되고 있는 모든 서버 종료
+sudo forever start ./bin/www      # 서버 시작
+```
 # LOGIN 
 - YBR은 일반 로그인과 카카오 로그인을 제공한다.
     * 일반 로그인
