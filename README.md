@@ -359,9 +359,9 @@ let token = socket.handshake.auth.token;
 
 ### **:three: 배포 자동화**
 ### **🔎 Crontab을 이용한 배포 자동화 서비스**
-1. 매일 새벽 1시에 sh 파일을 실행
+1. 매일 새벽 1시에 sh 파일을 실행하고 log 기록
 ```sh
-0 1 * * * /var/www/html/cron/running_ybr.sh
+0 1 * * * /var/www/html/cron/running_ybr.sh >> /var/www/html/cron/running_ybr.log 2>&1
 ```
 2. running_ybr.sh code
 ```sh
@@ -371,48 +371,4 @@ npm install                       # library 설치
 sudo forever stopall              # 동작되고 있는 모든 서버 종료
 sudo forever start ./bin/www      # 서버 시작
 ```
-# LOGIN 
-- YBR은 일반 로그인과 카카오 로그인을 제공한다.
-    * 일반 로그인
-        1. DB에 존재하지 않는 값이므로 FALSE를 리턴하여 로그인에 실패한다.
-
-    * 카카오 로그인
-        1. DB에 등록되어 있지 않는 계정이 로그인을 시도하면 회원가입 페이지로 이동한다.
-        
-
-* 로그인 LOGIC
-    1. 커플이 등록 되어있는 경우
-        JWT를 발급 후 URL(/home)으로 이동한다.
-    2. 커플이 등록 되어있지 않는 경우 
-        JWT를 발급 후 URL(/waiting)으로 이동한다.
-    
-* 중복 로그인
-    """기본적으로 중복 로그인을 허용하지 않는다."""
-    서버의 메모리 상에서 관리하는 'USER_DICT' 객체에 해당 유저의 UID가 등록되어 있다면  
-    로그인 중인 브라우저의 socket에 disconnection을 요청한다. 
-
-* 로그인 후 USER_DICT의 변화
-
-
-# COUPLE REGISTER
-1. 커플 등록
-
-2. 커플 해제
-
-3. 커플 재등록
-    DB에 저장되는 모든 데이터는 복구할 수 있는 가능성을 열어두고,  Status의 true, false로 관리한다.
-
-
-    
-# CHAT
-chat logs 저장 방식
-    @ crontab 사용
-    1. 매일 밤 1시에 table[Chats]의 행 중 전날의 message들을 가져다 /logs/chats/:chatId/month에 저장한다.
-
-### CronTab
-<details>
-    <summary><h4>linux crontab 을 이용한 자동 업데이트</h4></summary>
-    - crontab list
-    - code
-</details>
 
