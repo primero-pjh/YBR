@@ -105,6 +105,7 @@ $ npm start         // Backend 실행
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939)
 
 ## **⚡ 시스템 아키텍쳐**
+![image](https://github.com/primero-pjh/ybr/assets/58695375/0aafc683-f8f6-4138-9eae-8649bca5e877)
 
 
 ## **⚡ 비즈니스 로직**
