@@ -34,16 +34,11 @@
 <details>
     <summary><h3>로그인 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">로그인 페이지</td></tr>
         <tr>
-            <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7" />   
-                </kbd>
-            </td>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7" /></kbd></td>
             <td >
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: &nbsp;YBR 서비스를 이용하기 위한 로그인 페이지 입니다.
                     <br>
@@ -53,21 +48,30 @@
                 </div>
             </td>
         </tr>
+        <tr><td colspan="2">회원가입 페이지</td></tr>
+        <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/57c4da07-d487-4c56-b66a-1e6ae9a2b1da" /></kbd></td>
+            <td >
+                <div><h3>📃 설명</h3></div>
+                <div>
+                    :one: &nbsp;YBR 서비스를 이용하기 위한 일반 유저의 회원가입 페이지 입니다.
+                    <br>
+                    :two: 프로필 사진을 등록하고,
+                    <br>
+                    :three: 아이디와 패스워드를 입력하여 계정을 생성합니다.
+                </div>
+            </td>
+        </tr>
     </table>
 </details>
 <details>
     <summary><h3>홈 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">홈 페이지</td></tr>
         <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/e88565ec-5a10-43b8-af55-804164ffd9bb" /></kbd></td>
             <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/e88565ec-5a10-43b8-af55-804164ffd9bb" />        
-                </kbd>
-            </td>
-            <td>
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: YBR 서비스의 기본이 되는 Index 페이지입니다.
                     <br>
@@ -79,21 +83,30 @@
                 </div>
             </td>
         </tr>
+        <tr><td colspan="2">일정의 우측상단 버튼 - 일정 타임라인</td></tr>
+        <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/66f48382-3ace-4005-98db-9a2dfcd5111d" /></kbd></td>
+            <td>
+                <div><h3>📃 설명</h3></div>
+                <div>
+                    :one: 커플이 등록한 일정을 간편하게 볼 수 있도록 기능을 제공합니다.
+                    <br>
+                    :two: 등록한 일정의 시간순으로 나타냅니다.
+                    <br>
+                    :three: 좌측 원은 일정 유형의 색깔을 나타냅니다.
+                </div>
+            </td>
+        </tr>
     </table>
 </details>
 <details>
     <summary><h3>캘린더 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">캘린더 페이지</td></tr>
         <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/7125168e-eff4-4438-be75-83ddae8584d1" /></kbd></td>
             <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/7125168e-eff4-4438-be75-83ddae8584d1" />        
-                </kbd>
-            </td>
-            <td>
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: YBR 서비스에서 제공하는 캘린더 페이지입니다.
                     <br>
@@ -110,16 +123,11 @@
 <details>
     <summary><h3>채팅 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">채팅 페이지</td></tr>
         <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/38a9f8d2-c562-43cb-8792-2f43df9ec7d0" /></kbd></td>
             <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/38a9f8d2-c562-43cb-8792-2f43df9ec7d0" />
-                </kbd>
-            </td>
-            <td>
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: YBR 서비스에서 제공하는 채팅 페이지입니다.
                     <br>
@@ -133,16 +141,11 @@
 <details>
     <summary><h3>앨범 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">앨범뷰</td></tr>
         <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/e9ef8395-9690-47f9-8710-e266f1f702d1" /></kbd></td>
             <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/e9ef8395-9690-47f9-8710-e266f1f702d1" />
-                </kbd>
-            </td>
-            <td>
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: YBR 서비스에서 제공하는 앨범 페이지입니다.
                     <br>
@@ -152,21 +155,27 @@
                 </div>
             </td>
         </tr>
+        <tr><td colspan="2">이미지뷰</td></tr>
+        <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/a016536d-7497-45ef-9029-34d06975c4fb" /></kbd></td>
+            <td>
+                <div><h3>📃 설명</h3></div>
+                <div>
+                    :one: 앨범에 속한 이미지들의 리스트를 뷰로 나타내며 이미지를 클릭 시 해당 앨범의 수정창을 출력합니다.
+                    <br>
+                </div>
+            </td>
+        </tr>
     </table>
 </details>
 <details>
     <summary><h3>프로필 페이지</h3></summary>
     <table>
+        <tr><td colspan="2">프로필 페이지</td></tr>
         <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/11765721-5ddf-41e2-9e57-ed07f8626ab1" /></kbd></td>
             <td>
-                <kbd>
-                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/11765721-5ddf-41e2-9e57-ed07f8626ab1" />
-                </kbd>
-            </td>
-            <td>
-                <div>
-                    <h3>📃 설명</h3>
-                </div>
+                <div><h3>📃 설명</h3></div>
                 <div>
                     :one: YBR 서비스에서 제공하는 프로필 페이지입니다.
                     <br>
