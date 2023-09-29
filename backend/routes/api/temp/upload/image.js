@@ -13,11 +13,11 @@ const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         /* directory 경로가 없으면 생성 */
-        let dir = `${path}/wwwroot/temp/images`;
+        let dir = `${path}/public/temp/images`;
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
-        cb(null, 'wwwroot/temp/images');
+        cb(null, 'public/temp/images');
     },
     filename: function (req, file, cb) {
         let ext = file.originalname.split(".")[1];

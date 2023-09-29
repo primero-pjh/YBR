@@ -61,7 +61,7 @@ router.post('/user/signup', async function(req, res, next) {
     let UID = v4();
     let year = new Date().getFullYear();
     let month = new Date().getMonth();
-    let dir = `${path}/wwwroot/images/users/${UID}`;
+    let dir = `${path}/public/images/users/${UID}`;
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }

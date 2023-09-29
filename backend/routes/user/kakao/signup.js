@@ -46,7 +46,7 @@ router.post('/user/kakao/signup', async function(req, res, next) {
     let UID = v4();
     let year = new Date().getFullYear();
     let month = new Date().getMonth();
-    let dir = `${path}/wwwroot/images/users/${UID}`;
+    let dir = `${path}/public/images/users/${UID}`;
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
@@ -54,8 +54,8 @@ router.post('/user/kakao/signup', async function(req, res, next) {
     let image_old_path = '';
     let db_image_path = '';
     if(account.isImageChange) {
-        image_old_path = `${path}/wwwroot/images/temp/profile_image/${filename}`;
-        let image_new_path = `${path}/wwwroot/images/users/${UID}/${filename}`;
+        image_old_path = `${path}/public/images/temp/profile_image/${filename}`;
+        let image_new_path = `${path}/public/images/users/${UID}/${filename}`;
         fs.rename(image_old_path, image_new_path, function (err) {
             if (err) { throw err;}
         });

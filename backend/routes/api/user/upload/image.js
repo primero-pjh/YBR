@@ -12,7 +12,7 @@ const { v4 } = require('uuid');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'wwwroot/images/');
+        cb(null, 'public/images/');
     },
     filename: function (req, file, cb) {
         let ext = file.originalname.split(".")[1];
@@ -52,13 +52,13 @@ router.post('/api/user/upload/image', upload.single('file'), async function(req,
     }
 
     /* directory 경로가 없으면 생성 */
-    let dir = `${path}/wwwroot/images/${info.UID}`;
+    let dir = `${path}/public/images/${info.UID}`;
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
 
-    let image_old_path = `${path}/wwwroot/images/${file.filename}`;
-    let image_new_path = `${path}/wwwroot/images/${info.UID}/${file.filename}`;
+    let image_old_path = `${path}/public/images/${file.filename}`;
+    let image_new_path = `${path}/public/images/${info.UID}/${file.filename}`;
     let db_img_path = `/images/${info.UID}/${file.filename}`;
     fs.rename(image_old_path, image_new_path, function (err) {
         if (err) { throw err;}

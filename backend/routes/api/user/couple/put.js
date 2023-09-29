@@ -44,10 +44,10 @@ router.put('/api/user/couple', async function(req, res, next) {
 
     let [results] = await db.query(`
         insert into coupleInfos 
-        (toUID, fromUID, image, backgroundImage, dateAdded, status)
+        (toUID, fromUID, image, backgroundImageElement, backgroundImageUrl, dateAdded, status)
         values
-        (?, ?, ?, ?, ?, ?)
-    `, [toUID, fromUID, '', '', new Date(), 1])
+        (?, ?, ?, ?, ?, ?, ?)
+    `, [toUID, fromUID, '', '', '', new Date(), 1])
 
     let coupleInfoId = results.insertId;
 
@@ -97,7 +97,7 @@ router.put('/api/user/couple', async function(req, res, next) {
     let [rows] = await db.query(`
         select 
             u.userId, u.UID, u.phoneNumber, u.image, u.userName, u.coupleInfoId,
-            ci.backgroundImage
+            ci.backgroundImageElement, ci.backgroundImageUrl
         from appUsers as u 
         join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
         where u.UID=? and ci.status=1

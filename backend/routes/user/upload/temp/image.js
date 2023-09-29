@@ -12,7 +12,7 @@ const { v4 } = require('uuid');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'wwwroot/images/temp/profile_image');
+        cb(null, 'public/images/temp/profile_image');
     },
     filename: function (req, file, cb) {
         let ext = file.originalname.split(".")[1];

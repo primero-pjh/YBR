@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let coupleInfoId = req.params.coupleInfoId;
         let coupleAlbumId = req.params.coupleAlbumId;
-        let dir = `${path}/wwwroot/images/${coupleInfoId}/albums/${coupleAlbumId}`;
+        let dir = `${path}/public/images/${coupleInfoId}/albums/${coupleAlbumId}`;
         if (!is_delete && fs.existsSync(dir)) {
             rimraf.sync(dir);
             is_delete = true;

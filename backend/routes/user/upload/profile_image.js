@@ -13,7 +13,7 @@ const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let UID = req.params.UID;
-        let dir = `wwwroot/images/users/${UID}`;
+        let dir = `public/images/users/${UID}`;
         cb(null, dir);
     },
     filename: function (req, file, cb) {

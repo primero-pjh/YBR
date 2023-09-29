@@ -13,7 +13,7 @@ const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let coupleInfoId = req.params.coupleInfoId;
-        let dir = `${path}/wwwroot/images/${coupleInfoId}`;
+        let dir = `${path}/public/images/${coupleInfoId}`;
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }

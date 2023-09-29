@@ -9,20 +9,6 @@ const jwtFunc = require(`${path}/jwt`);
 let CRT_ERROR_CODE = require(`${path}/error_code`);
 const { v4 } = require('uuid');
 
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'wwwroot/images/');
-    },
-    filename: function (req, file, cb) {
-        let ext = file.originalname.split(".")[1];
-        let uuid = v4();
-        cb(null, `${uuid}.${ext}`);
-    },
-});
-  
-const upload = multer({ storage: storage });
-
 router.get('/api/couple/:coupleInfoId/chat', async function(req, res, next) {
     /*
         #swagger.description = '커플의 채팅 기록을 들고오는 API'
