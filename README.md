@@ -1,4 +1,4 @@
-![image](https://github.com/primero-pjh/ybr/assets/58695375/3bea82a7-672d-4736-bad1-fcc135630659)<div align="center">
+<div align="center">
     <h1>👫 YBR - Couple Application #Prototype</h1>
 </div>
 
@@ -15,13 +15,14 @@
 - ⭐ [기능 소개](#-기능-소개)
 
 ## **🔗 링크**
-### 1️⃣ &nbsp; 사용자 페이지 - <a href="https://ybr.pritras.com" target="_blank">바로가기</a>
-### 2️⃣ &nbsp; Swagger - <a href="https://ybr.pritras.com/api-docs" target="_blank">바로가기</a>
+### 1️⃣ &nbsp; 사용자 페이지 - <a href="http://ybr.pritras.com" target="_blank">바로가기</a>
+### 2️⃣ &nbsp; Swagger - <a href="http://ybr.pritras.com/api-docs" target="_blank">바로가기</a>
 
 ## **✨ 프로젝트 설명**
 ```
 커플 간의 관계를 향상시키고 일상 생활을 보다 효율적으로 관리하는 데 도음을 주는 웹 애플리케이션입니다.
 4가지 핵심 기능을 통해 다음과 같은 장점을 가집니다.
+
 1. 캘린더 기능을 통해 일정을 조율하고 협업할 수 있습니다.
 2. 채팅 기능을 통해 즉각적인 소통을 가능하게 합니다.
 3. 앨범 기능을 통해 추억을 공유할 수 있습니다.
@@ -204,13 +205,12 @@
 <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"> 
 <img src="https://img.shields.io/badge/letsencrypt-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white"> 
 <br>
-<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-<br>
 
 ### **:four: RESTAPI**
 <img src="https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white">
 <img src="https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=naver&logoColor=white">
+<img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 <br>
 
 ### **:five: API Document**
@@ -366,10 +366,9 @@ let token = socket.handshake.auth.token;
 ```
 2. running_ybr.sh code
 ```sh
-cd /var/www/html/ybr/backend      # director로 이동
-git pull origin master            # git에 올려진 파일을 다운로드 받음
-npm install                       # library 설치
-sudo forever stopall              # 동작되고 있는 모든 서버 종료
-sudo forever start ./bin/www      # 서버 시작
+cd /var/www/html/ybr            # director로 이동
+npm install                     # library 설치
+sudo forever stopall            # 동작되고 있는 모든 서버 종료
+sudo forever start ./bin/www    # 서버 시작
 ```
 
