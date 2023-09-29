@@ -1841,11 +1841,11 @@
                   "properties": {
                     "userId": {
                       "type": "string",
-                      "example": "primero"
+                      "example": ""
                     },
                     "password": {
                       "type": "string",
-                      "example": "1234"
+                      "example": ""
                     },
                     "rememberMe": {
                       "type": "boolean",

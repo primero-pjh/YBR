@@ -21,8 +21,8 @@ router.post('/user/login', async function(req, res, next) {
             in: 'params',
             schema: {
                 params: {
-                    userId: 'primero',
-                    password: '1234',
+                    userId: '',
+                    password: '',
                     rememberMe: true,
                 }
             }
@@ -48,7 +48,7 @@ router.post('/user/login', async function(req, res, next) {
     let [rows, fields] = await db.query(`
         select 
             u.userId, u.UID, u.phoneNumber, u.image, u.userName, 
-            u.isAdmin, u.coupleInfoId, u.password, u.code,
+            u.isAdmin, u.coupleInfoId, u.coupleUID, u.password, u.code,
             us.salt
         from appUsers as u 
         join userSalts as us on u.UID=us.UID
@@ -65,7 +65,6 @@ router.post('/user/login', async function(req, res, next) {
     /* 로그인이 존재하는 경우 기존 로그인까지도 해제 */
     if(user_dict.hasOwnProperty(user.UID)) {
         io.to(user_dict[user.UID].socketId).emit('/client/user/duplication/login');
-        console.log(io);
         return res.json({
             success: 0,
             isDuplicationLogin: true
@@ -98,9 +97,15 @@ router.post('/user/login', async function(req, res, next) {
                 ci.backgroundImageElement, ci.backgroundImageUrl
             from appUsers as u 
             join coupleInfos as ci on u.coupleInfoId=ci.coupleInfoId
-            where ci.status=1 and u.UID != ?
-        `, [user.UID]);
+            where ci.status=1 and u.UID=?
+        `, [user.coupleUID]);
         couple = rows[0];
+        if(!couple) {
+            return res.json({
+                success: 0,
+                message: '커플 정보가 잘못되었습니다. 확인 후 다시 시도해주세요',
+            });
+        }
         user_dict[user.UID].couple.UID = couple.UID;
     }
     
@@ -128,7 +133,6 @@ router.post('/user/login', async function(req, res, next) {
         }
     }
     
-
     return res.json({
         success: 1,
         user,

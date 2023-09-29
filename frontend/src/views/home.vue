@@ -31,7 +31,13 @@
                 <div style="min-width: 400px; max-width: 400px;">
                     <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle"
                         style="height: 200px; max-width: 400px; padding: 12px; border: 1px solid gray;">
-                        <div>
+                        <div style="width: 100%; height: 100%;">
+                            <template v-if="sche_list.length == 0" >
+                                <div style="display: flex; width: 100%; height: 100%;
+                                justify-content: center; align-items: center;" class="fkR ft18">
+                                    등록된 일정이 없습니다.
+                                </div>
+                            </template>
                             <template  v-for="row, idx in sche_list" :key="idx">
                                 <div style="display: flex; background-color: #eee; align-items: center;
                                     border-radius: 5px; border: 1px solid gray;" 
