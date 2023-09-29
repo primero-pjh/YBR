@@ -295,7 +295,7 @@ $ npm start         // Backend 실행
 ### **:two: 통신 규약**
 
 ### **🔎 Axios : 서버와 통신을 위해 사용되는 Promise 기반 HTTP 비동기 통신 라이브러리**
-1. Server에 요청하기 전에 Headers에 Token(JWT)를 첨부하여 서버에 요청합니다.
+1. Server에 요청하기 전에 Headers에 Token(JWT)를 첨부하여 서버에 요청합니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/frontend/src/main.js#L18)
 ```javascript
 axios.interceptors.request.use((config) => {
     let token = $c.getCookie('token'); // Browser-Cookie에 저장된 token을 가져온다.
@@ -305,7 +305,7 @@ axios.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 ```
-2. 서버에서 응답을 받고, 각 페이지에 응답되기 전에 에러가 있다면 분기문을 통해 처리합니다.
+2. 서버에서 응답을 받고, 각 페이지에 응답되기 전에 에러가 있다면 분기문을 통해 처리합니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/frontend/src/main.js#L25)
 ```javascript
 axios.interceptors.response.use((res) => {
     let data = res.data;
@@ -323,7 +323,7 @@ axios.interceptors.response.use((res) => {
     return Promise.reject(error);
 });
 ```
-3. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다.
+3. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/backend/app.js#L22)
 ```javascript
 app.all('/api/*', async (req, res, next) => {
     let url = req.url;
@@ -351,13 +351,13 @@ app.all('/api/*', async (req, res, next) => {
 
 ### **🔎 Socket.IO : 웹 소켓 연결을 통해 클라이언트와 서버간에 실시간 양방향 통신을 가능하게 하는 라이브러리**
 
-1. 로그인 성공 후 handshake-auth에 JWT-Token을 포함하여 socket에 연결하는 코드
+1. 로그인 성공 후 handshake-auth에 JWT-Token을 포함하여 socket에 연결하는 코드 :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/frontend/src/views/login.vue#L83)
 ```javascript
 const socket = io(`${vm.$store.state.host}`, {
     auth: { token, },
 });
 ```
-2. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다.
+2. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/backend/bin/www#L44)
 ```javascript
 io.use((socket, next) => {
 let token = socket.handshake.auth.token;
