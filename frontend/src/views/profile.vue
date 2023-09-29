@@ -632,8 +632,21 @@ export default {
             imageDivMe.style.width = "100px";
             imageDivMe.style.height = "100px";
             imageDivMe.style.position = 'absolute';
-            imageDivMe.addEventListener("click", (e) => {
-                vm.ybrImageEventListener(e);
+            imageDivMe.addEventListener('click', (e) => {
+                vm.dragImage = null;
+                vm.tab = 'couple';
+                if(vm.selectText) { vm.selectText.classList = ""; }
+                if(vm.selectCoupleImage) { vm.selectCoupleImage.classList = ""; }
+                vm.selectCoupleImage = e.target;
+                let matrix = vm.getElementMatrix(e.target);
+                vm.setSelectCoupleImage(e.target);
+                vm.currentX = matrix.x;
+                vm.currentY = matrix.y;
+                vm.initialX = matrix.x;
+                vm.initialY = matrix.y;
+                vm.xOffset = matrix.x;
+                vm.yOffset = matrix.y;
+                vm.selectCoupleImage.classList.add("ybrImageActive");
             });
             div.appendChild(imageDivMe);
 
@@ -645,8 +658,21 @@ export default {
             imageDivCouple.style.width = "100px";
             imageDivCouple.style.height = "100px";
             imageDivCouple.style.position = 'absolute';
-            imageDivCouple.addEventListener("click", (e) => {
-                vm.ybrImageEventListener(e);
+            imageDivCouple.addEventListener('click', (e) => {
+                vm.dragImage = null;
+                vm.tab = 'couple';
+                if(vm.selectText) { vm.selectText.classList = ""; }
+                if(vm.selectCoupleImage) { vm.selectCoupleImage.classList = ""; }
+                vm.selectCoupleImage = e.target;
+                let matrix = vm.getElementMatrix(e.target);
+                vm.setSelectCoupleImage(e.target);
+                vm.currentX = matrix.x;
+                vm.currentY = matrix.y;
+                vm.initialX = matrix.x;
+                vm.initialY = matrix.y;
+                vm.xOffset = matrix.x;
+                vm.yOffset = matrix.y;
+                vm.selectCoupleImage.classList.add("ybrImageActive");
             });
             div.appendChild(imageDivCouple);
             document.getElementById('ybrZone').appendChild(div);
@@ -750,8 +776,8 @@ export default {
                 }
                 vm.xOffset = vm.currentX;
                 vm.yOffset = vm.currentY;
-                vm.selectCoupleImage.x = vm.currentX;
-                vm.selectCoupleImage.y = vm.currentY;
+                vm.selectCoupleImageObj.x = vm.currentX;
+                vm.selectCoupleImageObj.y = vm.currentY;
                 vm.moveItem('image');
             }
         }

@@ -249,7 +249,7 @@ const store = createStore({
                 state.couple.phoneNumber = couple.phoneNumber;
                 state.couple.socketId = couple.socketId;
                 state.couple.backgroundImageElement = couple.backgroundImageElement;
-                state.couple.backgroundImageUrl = state.host + couple.backgroundImageUrl;
+                state.couple.backgroundImageUrl = couple.backgroundImageUrl;
                 state.couple.memo = couple.memo;
                 state.couple.UID = couple.UID;
             }
