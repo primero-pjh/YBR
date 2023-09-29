@@ -11,6 +11,7 @@
 - 🛠 [기술 스택](#-기술-스택)
 - ⚡ [서버 실행](#-서버-실행)
 - 📁 [ERD](#-erd)
+- 🔀 [시스템 흐름도](#-시스템-흐름도)
 - ⭐ [비즈니스 로직](#-비즈니스-로직)
 - ☑️ [기능 소개](#-기능-소개)
 
@@ -238,9 +239,6 @@ $ npm start         // Backend 실행
     <img src="https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939" />
 </kbd>
 
-## **⚡ 시스템 아키텍쳐**
-
-
 ## **🔀 시스템 흐름도**
 
 <kbd>
@@ -263,23 +261,108 @@ $ npm start         // Backend 실행
 ### **:one: MVC 패턴과 디렉토리 구조**
 <kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/0b865988-f9ad-44eb-b689-7f1aaa036a20" width="30%" /><img src="https://github.com/primero-pjh/ybr/assets/58695375/7a28f15a-b882-4979-bdeb-6d851c59d202" /></kbd>
 
- <b>YBR 프로젝트는 MVC 패턴을 따라 디렉토리 구조를 설계하였습니다.</b><br>    
+<b>YBR 프로젝트는 MVC 패턴을 따라 디렉토리 구조를 설계하였습니다.</b><br>    
 <b>M</b>odel - NodeJs 특성상 자료형이 자유롭기 때문에 생략하였습니다.<br>
 <b>V</b>iew - /ybr/backend/public/index.html<br>
 - /ybr/frontend의 파일들이 build가 되며 /ybr/backend/public으로 들어오게 됩니다. :arrow_forward: 📌 [코드 보기](https://github.com/primero-pjh/ybr/blob/master/frontend/vue.config.js)
 - YBR의 Client에게 제공되는 UI/UX입니다.
-<b>C</b>ontroller - /ybr/backend/routes<br>
+  
+<br>
+
+<b>C</b>ontroller - /ybr/backend/routes
+- 사용자의 요청에 따라 응답하게 되는 Controller(Router) 디렉토리입니다.
+- axios: /ybr/backend/routes/api
+- socket-io: /ybr/backend/routes/socket
+
 
 
 ### **:two: 통신 규약**
 
-### **AXIOS**
+### **🔎 Axios : 서버와 통신을 위해 사용되는 Promise 기반 HTTP 비동기 통신 라이브러리**
+1. Server에 요청하기 전에 Headers에 Token(JWT)를 첨부하여 서버에 요청합니다.
+```javascript
+axios.interceptors.request.use((config) => {
+    let token = $c.getCookie('token'); // Browser-Cookie에 저장된 token을 가져온다.
+    config.headers["Authorization"] = token;
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+```
+2. 서버에서 응답을 받고, 각 페이지에 응답되기 전에 에러가 있다면 분기문을 통해 처리합니다.
+```javascript
+axios.interceptors.response.use((res) => {
+    let data = res.data;
+    if(data.success == 0 && Object.prototype.hasOwnProperty.call(data, "isLogged")) { // Jwt 토큰 검증에 실패한 경우 에러코드 출력 후 Login 페이지로 이동
+        alert(data.message);
+        window.location = "/#/login";
+    } else if (data.success == 0 && Object.prototype.hasOwnProperty.call(data, "code")) { // couple의 정보가 잘못된 경우 에러코드 출력 후 Login 페이지로 이동
+        if(data.code == "COUPLE_EMPTY_ERROR") {
+            alert(data.message);
+            window.location = "/#/login";
+        }
+    }
+    return res;
+}, (error) => {
+    return Promise.reject(error);
+});
+```
+3. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다.
+```javascript
+app.all('/api/*', async (req, res, next) => {
+    let url = req.url;
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With"); 
+    /* 
+        url의 요청이 login이 아니라면
+        사용자가 추가한 authorization의 jwt token 값의 유효성을 검사한다.
+    */
+    if(url != '/api/user/login') {
+        let token = req.headers.authorization;
+        let resJwt = await jwtFunc.verify(token);
+        if(!resJwt) {
+            return res.json({
+                success: 0,
+                isLogged: false,
+                message: CRT_ERROR_CODE["LOGIN_TOKEN"],
+            });
+        }
+        req.self = resJwt;  // 에러가 없는 경우 req 인자에 self 필드를 추가합니다.
+    }
+    next(); // 사용자가 요청한 end-point로 전송합니다.
+});
+```
 
-### **SocketIO**
+### **🔎 Socket.IO : 웹 소켓 연결을 통해 클라이언트와 서버간에 실시간 양방향 통신을 가능하게 하는 라이브러리**
 
-# AXIOS MIDDLEWARE
-
-# SOCKETIO MIDDLEWARE
+1. 로그인 성공 후 handshake-auth에 JWT-Token을 포함하여 socket에 연결하는 코드
+```javascript
+const socket = io(`${vm.$store.state.host}`, {
+    auth: { token, },
+});
+```
+2. 서버의 <b>Middleware</b> 코드→ 사용자가 요청한 end-point로 도달하기 전에 Header에 담겨진 JWT-Token의 유효성을 검사를 합니다.
+```javascript
+io.use((socket, next) => {
+let token = socket.handshake.auth.token;
+    if(token) {
+        jwtFunc.verify(token).then((res) => {
+            if(!res) {
+                socket.emit('/error', {
+                    message: '로그인 토큰 만료!\n'
+                });
+            }
+        });
+        next(); // 이상이 없는 경우 end-point로 이동한다.
+    } else {
+        console.error('\u001b[41m', 'jwt token error', '\x1b[40m');
+        socket.emit('/error', {
+            message: '로그인 토큰 만료!\n'
+        });
+        next(); // 잘못된 데이터로 error를 반환한다.
+    }
+});
+```
 
 # LOGIN 
 - YBR은 일반 로그인과 카카오 로그인을 제공한다.
