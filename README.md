@@ -97,6 +97,19 @@
                 </div>
             </td>
         </tr>
+        <tr><td colspan="2">일정의 icon:place 버튼 - 네이버 지도</td></tr>
+        <tr>
+            <td><kbd><img src="https://github.com/primero-pjh/ybr/assets/58695375/5d9d16bc-beac-4629-a6f0-d8cefe3214e5" /></kbd></td>
+            <td>
+                <div><h3>📃 설명</h3></div>
+                <div>
+                    :one: 장소를 지정하면 버튼이 나타납니다.
+                    <br>
+                    :two: 사용자가 입력한 장소를 네이버 지도로 출력합니다.
+                    <br>
+                </div>
+            </td>
+        </tr>
     </table>
 </details>
 <details>
