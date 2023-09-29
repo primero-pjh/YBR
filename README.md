@@ -11,7 +11,7 @@
 - 🛠 [기술 스택](#-기술-스택)
 - ⚡ [서버 실행](#-서버-실행)
 - 📁 [ERD](#-erd)
-- 🚨 [비즈니스 로직](#-비즈니스-로직)
+- ⭐ [비즈니스 로직](#-비즈니스-로직)
 - ☑️ [기능 소개](#-기능-소개)
 
 ## **🔗 링크**
@@ -179,29 +179,37 @@
 </details>
 
 ## **🛠 기술 스택**
-    
-<img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">    
-<img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white"> 
-<img src="https://img.shields.io/badge/nodejs-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"> 
+
+### **:one: Language**
+<img src="https://img.shields.io/badge/nodejs-339933?style=for-the-badge&logo=nodedotjs&logoColor=white">
+<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"> 
+<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> 
 <br>
+
+### **:two: FE - Frameworks**
+<img src="https://img.shields.io/badge/Vue-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white"> 
+<img src="https://img.shields.io/badge/Quasar-050A14?style=for-the-badge&logo=Quasar&logoColor=white">
+<img src="https://img.shields.io/badge/SocketIO-010101?style=for-the-badge&logo=socketdotio&logoColor=white">
+<img src="https://img.shields.io/badge/AXIOS-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
+<img src="https://img.shields.io/badge/Toast-000000?style=for-the-badge&logo=&logoColor=white">
+<br>
+
+### **:three: BE - Frameworks**
 <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white">
-<img src="https://img.shields.io/badge/SocketIO-010101?style=for-the-badge&logo=socketdotio&logoColor=white"> 
-<br>
-<img src="https://img.shields.io/badge/AXIOS-5A29E4?style=for-the-badge&logo=axios&logoColor=white">    
 <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=&logoColor=white">    
-<img src="https://img.shields.io/badge/Toast-000000?style=for-the-badge&logo=&logoColor=white">    
-<br>
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+<br>
 <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=white"> 
 <img src="https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white"> 
 <img src="https://img.shields.io/badge/letsencrypt-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white"> 
-
 <br>
 <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 <br>
+
+### **:four: RESTAPI**
 <img src="https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white">
-<img src="https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=NaverlogoColor=white">
+<img src="https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=naver&logoColor=white">
 </div>
 
 
@@ -220,13 +228,32 @@ $ npm start         // Backend 실행
 
     
 ## **📦 ERD**
-![image](https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939)
+<kbd>
+    <img src="https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939" />
+</kbd>
 
 ## **⚡ 시스템 아키텍쳐**
-![image](https://github.com/primero-pjh/ybr/assets/58695375/0aafc683-f8f6-4138-9eae-8649bca5e877)
 
 
-## **⚡ 비즈니스 로직**
+## **🔀 시스템 흐름도**
+
+<kbd>
+    <img src="https://github.com/primero-pjh/ybr/assets/58695375/0aafc683-f8f6-4138-9eae-8649bca5e877" />
+</kbd>
+
+<details>
+    <summary><h3>상세 설명</h3></summary>
+
+    1. 클라이언트는 YBR에서 제공하는 FE(Vue)를 통해 커플 웹 서비스를 이용할 수 있습니다.
+    2. 서버는 Node-Express-Framework를 사용하여 모든 요청을 응답합니다.
+    3. 올바른 사용자 검증을 위해 모든 Rest-API 요청에 JWT Token을 포함하여 전송합니다.
+    4. 서버는 모든 요청의 JWT Token을 검증합니다. 
+    5. 올바른 요청에서의 데이터를 조회하고 저장하며 사용자의 요청을 성공, 실패를 반환합니다.
+        
+</details>
+
+## ⭐ 비즈니스 로직
+
 ### MVC 패턴
 
 ### SocketIO와 Axios 사용
