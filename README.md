@@ -264,8 +264,7 @@ $ npm start         // Backend 실행
 
 <details>
     <summary><h3>상세 설명</h3></summary>
-
-    1. 클라이언트는 YBR에서 제공하는 FE(Vue)를 통해 커플 웹 서비스를 이용할 수 있습니다.
+    1. 클라이언트는 YBR의 Nginx을 통해 제공되는 FE(Vue)를 통해 커플 웹 서비스를 이용할 수 있습니다.
     2. 서버는 Node-Express-Framework를 사용하여 모든 요청을 응답합니다.
     3. 올바른 사용자 검증을 위해 모든 Rest-API 요청에 JWT Token을 포함하여 전송합니다.
     4. 서버는 모든 요청의 JWT Token을 검증합니다. 
@@ -392,5 +391,38 @@ cd /var/www/html/ybr            # director로 이동
 npm install                     # library 설치
 sudo forever stopall            # 동작되고 있는 모든 서버 종료
 sudo forever start ./bin/www    # 서버 시작
+```
+
+### **:four: Nginx Code**
+1. http://ybr.pritras.com 로 들어오는 URL 요청을 내부의 127.0.0.1:3000 으로 proxy pass 해줍니다.
+2. root directory를 /ybr/public으로 지정하며 static 한 파일으로 설정합니다.
+3. certbot을 통해 https 를 지원합니다. (letsencrypt)
+```sh
+server {
+        listen 80;
+        server_name ybr.pritras.com;
+        root /var/www/html/ybr/public;
+        client_max_body_size 100m;
+        location ~* \.(py|pyc|tmpl|cfg|pem|~)$ { deny all; }
+        location ~* /~/ { deny all; }
+        location ~* \.\w+$ {}
+        location / {
+       		proxy_http_version 1.1;
+       		proxy_pass       http://127.0.0.1:3000;
+       		proxy_redirect   off;
+       		proxy_set_header   X-Scheme $scheme;
+       		proxy_set_header Host $http_host;
+       		proxy_set_header Upgrade $http_upgrade;
+       		proxy_set_header Connection "upgrade";
+       		proxy_set_header REMOTE_ADDR $remote_addr;
+     		proxy_read_timeout 300s;
+        }
+
+        listen 443 ssl; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/ybr.pritras.com/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/ybr.pritras.com/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
 ```
 
