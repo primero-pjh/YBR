@@ -30,59 +30,152 @@
 ## **🔍 미리보기**
 
 <details>
-<summary><h3>로그인 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7)
-
-<table>
-    <tr>
-        <td>
-            <img src="https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7" />        
-        </td>
-        <td>
-            <div>
-                📃 설명
-            </div>
-            <div>
-                :one: &nbsp;YBR 서비스를 이용하기 위한 로그인 페이지 입니다.
-                <br>
-                :two: 일반 로그인과 카카오 로그인을 제공합니다.
-                <br>
-                :three: 회원가입을 통해 YBR 서비스를 이용할 수 있습니다.
-            </div>
-        </td>
-    </tr>
-</table>
-
-
-
-
-
+    <summary><h3>로그인 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7" />        
+                </kbd>
+            </td>
+            <td >
+                <div style="min-width: 50%;">
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: &nbsp;YBR 서비스를 이용하기 위한 로그인 페이지 입니다.
+                    <br>
+                    :two: 일반 로그인과 카카오 로그인을 제공합니다.
+                    <br>
+                    :three: 회원가입을 통해 YBR 서비스를 이용할 수 있습니다.                
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 <details>
-<summary><h3>홈 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/39999459-1de2-4e34-8f98-9535b5c7fd84)
+    <summary><h3>홈 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/39999459-1de2-4e34-8f98-9535b5c7fd84" />        
+                </kbd>
+            </td>
+            <td>
+                <div>
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: YBR 서비스의 기본이 되는 Index 페이지입니다.
+                    <br>
+                    :two: 커플과 함께 꾸민 배경사진을 볼 수 있습니다.
+                    <br>
+                    :three: 등록한 일정 List를 볼 수 있습니다.
+                    <br>
+                    :four: 등록한 앨범 List를 볼 수 있습니다. 
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 <details>
-<summary><h3>캘린더 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/dc7d1d16-50d2-4728-a63a-ff753420217f)
+    <summary><h3>캘린더 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/dc7d1d16-50d2-4728-a63a-ff753420217f" />        
+                </kbd>
+            </td>
+            <td>
+                <div>
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: YBR 서비스에서 제공하는 캘린더 페이지입니다.
+                    <br>
+                    :two: 커플과 함께 일정을 등록, 수정 및 삭제 할 수 있는 페이지입니다.
+                    <br>
+                    :three: 일정을 유형별로 볼 수 있는 캘린더 필터 기능을 제공합니다.
+                    <br>
+                    :four: 월간, 주간, 일간 단위로 조회가 가능합니다.
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 <details>
-<summary><h3>채팅 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/caf433c0-c592-4492-96f6-f1e821e94068)
+    <summary><h3>채팅 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/caf433c0-c592-4492-96f6-f1e821e94068" />
+                </kbd>
+            </td>
+            <td>
+                <div>
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: YBR 서비스에서 제공하는 채팅 페이지입니다.
+                    <br>
+                    :two: 커플과 이야기를 주고 받을 수 있습니다.
+                    <br>
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 <details>
-<summary><h3>앨범 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/3a66e4a3-f3b8-4803-ade9-159d2127a7d0)
+    <summary><h3>앨범 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/3a66e4a3-f3b8-4803-ade9-159d2127a7d0" />
+                </kbd>
+            </td>
+            <td>
+                <div>
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: YBR 서비스에서 제공하는 앨범 페이지입니다.
+                    <br>
+                    :two: 우측 하단의 Fab Button을 통해 앨범을 추가할 수 있습니다.
+                    <br>
+                    :three: 등록한 앨범을 조회하고, 수정할 수 있습니다.
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 <details>
-<summary><h3>프로필 페이지</h3></summary>
-
-![image](https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d)
+    <summary><h3>프로필 페이지</h3></summary>
+    <table>
+        <tr>
+            <td>
+                <kbd>
+                    <img src="https://github.com/primero-pjh/ybr/assets/58695375/64abace4-c92f-42c7-bee3-d036aeed681d" />
+                </kbd>
+            </td>
+            <td>
+                <div>
+                    <h3>📃 설명</h3>
+                </div>
+                <div>
+                    :one: YBR 서비스에서 제공하는 프로필 페이지입니다.
+                    <br>
+                    :two: 좌측 Layer으로 각 Components를 드래그하여 아이템들을 배치할 수 있습니다.
+                    <br>
+                    :three: 우측 Layer에 Tools로 배경이미지를 삽입하거나, 텍스트를 배치할 수 있고 미리볼 수 있습니다.
+                    <br>
+                </div>
+            </td>
+        </tr>
+    </table>
 </details>
 
 ## **🛠 기술 스택**
