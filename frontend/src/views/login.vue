@@ -81,11 +81,9 @@ export default {
                     let token = data.token.APP_ACC_TKN;
                     vm.$store.state.setCookie("token", token);
                     const socket = io(`${vm.$store.state.host}`, {
-                        // reconnectionDelayMax: 10000,
-                        auth: {
-                            token,
-                        },
+                        auth: { token, },
                     });
+
                     vm.$store.commit("setSocket", socket);
 
                     /* user_dict의 socketId 등록 */
@@ -197,7 +195,7 @@ export default {
         },
         onLoginKakao: function() {
             let vm = this;
-            window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=6d428fae7a51015c7356f1c83935cfe0&redirect_uri=http://localhost:3000/user/kakao/login&response_type=code&prompt=login`;
+            window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=6d428fae7a51015c7356f1c83935cfe0&redirect_uri=${vm.$store.state.host}/user/kakao/login&response_type=code&prompt=login`;
         },
     },
     mounted: function() {

@@ -44,21 +44,20 @@ const io = require("socket.io")(server, {
 io.use((socket, next) => {
 	let token = socket.handshake.auth.token;
 	if(token) {
-		/* jwt check */
-		jwtFunc.verify(token).then(function(res) {
+		jwtFunc.verify(token).then((res) => {
 			if(!res) {
 				socket.emit('/error', {
 					message: '로그인 토큰 만료!\n'
 				});
 			}
 		});
-		next();
+		next(); // 이상이 없는 경우 end-point로 이동한다.
 	} else {
 		console.error('\u001b[41m', 'jwt token error', '\x1b[40m');
 		socket.emit('/error', {
 			message: '로그인 토큰 만료!\n'
 		});
-		next();
+		next(); // 잘못된 데이터로 error를 반환한다.
 	}
 });
 
