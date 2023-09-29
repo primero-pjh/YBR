@@ -11,8 +11,8 @@
 - 📜 [미리보기](#-미리보기)
 - ⚡ [서버 실행](#-서버-실행)
 - 📁 [ERD](#-erd)
-- :rotating_light: [비즈니스 로직](#-비즈니스-로직)
-- :ballot_box_with_check: [기능 소개](#-기능-소개)
+- 🚨 [비즈니스 로직](#-비즈니스-로직)
+- ☑️ [기능 소개](#-기능-소개)
 
 ## **🔗 링크**
 ### 1️⃣ &nbsp; 사용자 페이지 - <a href="https://ybr.pritras.com" target="_blank">바로가기</a>
@@ -33,6 +33,31 @@
 <summary><h3>로그인 페이지</h3></summary>
 
 ![image](https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7)
+
+<table>
+    <tr>
+        <td>
+            <img src="https://github.com/primero-pjh/ybr/assets/58695375/5ff903e6-0467-4192-8178-be7a05dfc9e7" />        
+        </td>
+        <td>
+            <div>
+                📃 설명
+            </div>
+            <div>
+                :one: &nbsp;YBR 서비스를 이용하기 위한 로그인 페이지 입니다.
+                <br>
+                :two: 일반 로그인과 카카오 로그인을 제공합니다.
+                <br>
+                :three: 회원가입을 통해 YBR 서비스를 이용할 수 있습니다.
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
+
+
 </details>
 <details>
 <summary><h3>홈 페이지</h3></summary>
