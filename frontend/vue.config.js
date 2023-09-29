@@ -1,9 +1,8 @@
 const { defineConfig } = require('@vue/cli-service');
 const path = require('path');
-console.log("VUE_APP_HOST:", process.env.VUE_APP_HOST);
 module.exports = defineConfig({
   transpileDependencies: true,
-  outputDir: path.resolve(__dirname, '../backend/public/'),
+  outputDir: path.resolve(__dirname, '../backend/public/'), // frontend 파일이 backend에 저장될 위치
   devServer: {
     // 프록시 설정
     proxy: {
