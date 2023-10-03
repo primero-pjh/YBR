@@ -252,7 +252,7 @@ $ npm run build     // Frontend 데이터를 Backend로 build 합니다.
 $ npm start         // Backend 실행
 ```
     
-## **📦 ERD**
+## **💾 ERD**
 <kbd>
     <img src="https://github.com/primero-pjh/ybr/assets/58695375/6fb45a06-23bf-459f-932a-fb81a1da2939" />
 </kbd>
