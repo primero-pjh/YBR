@@ -427,8 +427,8 @@ server {
 ```
 
 ## 성능 개선안
-Calendar 페이지의 List를 들고오는 raw-data가 많습니다. 따라서 sql query의 조건으로 사용자가 보는 date 및 userId를 Index로 설정하여
-이분탐색을 하도록 테이블의 인덱스 키로 설정하였습니다.
+Calendar 페이지의 List를 들고오는 raw-data가 많습니다.<br>따라서 sql query의 조건으로 사용자가 보는 date 및 userId를 Index로 설정하여
+이분탐색을 하도록 테이블의 인덱스 키로 설정하였습니다.<br>
 SQL 코드
 ```sql
 INDEX `coupleInfoId` (`start`, `end`, `coupleInfoId`) USING BTREE
