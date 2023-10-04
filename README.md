@@ -426,6 +426,15 @@ server {
 }
 ```
 
+## 성능 개선안
+Calendar 페이지의 List를 들고오는 raw-data가 많습니다. 따라서 sql query의 조건으로 사용자가 보는 date 및 userId를 Index로 설정하여
+이분탐색을 하도록 테이블의 인덱스 키로 설정하였습니다.
+SQL 코드
+```sql
+INDEX `coupleInfoId` (`start`, `end`, `coupleInfoId`) USING BTREE
+```
+   
+
 ## 추가 개발안
 - 커플과 같은 화면을 공유할 수 있는 Live Shared 기능을 추가하여 생산성 높은 웹 애플리케이션을 만들고 싶습니다.
 - 인스타그램와 같이 다른 사람에게 나(커플)의 '앨범'을 공유하는 시스템을 도입하여 좋아요,댓글 등 커뮤니케이션 기능을 추가하고 싶습니다.
