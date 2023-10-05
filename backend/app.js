@@ -127,7 +127,7 @@ app.use('/', require('./routes/user/kakao/oauth/token'));
 app.use('/', require('./routes/user/kakao/signup'));
 
 //Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

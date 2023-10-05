@@ -10,6 +10,9 @@ module.exports = defineConfig({
       '/api': {
           // 프록시 요청을 보낼 서버의 주소
           target: process.env.VUE_APP_HOST
+      },
+      '/swagger': {
+        target: process.env.VUE_APP_HOST
       }
     }
   }
