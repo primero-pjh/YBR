@@ -427,13 +427,50 @@ server {
 ```
 
 ## 성능 개선안
+
+**1. DB-Table의 Index Key 설정**<br>
 Calendar 페이지의 List를 들고오는 raw-data가 많습니다.<br>따라서 sql query의 조건으로 사용자가 보는 date 및 userId를 Index로 설정하여
 이분탐색을 하도록 테이블의 인덱스 키로 설정하였습니다.<br>
-SQL 코드
+[SQL 코드]
 ```sql
-INDEX `coupleInfoId` (`start`, `end`, `coupleInfoId`) USING BTREE
+CREATE TABLE `schedules` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`coupleInfoId` INT(11) NOT NULL DEFAULT '0',
+	`calendarId` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`title` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`body` VARCHAR(500) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`isAllday` INT(11) NOT NULL DEFAULT '0',
+	`start` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`end` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`location` VARCHAR(500) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`attendees` TEXT NOT NULL COLLATE 'utf8mb4_general_ci',
+	`category` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`classification` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`dueDateClass` VARCHAR(50) NOT NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
+	`isVisible` INT(11) NOT NULL DEFAULT '0',
+	`isPending` INT(11) NOT NULL DEFAULT '0',
+	`isFocused` INT(11) NOT NULL DEFAULT '0',
+	`isPrivate` INT(11) NOT NULL DEFAULT '0',
+	`status` INT(11) NOT NULL DEFAULT '1',
+	`dateAdded` DATETIME NOT NULL,
+	`dateDeleted` DATETIME NULL DEFAULT NULL,
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `coupleInfoId` (`start`, `end`, `coupleInfoId`) USING BTREE
+)
+COMMENT='커플들의 일정관리'
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1000052
+;
 ```
-   
+2. 서버 업그레이드
+현재 사용하고 있는 서버의 사양입니다.<br>
+![image](https://github.com/primero-pjh/ybr/assets/58695375/5ec3b9a0-8e45-498a-be49-e3c6f6f09f8b)
+
+CI/CD를 위해 Java로 8080 포트의 서버를 열어야 하는데 부족한 메모리로 인하여<br>
+Jenkins의 성능이 많이 저하되고 있습니다. 따라서 서버의 사양을 조금 더 업그레이드 하여 서비스를 진행하면 좋을 것 같습니다.<br>
+![image](https://github.com/primero-pjh/ybr/assets/58695375/335bfaed-4b98-446c-9b73-2340f5a17cb2)
+
 
 ## 추가 개발안
 - 커플과 같은 화면을 공유할 수 있는 Live Shared 기능을 추가하여 생산성 높은 웹 애플리케이션을 만들고 싶습니다.
