@@ -16,7 +16,7 @@
 
 ## **🔗 링크**
 ### 1️⃣ &nbsp; 사용자 페이지 - <a href="http://ybr.pritras.com" target="_blank">바로가기</a>
-### 2️⃣ &nbsp; Swagger - <a href="http://ybr.pritras.com/api-docs" target="_blank">바로가기</a>
+### 2️⃣ &nbsp; Swagger - <a href="http://pritras.com:3000/swagger" target="_blank">바로가기</a>
 
 ## **✨ 프로젝트 설명**
 ```
