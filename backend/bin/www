@@ -7,7 +7,7 @@ const app = require('../app')["app"];
 const cfg = require('../config');
 const user_dict = require('../app')["user_dict"];
 const debug = require('debug')('backend:server');
-const http = require('http');
+const http2 = require("http2");
 const jwtFunc = require('../jwt');
 const fs = require("fs");
 const { env } = require('process');
@@ -28,7 +28,11 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+const server = http2.createSecureServer({
+	key: fs.readFileSync("localhost-private.pem"),
+    cert: fs.readFileSync("localhost-cert.pem"),
+    allowHTTP1: true,
+}, app);
 const io = require("socket.io")(server, {
 	cors: { 
         origin: [
